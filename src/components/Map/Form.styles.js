@@ -40,3 +40,16 @@ export const BtnStyle = styled.div `
 	}
 `;
 
+
+export const PopUpStyle = styled.div `
+	margin-top: 1em;
+	margin-bottom: 1em;
+	text-align: left;
+	padding: 2em;
+	border: 2px solid black;
+	min-height: 12vh;
+	background-color: #1f2a32;
+	color:#F1F1F1
+	
+}
+`;

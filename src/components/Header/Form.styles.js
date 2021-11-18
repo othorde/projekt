@@ -10,6 +10,7 @@ export const Wrapper = styled.div `
         text-align: center;
 		background: #1f2a32;
 		color: #f1f1f1;
+		border-bottom: 2px solid black;
 	}
 `;
 

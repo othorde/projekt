@@ -3,42 +3,65 @@ import React, {useState , useEffect} from "react";
 import Map from '../Map/index'
 
 //Styles
-import {Wrapper, Content, Nav, MapContainer} from './Form.styles'
+import {Wrapper, Content, Nav, MapContainer, StyledBtn} from './Form.styles'
 import Api from '../../api'
 /* link / navLinkto (to) prop använder invoice number för att ladda sidan med
   rätt id
 */
 
 let initalValue = {
-	getbike: false,
+	loadScooters: false,
 	content: []
+}
+let initalValueLoadCitys = {
+	loadCity: false,
+}
+let initalValueLoadStations = {
+	loadStation: false,
 }
 
 const Admin = () => {
-	const [bikes, setBike] = useState(initalValue);
+	const [ifToShowScooter, setIfToShowScooter] = useState(initalValue);
+	const [ifToShowCity, setIfToShowCity] = useState(initalValueLoadCitys);
+	const [ifToShowLoadStations, setIfToShowLoadStations] = useState(initalValueLoadStations);
 
-	const getBikes = async ()  => {
+	// hämtar ju alla scootrar här varje gång man trycker.
+	// Kanske onödigt? Samtidigt vill man få det uppdaterat?
+	const getScooters = async() => {
         try {
-            let res = await Api.getAllCrimes();
-			setBike(prevState => ({
-				getbike: !prevState.getbike,
+            let res = await Api.getAllScooters();  
+			setIfToShowScooter(prevState => ({
+				loadScooters: !prevState.loadScooters,
 				content: res
-			  }));
+			}));
         } catch (error) {
+			console.log(error)
         }
     }
+	const getCitys = async() => {
+		setIfToShowCity(prevState => ({
+			loadCity: !prevState.loadCity,
+		}));
+	}
+
+	const getLoadStations = async() => {
+		setIfToShowLoadStations(prevState => ({
+			loadStation: !prevState.loadStation,
+		}));
+	}
 
 return (
     <Wrapper>
         <Content>
 			<Nav>
-			<button onClick= {getBikes} > Ladda cyklar </button>
+				<StyledBtn onClick= {getScooters}> Cyklar </StyledBtn>
+				<StyledBtn onClick= {getCitys}> Städer </StyledBtn>
+				<StyledBtn onClick= {getLoadStations}> Laddstationer </StyledBtn>
+				<StyledBtn onClick= {null}> Accepterade platser </StyledBtn>
 			</Nav>
-			
 			<MapContainer>
-				<Map bikes={bikes} ></Map>
+				<Map ifToShowScooter={ifToShowScooter} ifToShowCity={ifToShowCity} ifToShowLoadStations={ifToShowLoadStations} ></Map>
 			</MapContainer>
-			
         </Content>
     </Wrapper>
   )

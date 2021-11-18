@@ -23,7 +23,7 @@ export const Content = styled.div `
     left:0;
     bottom:0;
     background: #1c3d5a;
-
+    border-top: 2px solid black;
 `;
 
 export const About = styled.div `
