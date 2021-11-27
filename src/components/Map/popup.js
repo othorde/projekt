@@ -1,42 +1,52 @@
 
-import {React } from "react";
+import {React, useState } from "react";
 //styles
 import {PopUpStyle} from './Form.styles'
-
-
+import MoveBike from "../MoveBike";
 export default function PopUp(props) {
-    console.log(props.PopupInfo.content)
+    let content;
+    let whatToShow;
 
-    // const city = 
+    if (props.PopupInfo && props.PopupInfo.content ) {
+        content = props.PopupInfo.content
+        whatToShow = props.PopupInfo.whatToShow
+    }
 
 	return (
 		<PopUpStyle >
-         
-        { props.PopupInfo.showScooter ? (
-            
+        { whatToShow === "Scooter" ? (
             <>
-            <div> Scooter ID: {props.PopupInfo.content._id} Batteri: {props.PopupInfo.content.battery}</div>
-            <div> Stad: {props.PopupInfo.content.city_location} Position, Latitude: {props.PopupInfo.content.position.lat} Longitude: {props.PopupInfo.content.position.long} </div>
-            <div>Hastighet {props.PopupInfo.content.speed} </div>
-            <div>Starttid {props.PopupInfo.content.start_time} </div>
-            <div> <button> Förflytta cykel </button> {props.PopupInfo.content.category}</div>
+            <div> Scooter ID: {content._id} Batteri: {content.battery}</div>
+            <div> Stad: {content.city_location} Position, Latitude: {content.position.lat} Longitude: {content.position.long} </div>
+            <div> Hastighet {content.speed} </div>
+            <div> Starttid {content.start_time} </div>
+            <MoveBike 
+                id = {content._id}
+                city = {content.city_location}
+                position = {content.position}
+                battery = {content.battery}
+                speed = {content.speed}
+                >
+            </MoveBike>
             </>
             ) : null }
-
-        { props.PopupInfo.showCity ? (
+    
+        { whatToShow === "City" ? (
             <>
-            <div> Stad {props.PopupInfo.content.city}</div>
-            <div> Antal cyklar {props.PopupInfo.content.amount_of_bikes} {}</div>
+            <div> Stad {content.city}</div>
+            <div> Antal cyklar {content.amount_of_bikes} </div>
             </>
             ) : null } 
-
-        {/* { props.what2Show.ifToShowLoadStations ? (
+ 
+        {  whatToShow === "LoadStation" ? (
             <>
-            <div> Stad {props.city.city.city}</div>
-            <div> Antal cyklar {props.city.content.amount_of_bikes} {}</div>
+            <div> Position (Visar endast 2 av positionerna nu) 
+                {content.position.polygonePart1.lat }
+                { content.position.polygonePart2.lng }
+            </div>
+            <div> Antal cyklar ??????</div>
             </>
-            ) : null }  */}
-
+            ) : null } 
 		</PopUpStyle>	
 	);
 }

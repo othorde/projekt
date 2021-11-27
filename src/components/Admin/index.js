@@ -1,10 +1,10 @@
-import React, {useState , useEffect} from "react";
+import React, {useState } from "react";
 //components
-import Map from '../Map/index'
+import Map from '../Map/index';
 
 //Styles
-import {Wrapper, Content, Nav, MapContainer, StyledBtn} from './Form.styles'
-import Api from '../../api'
+import {Wrapper, Content, Nav, MapContainer, StyledBtn} from './Form.styles';
+import Api from '../../api';
 /* link / navLinkto (to) prop använder invoice number för att ladda sidan med
   rätt id
 */
@@ -49,6 +49,7 @@ const Admin = () => {
 			loadStation: !prevState.loadStation,
 		}));
 	}
+
 
 return (
     <Wrapper>

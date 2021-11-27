@@ -1,21 +1,24 @@
 import {useState, useEffect} from 'react';
 import Api from '../api';
 
+let initalValue = {
+	showLoadCitys: false,
+	city: []
+}
+
 const useLoadCitysToMap = (mapRef, props, changePopUpInfo) => {
     const[cityObject, setcityObject] = useState([]); // håller objektet så att man kan ta bort det från kartan
-    const[cityContent, setCityContent] = useState([]); // håller content för onClick
-    // sparar res i state, så slipper hämta från servern hela tiden. Kanske ändra om vi ska köra nån realtime
+    const[cityContent, setCityContent] = useState(initalValue); // håller content för onClick
+    //sparar res i state, så slipper hämta från servern hela tiden. Kanske ändra om vi ska köra nån realtime
     const[resFromApi, setResFromApi] = useState(null); 
     const [errorForCity, setErrorForCity] = useState();
-    console.log(props)
     
     const handleSucces = (res) => {
     var cityname;
     const map = mapRef.current.map;
     const maps = mapRef.current.maps;
 
-    res.map(city => {
-
+    res.forEach(city => {
         cityname = city.city
         let polyGon = 
             ([city.position.polygonePart1,
@@ -33,13 +36,23 @@ const useLoadCitysToMap = (mapRef, props, changePopUpInfo) => {
             });
         
         cityname.addListener('click', (event) => {
-            setCityContent({ city, showCity: true })
+
+            setCityContent(prevState => ({
+                showLoadCitys: !prevState.showLoadCitys,
+                city
+            }));
         });
+
         cityname.setMap(map);
         setcityObject(oldArray => [...oldArray, cityname]);
 
         })
     };
+    // funktion som kan toggla state, från andra komponenter
+    const showInfoForCity = (trueOrFalse) => {
+        setCityContent({showLoadCitys: trueOrFalse });
+	}
+
     const handleError = (error) => {
         setErrorForCity(error.message);
     };
@@ -48,34 +61,36 @@ const useLoadCitysToMap = (mapRef, props, changePopUpInfo) => {
     // Kommer behövas om man ska få realtiduppdateringar, typ timer
 	function removeCitysFromMap() { 
 		if (cityObject !== null) {
-			cityObject.map(city => {
+			cityObject.forEach(city => {
 				city.setMap(null);
 			})
 		}
         return
 	}
 
-    useEffect(async () => {
-        // Om loadStations ska tas bort från kartan
-        if (props.ifToShowCity.loadCity === false ) {
-            removeCitysFromMap(mapRef)
-            return
+    useEffect(() => {
+        async function fetchData() {
+            // Om loadStations ska tas bort från kartan
+            if (props.ifToShowCity.loadCity === false ) {
+                removeCitysFromMap(mapRef)
+                return
+            }
+            // Om state är null == ej hämtat från backend ännu
+            if (resFromApi === null) {
+                let res = await Api.getAllCitys();
+                setResFromApi(res);
+                handleSucces(res)
+            // Annars använd det som är sparat i state
+            } else if (resFromApi !== null) {
+                handleSucces(resFromApi);
+            } else {
+                handleError("Error")
+                return;
+            }
         }
-        // Om state är null == ej hämtat från backend ännu
-        if (resFromApi === null) {
-            let res = await Api.getAllCitys();
-            setResFromApi(res);
-            handleSucces(res)
-        // Annars använd det som är sparat i state
-        } else if (resFromApi != null) {
-            handleSucces(resFromApi);
-        } else {
-            handleError("Error")
-            return;
-        }
+        fetchData();
     },[mapRef, props.ifToShowCity.loadCity])
-    
-    return {cityContent, errorForCity};
+    return {cityContent, errorForCity, showInfoForCity};
 };
 export default useLoadCitysToMap;
 

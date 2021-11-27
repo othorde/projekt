@@ -1,20 +1,24 @@
 import {useState, useEffect} from 'react';
 import Api from '../api';
 
+let initalValue = {
+	showLoadStations: false,
+	loadStations: []
+}
+
 const useLoadStationToMap = (mapRef, props) => {
     const[loadStationObject, setLoadStationObject] = useState([]); // håller objektet så att man kan ta bort det från kartan
-    const[loadStationContent, setLoadStationContent] = useState([]); // håller content för onClick
+    const[loadStationContent, setLoadStationContent] = useState(initalValue); // håller content för onClick
     // sparar res i state, så slipper hämta från servern hela tiden. Kanske ändra om vi ska köra nån realtime
     const[resFromApi, setResFromApi] = useState(null); 
     const [error1, setError1] = useState();
-    console.log(props)
     const handleSucces = (res) => {
     var loadStationName;
     const map = mapRef.current.map;
     const maps = mapRef.current.maps;
 
-    res.map(cityCoords => {
-        cityCoords.charging_posts.map(loadStations => {         
+    res.forEach(cityCoords => {
+        cityCoords.charging_posts.forEach(loadStations => {         
             let polyGon = 
                 ([cityCoords.position.polygonePart1,
                     cityCoords.position.polygonePart2,
@@ -23,7 +27,7 @@ const useLoadStationToMap = (mapRef, props) => {
                 ]);
             loadStationName = new maps.Polygon({
                 paths: polyGon,
-                strokeColor: "yellow",
+                strokeColor: loadStations.color,
                 strokeOpacity: 0.9,
                 strokeWeight: 2,
                 fillColor: "transparent",
@@ -31,13 +35,22 @@ const useLoadStationToMap = (mapRef, props) => {
                 });
             
             loadStationName.addListener('click', (event) => {
-                setLoadStationContent({loadStations}); //klickevent, fungerade inte med onClick
+                setLoadStationContent(prevState => ({
+                    showLoadStations: !prevState.showLoadStations,
+                    loadStations
+                }));
             });
         loadStationName.setMap(map);
         setLoadStationObject(oldArray => [...oldArray, loadStationName]);
         })
     })
 };
+
+    // funktion som kan toggla state, från andra komponenter
+    const showInfoForLoadStation = (trueOrFalse) => {
+        setLoadStationContent({ showLoadStations: trueOrFalse});
+	}
+
     const handleError = (error) => {
         setError1(error.message);
     };
@@ -46,9 +59,7 @@ const useLoadStationToMap = (mapRef, props) => {
     // Kommer behövas om man ska få realtiduppdateringar, typ timer
 	function removeLoadingStationsFromMap() { 
 		if (loadStationObject !== null) {
-            console.log("HÅR")
-			loadStationObject.map(loadStation => {
-                console.log(loadStation)
+			loadStationObject.forEach(loadStation => {
 				loadStation.setMap(null);
 			})
 		}
@@ -76,7 +87,7 @@ const useLoadStationToMap = (mapRef, props) => {
         // geolocation.getCurrentPosition(handleSucces, handleError, options)
     },[mapRef, props.ifToShowLoadStations.loadStation])
     
-    return {loadStationObject, loadStationContent, error1};
+    return {loadStationObject, loadStationContent, error1, showInfoForLoadStation};
 };
 export default useLoadStationToMap;
 

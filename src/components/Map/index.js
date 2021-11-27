@@ -5,10 +5,7 @@ import GoogleMapReact from "google-map-react";
 import useCurrentLocation from "../../Hooks/currentPosition";
 import useLoadStationsToMap from "../../Hooks/loadStationsToMap";
 import useCityToMap from "../../Hooks/loadCitysToMap";
-
 import PopUp from "./popup";
-import LoadCitys from "./helperFunctions/loadCitys"
-import Api from "../../api";
 //styles & img
 import {Style} from './Form.styles'
 import bikeimg from '../../images/bike.png'
@@ -25,48 +22,58 @@ const options = {
 export default function MapContainer(props) {
 	//hooks
 	const mapRef = useRef();
-	const { loadStationContent, err1 } = useLoadStationsToMap(mapRef, props);
-	const { cityContent, errorForCity } = useCityToMap(mapRef, props);
-
+	const { loadStationContent, err1, showInfoForLoadStation } = useLoadStationsToMap(mapRef, props);
+	const { cityContent, errorForCity, showInfoForCity } = useCityToMap(mapRef, props);
 	const { location, err } = useCurrentLocation(options);
-	const [markerInfo, setMarkerInfo] = useState([]);
-	const [PopupInfo, setPopupInfo] = useState([]);
+	const [scooter, setScooter] = useState([]);
+	const [PopupInfo, setPopupInfo] = useState(null);
 
 	///Variabel
 	const loadScooters = props.ifToShowScooter;
-	console.log(loadScooters)
-
-	var ScooterArray = props.ifToShowScooter.content;
-	// bikeArray =  bikeArray.slice(0, 200); // innan jag fixar med cluster max 200
+	const ScooterArray = props.ifToShowScooter.content; 	// ScooterArray =  bikeArray.slice(0, 200); // innan jag fixar med cluster max 200
 	const Marker = ({ children }) => <div>{children}</div>;
 
+	// Dessa tre useEffect sätter de andra värdena till false så att rätt info visas i rutan för innehåll
+	//fundera på om det finns något bättre/snyggare sätt om man ska kunna toggla mellan de olika
+	// Alternativ är att ladda in allt här, men då blir index.js kladdig 
+	// Har flera fetch vilket är ganska onödigt men om vi ska använda graphql senare så är strukturen m hooks att föredra.
+	// Om vi inte använder graphQl så hämta allt på en gång kanske och spara i state => populera
 	useEffect(() => {
-		if (cityContent.showCity == true) {
-			setPopupInfo({
-				showCity: cityContent.showCity,
-				showScooter: false,
-				showLoadStation: false,
-				showAccLocation: false,
-				content: cityContent.city
-			})
+		if (scooter.showScooter === true) {
+			showInfoForCity(false)
+			showInfoForLoadStation(false)
+			setPopupInfo({content: scooter.scooter, whatToShow: "Scooter"});
 		}
-	},[cityContent.showCity])
+	},[scooter.showScooter])
+
 
 	useEffect(() => {
-		if (markerInfo.showScooter == true) {
-			setPopupInfo({
-				showCity: false,
-				showScooter: markerInfo.showScooter,
-				showLoadStation: false,
-				showAccLocation: false,
-				content: markerInfo.scooter
-			})
+		if (loadStationContent.showLoadStations === true) {
+			setScooter(prevState => ({
+				scooter: prevState.scooter,
+				showScooter: false
+			}));
+			showInfoForCity(false);
+			setPopupInfo({content: loadStationContent.loadStations, whatToShow: "LoadStation"});
 		}
-	},[markerInfo.showScooter])
+	},[loadStationContent.showLoadStations])
+
+
+	useEffect(() => {
+		if (cityContent.showLoadCitys === true) {
+			setScooter(prevState => ({
+				scooter: prevState.scooter,
+				showScooter: false
+			}));
+			showInfoForLoadStation(false);
+			setPopupInfo({content: cityContent.city, whatToShow: "City"});
+		}
+	},[cityContent.showLoadCitys])
 
 	return (
 		<Style>
-			{/* 		KARTA		 */}
+			{/*KARTA*/}
+			
 			{location ? (
 			<GoogleMapReact 
 				bootstrapURLKeys={{key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY}}
@@ -77,7 +84,8 @@ export default function MapContainer(props) {
 					mapRef.current = {map, maps};
 				}}
 			>
-				{/* 		1 Person 		*/}
+				{/*1 Person*/}
+
 				<Marker 
 					key={1} 
 					lat={location.latitude} 
@@ -87,31 +95,30 @@ export default function MapContainer(props) {
 						<img className = "crime-marker" src={personimg} alt="person" />
 					</div>	
 				</Marker>
-				{/* 		Alla cyklar		 */}
-				{loadScooters.loadScooters ? (
+				{/*Alla cyklar*/}
+
+				{loadScooters.loadScooters && (
 				ScooterArray.map(scooter => {
-				return (
-				<Marker 
-					key={scooter._id} 
-					lat={scooter.position.lat} 
-					lng={scooter.position.lng}
-					>
-					<div onClick={() => setMarkerInfo({scooter, showScooter: true})}className="crime-marker">
-					<img className = "scooter" src={bikeimg} alt="scooter"/>
-					</div>
-				</Marker>)
-				})
-				) : (null)}
+					return (
+					<Marker 
+						key={scooter._id} 
+						lat={scooter.position.lat} 
+						lng={scooter.position.lng}
+						>
+						<div onClick={() => setScooter({scooter, showScooter: true})}className="crime-marker">
+						<img className = "scooter" src={bikeimg} alt="scooter"/>
+						</div>
+					</Marker>)
+					})
+				)}
 			</GoogleMapReact>
 			):(<p>Loading...</p> )}
-			{/*				 POPUP				 */}
-			{markerInfo || cityContent || loadStationContent ? (
-			<PopUp
-				key={"popupkey"}
-				PopupInfo={PopupInfo}
-				>
-			</PopUp>
+
+			{/*POPUP*/}
+			{scooter || cityContent || loadStationContent ? (
+			<PopUp key={"popupkey"} PopupInfo={PopupInfo}></PopUp>
 			): (null) }
+
 		</Style>
 	);
 }

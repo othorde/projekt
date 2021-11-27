@@ -15,32 +15,28 @@ export const Content = styled.div `
     flex-direction: column;
     width: 55%;
     height: 100%;
-    background-color: #3776ab;
+    background-color: #8CF3F3;
     float: left;
     @media screen and (max-width: 550px) {
         {
             width: 100%;
             height: 100%;
-
         }
       }
-
 `;
 
 export const Textbox = styled.div `
     flex: 1;
     margin-top: 8em;
     height: 70%;
-    background-color: #3776ab;
-    color: #FFFFFF;
+    background-color: #8CF3F3;
+    color: black;
     text-align:center;
-
 `;
 
 
 export const Picture = styled.div `
-margin: auto;
-
+    margin: auto;
     width: 45%;
     height: 100%;
     float: left;
@@ -57,9 +53,7 @@ export const Downloadable = styled.div `
     flex-direction: row;
     width:100%;
     height:30%;
-
     justify-content:center;
-
 `;
 
 export const AStore = styled.div `
@@ -77,16 +71,11 @@ export const Gplay = styled.div `
     height: 35px;
     padding-top: 2em;
     padding-left: 0.5em;
-
-
-
-
 `;
 
 export const BtnContainer = styled.div `
     display: flex;
     justify-content:center;
-
     width: 100%;
     height: 30%;
     min-height: 3em;

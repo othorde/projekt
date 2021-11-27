@@ -11,13 +11,12 @@ const Header = () => {
     const myContext = useContext(AppContext);
     const auth = myContext.auth;
     let navigate = useNavigate();
-    let admin = true; /* byt ut denna sen, checka om det är admin vid inlogg */
+    let admin = false; /* byt ut denna sen, checka om det är admin vid inlogg */
+    let user = true; /* byt ut denna sen, checka om det är admin vid inlogg */
 
     const handleSubmit = async (event)  => {
-
         myContext.toggleAuth(false);
         localStorage.clear();
-
         navigate("/");
         event.preventDefault();
     }
@@ -25,33 +24,38 @@ const Header = () => {
     return (
         <Wrapper>
             <Content>
-
             <Logga> Svenska Elsparkcyklar </Logga>
-            {auth === true ? (
+            {auth && (
             <>
                 <Nav>
-                    <Link to="/admin" > Admin </Link> |{" "} {/* Link som global navigation */}
-                    <Link to="/account" > Konto</Link>
-                    {admin === true ? (
+                    {admin &&
+                    <>
+                    <Link to="/admin" > Admin </Link> 
+
                     <Nav2> 
                         <Link to="/account" > Hantera kunder </Link>
-                        <Link to="/account" > Hantera kunder </Link>
-                        <Link to="/account" > Hantera kunder </Link>
-                        <Link to="/account" > Hantera kunder </Link>
-
+                        <Link to="/account" > Överblick </Link>
                     </Nav2>
-                    ): console.log("FALSE") }
-
+                    </>
+                    }
+                    {user &&
+                    <>
+                    <Link to="/home" > Hem </Link> 
+                    <Nav2> 
+                        <Link to="/account" > Konto </Link>
+                        <Link to="/history" > Historik </Link>
+                    </Nav2>
+                    </>
+                    }
                 </Nav>
                 <SignOut>
                     <form onSubmit={handleSubmit} className = "logout">
                         <input type="submit" value="Logga ut" />
                     </form>
                 </SignOut>
-                
                 <Outlet/> {/* outlet renderar child  */}
                 </>
-            ): console.log("FALSE") }
+            )}
             </Content>
 
         </Wrapper>

@@ -3,10 +3,10 @@ import styled from "styled-components";
 
 export const Style = styled.div `
 	{	
-		width: 85%;
-		height: 70%;
-		borderRadius: 20px,
-		boxShadow: 6px 5px 15px 5px rgb(0 0 0 / 50%) ,
+		width: 70%;
+		height: 55%;
+		border: 20px;
+		box-shadow: 10px 8px 20px 5px rgb(0 0 0 / 50%);
 
 	}
 `;
@@ -14,8 +14,8 @@ export const Style = styled.div `
 
 export const Style2 = `
 	{	
-		width: 85%;
-		height: 70%;
+		width: 70%;
+		height: 55%;
 		borderRadius: 20px,
 		background-color:red;
 	}

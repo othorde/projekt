@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
 
-
-
 export const Delimiter = styled.div `
 	border-bottom: 1px solid #f1f1f1;
 	width: 100%;
@@ -13,16 +11,16 @@ export const Delimiter = styled.div `
 
 
 export const Content = styled.div `
+
     display:flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
     width: 100%;
-    height: 20vh;
-    position: relative;
-    left:0;
+    height: 8em;
+    position: absolute;
     bottom:0;
-    background: #1c3d5a;
+    background: #1f2a32;
     border-top: 2px solid black;
 `;
 
