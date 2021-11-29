@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
 import { Link, Outlet, useNavigate  } from "react-router-dom";
 //style
-import { Container, Logga, Nav, SignOut, Content } from './Form.styles.js';
+import { Container, Logga, Nav, SignOut, StyledMenu } from './Form.styles.js';
 //components
 import Burger from "../BurgerMenu/index";
-import Menu from "../Menu/index"
+//import Menu from "../Menu/index"
 import AppContext from "../../AppContext";
 
 const Header = () => {
@@ -24,17 +24,34 @@ const Header = () => {
     }
 
     return (
+        <> {/* Burgermenu */}
+        {auth &&
+        <Burger open={open} setOpen={setOpen}> </Burger>
+        }
+            <StyledMenu open={open}>
+                <Link to="/home" > Svenska Elsparkcyklar</Link> 
+
+                <Link to="/home" > Hem </Link> 
+                {admin &&
+                <>
+                <Link to="/admin" > Admin </Link> 
+                <Link to="/account" > Hantera kunder </Link>
+                </>
+                }
+                {user &&
+                <>
+                <Link to="/account" > Konto </Link>
+                <Link to="/history" > Historik </Link>
+                </>
+            }
+            <Outlet/>
+        </StyledMenu>
+
+        {/* Menu */}
         <Container>
-
-               
-
             <Logga> Svenska Elsparkcyklar </Logga>
-            
             {auth && (
-            
             <>
-                <Burger open={open} setOpen={setOpen}/>
-                <Menu open={open} setOpen={setOpen}/>
                 <Nav>
                     <Link to="/home" > Hem </Link> 
                     {admin &&
@@ -59,6 +76,7 @@ const Header = () => {
             </>
             )}
         </Container>
+        </>
     )
 }
 
