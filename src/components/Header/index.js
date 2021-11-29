@@ -1,18 +1,20 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, Outlet, useNavigate  } from "react-router-dom";
 //style
-import { Wrapper, Logga, Nav, Nav2, SignOut, Content } from './Form.styles.js';
-
+import { Container, Logga, Nav, SignOut, Content } from './Form.styles.js';
 //components
+import Burger from "../BurgerMenu/index";
+import Menu from "../Menu/index"
 import AppContext from "../../AppContext";
 
 const Header = () => {
-  
+
+    const [open, setOpen] = useState(false);
     const myContext = useContext(AppContext);
     const auth = myContext.auth;
     let navigate = useNavigate();
-    let admin = false; /* byt ut denna sen, checka om det är admin vid inlogg */
-    let user = true; /* byt ut denna sen, checka om det är admin vid inlogg */
+    let admin = true; /* byt ut denna sen, checka om det är admin vid inlogg */
+    let user = false; /* byt ut denna sen, checka om det är admin vid inlogg */
 
     const handleSubmit = async (event)  => {
         myContext.toggleAuth(false);
@@ -22,43 +24,41 @@ const Header = () => {
     }
 
     return (
-        <Wrapper>
-            <Content>
+        <Container>
+
+               
+
             <Logga> Svenska Elsparkcyklar </Logga>
+            
             {auth && (
+            
             <>
+                <Burger open={open} setOpen={setOpen}/>
+                <Menu open={open} setOpen={setOpen}/>
                 <Nav>
+                    <Link to="/home" > Hem </Link> 
                     {admin &&
                     <>
                     <Link to="/admin" > Admin </Link> 
-
-                    <Nav2> 
-                        <Link to="/account" > Hantera kunder </Link>
-                        <Link to="/account" > Överblick </Link>
-                    </Nav2>
+                    <Link to="/account" > Hantera kunder </Link>
                     </>
                     }
                     {user &&
                     <>
-                    <Link to="/home" > Hem </Link> 
-                    <Nav2> 
-                        <Link to="/account" > Konto </Link>
-                        <Link to="/history" > Historik </Link>
-                    </Nav2>
+                    <Link to="/account" > Konto </Link>
+                    <Link to="/history" > Historik </Link>
                     </>
                     }
                 </Nav>
-                <SignOut>
-                    <form onSubmit={handleSubmit} className = "logout">
-                        <input type="submit" value="Logga ut" />
-                    </form>
-                </SignOut>
                 <Outlet/> {/* outlet renderar child  */}
-                </>
+            <SignOut>
+                <form onSubmit={handleSubmit} className = "logout">
+                    <input type="submit" value="Logga ut" />
+                </form>
+            </SignOut>
+            </>
             )}
-            </Content>
-
-        </Wrapper>
+        </Container>
     )
 }
 

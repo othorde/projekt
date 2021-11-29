@@ -3,7 +3,13 @@ import React, {useState } from "react";
 import Map from '../Map/index';
 
 //Styles
-import {Wrapper, Content, Nav, MapContainer, StyledBtn} from './Form.styles';
+import {
+	Container, 
+	Nav, 
+	MapContainer, 
+	StyledBtn, 
+	ShowLogg
+} from './Form.styles';
 import Api from '../../api';
 /* link / navLinkto (to) prop använder invoice number för att ladda sidan med
   rätt id
@@ -52,19 +58,18 @@ const Admin = () => {
 
 
 return (
-    <Wrapper>
-        <Content>
-			<Nav>
-				<StyledBtn onClick= {getScooters}> Cyklar </StyledBtn>
-				<StyledBtn onClick= {getCitys}> Städer </StyledBtn>
-				<StyledBtn onClick= {getLoadStations}> Laddstationer </StyledBtn>
-				<StyledBtn onClick= {null}> Accepterade platser </StyledBtn>
-			</Nav>
-			<MapContainer>
-				<Map ifToShowScooter={ifToShowScooter} ifToShowCity={ifToShowCity} ifToShowLoadStations={ifToShowLoadStations} ></Map>
-			</MapContainer>
-        </Content>
-    </Wrapper>
+	<Container>
+		<Nav>
+			<StyledBtn onClick= {getScooters}> Cyklar </StyledBtn>
+			<StyledBtn onClick= {getCitys}> Städer </StyledBtn>
+			<StyledBtn onClick= {getLoadStations}> Laddstationer </StyledBtn>
+			<StyledBtn onClick= {null}> Accepterade platser </StyledBtn>
+		</Nav>
+		<MapContainer>
+			<Map ifToShowScooter={ifToShowScooter} ifToShowCity={ifToShowCity} ifToShowLoadStations={ifToShowLoadStations} ></Map>
+		</MapContainer>
+		<ShowLogg>VISA LOGGEN </ShowLogg>
+	</Container>
   )
 }
 

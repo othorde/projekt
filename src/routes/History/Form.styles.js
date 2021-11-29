@@ -9,14 +9,13 @@ export const Container = styled.div `{
     flex-direction: row;
 	background-color: #8CF3F3;
 	padding: 2em;
+    padding-bottom: 8em;    /* Footer height */
 
 	@media (max-width: 1000px) {
 		flex-direction: column;
 		width: 100%;
 		height: 85%;
-
 	}
-
 }
     
 `;
@@ -24,10 +23,10 @@ export const Container = styled.div `{
 export const Main = styled.div `{
 	display: flex;
 	flex-direction: column;
-	width: 60%;
+	width: ${props => props.showMap ? "60%" : "100%"};
+	transition: all 1s;
     background-color: #8CF3F3;
-	padding: 2em;
-    padding-right:2.7em;
+    padding-right:2em;
 	position: relative;
 	display: inline-block;
 	
@@ -35,29 +34,31 @@ export const Main = styled.div `{
 		flex-direction: column;
 		width: 90%;
 		height: 90%;
+		padding-right:0em;
 
 	}
-
 }
 `
-
 
 export const MapContainer = styled.div `{
     
 	display: flex;
 	text-align: center;
 	flex-direction: column;
-	width: 40%;
-	padding: 2em;
+	width: ${props => props.showMap ? "40%":"0%"};
+	transition: all 1s;
+	max-height: 600px;
+	padding-left:1em;
+	padding-right:1em;
+	margin 0 auto;
 
-		
-	@media (max-width: 1000px) {
-		flex-direction: column;
-		width: 90%;
-		height: 90%;
-
+	@media screen and (max-width: 1000px) {
+		position: absolute;
+		top: calc(${props => props.pageY}px + -250px);
+		max-height: 200px;
+		width: ${props => !props.showMap ? "0px" : "75%"};
+		padding-left:0em;
 	}
-
 }
 
 `
@@ -70,12 +71,13 @@ export const UserHistory = styled.div `
 	padding: 12px 16px;
 	z-index: 1;
     width: 100%;
-    min-width: 220px;
+    min-width: 250px;
 	font-size: 0.9em;
 	border-radius: 5px 5px 5px 5px;
 	overflow: hidden;
 	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 	background-color: #C6F4F4;
+
 
     button {
         background:#8CF3F3;

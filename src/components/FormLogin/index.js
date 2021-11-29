@@ -26,7 +26,7 @@ const FormLogin = () => {
         // nu sparar jag lösen som vnaligt lösen, fixa
         localStorage.setItem('user', JSON.stringify(inputs));
         myContext.toggleAuth(true);
-        navigate("/account")
+        navigate("/home")
         event.preventDefault();
     }
 

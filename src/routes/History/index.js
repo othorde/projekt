@@ -69,7 +69,6 @@ let data = [
                     },    
                     time: "12:44"
                 } 
-
             },
         ],
         balance: "500"
@@ -123,24 +122,26 @@ const History  = ()  => {
         return `hmm, något gick snett`
     }
     /// visa karta
-    function showMap(startCoord, stopCoord) {
+    function showMap(startCoord, stopCoord, e) {
         setShowMapForUser({
             showMap: !showMapForUser.showMap,
             startCoord: startCoord,
-            stopCoord: stopCoord
+            stopCoord: stopCoord,
+            pageY: e.pageY
         })
     }
 
     useEffect(() => {
-
       
     }, [showMapForUser, setShowMapForUser])
 
+    console.log(showMapForUser.pageY)
+
 	return (
         <Container>  
-            <Main>
+            <Main  showMap = {showMapForUser.showMap}  >
             {showMapForUser.showMap }
-                <UserHistory>
+                <UserHistory> {/* 	background-color: ${props => props.trueOrFalse ? "red" : "white"}; */}
                     <table>
                     <caption>Din Historik</caption>
                     <thead>
@@ -161,8 +162,8 @@ const History  = ()  => {
                         <td data-label="Sluttid">{elem.stop.time} </td>
                         <td data-label="Total tid">{calculateTravelTime(elem.start.time, elem.stop.time)} </td>
                         <td data-label="Visa på karta" >
-                            {<button className="button vertical-align:middle"  onClick={() => 
-                            showMap(elem.start.position, elem.stop.position)}><span>Färd </span></button>}
+                            {<button className="button vertical-align:middle"  onClick={(e) => 
+                            showMap(elem.start.position, elem.stop.position, e)}><span>Färd </span></button>}
                         </td>
                       
                         <td data-label="Kostnad">{elem.price}:- </td>
@@ -173,9 +174,9 @@ const History  = ()  => {
                     
                 </UserHistory>
             </Main>
-            <MapContainer>
+            <MapContainer  showMap = {showMapForUser.showMap} pageY={showMapForUser.pageY} >
                 {showMapForUser.showMap &&
-                <MapForUser showMapForUser = {showMapForUser}> här </MapForUser>
+                    <MapForUser showMapForUser = {showMapForUser}> </MapForUser>
                 }
             </MapContainer>
         </Container>

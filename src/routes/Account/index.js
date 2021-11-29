@@ -22,7 +22,6 @@ const Account = () => {
 			<PaymentContainer>
 				<Payment></Payment>
 			</PaymentContainer>	
-		
 		</Container>
 	);
 }

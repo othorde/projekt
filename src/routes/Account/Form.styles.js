@@ -1,17 +1,6 @@
 import styled from "styled-components";
 
 
-// export const Wrapper = styled.div `
-// 	font-size: 1em;
-// 	position: relative;
-//     min-height: 100vh;
-//     width: 100vw;
-//     height: 100vh;
-// 	background-color: #8CF3F3;
-//     padding-bottom: 8em;    /* Footer height */
-
-// `;
-
 export const Container = styled.div `
 
 	background-color: #8CF3F3;
@@ -59,7 +48,7 @@ export const Christmas = styled.div `
 
 	position: relative;
 	width: 100%;
-	height: 100%
+	height: 100%;
 	padding:0;
 	margin:0 auto;
 	min-width: 200px;

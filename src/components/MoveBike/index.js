@@ -1,7 +1,7 @@
 import {React, useState, useContext} from "react";
 import Api from "../../api";
 import AppContext from "../../AppContext";
-
+import {StyleMoveBike} from './Form.styles.js'
 export default function MoveBike(props) {
     const myContext = useContext(AppContext);
     const [charging_posts, setCharging_posts] = useState([])
@@ -67,7 +67,7 @@ export default function MoveBike(props) {
     }
 
 	return (
-        <div onClick = {getLoadStationsForMovingBike}> {/* laddar in ny info med onClick */}
+        <StyleMoveBike onClick = {getLoadStationsForMovingBike}> {/* laddar in ny info med onClick */}
             <select 
                 data-testid="dropdown" onChange={(e) => {
                 setMoveBikeToColor((e.target.value))
@@ -78,8 +78,8 @@ export default function MoveBike(props) {
                     {elem.color + " zon"}
                     </option> )}
             </select>
-            <div> <button onClick={handleSubmit}> Förflytta cykel </button> </div>
-        </div>
+            <button onClick={handleSubmit}> Förflytta cykel </button>
+        </StyleMoveBike>
 	);
 }
 

@@ -8,7 +8,7 @@ import Loader from './components/loader/loader';
 import AppContext from './AppContext';
 import Header from './components/Header';
 import Footer from './components/Footer'
-import Welcome from './components/welcome/welcome';
+import Welcome from './routes/welcome/welcome';
 import Home from './routes/Home';
 import History from './routes/History';
 //logga in => spara användaruppgifter i state, state sätts av localStorage ? 

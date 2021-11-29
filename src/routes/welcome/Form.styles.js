@@ -59,16 +59,16 @@ export const Downloadable = styled.div `
 export const AStore = styled.div `
 
     flex:2;
-    height: 35px;
+    height: 4.5rem;
     max-width: 120px;
     padding-top: 2em;
     padding-right: 0.5em;
-
+    
 `;
 export const Gplay = styled.div `
     flex:2;
     max-width: 120px;
-    height: 35px;
+    height: 4.5rem;
     padding-top: 2em;
     padding-left: 0.5em;
 `;

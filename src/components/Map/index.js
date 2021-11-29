@@ -5,9 +5,9 @@ import GoogleMapReact from "google-map-react";
 import useCurrentLocation from "../../Hooks/currentPosition";
 import useLoadStationsToMap from "../../Hooks/loadStationsToMap";
 import useCityToMap from "../../Hooks/loadCitysToMap";
-import PopUp from "./popup";
+import PopUp from "../PopUp";
 //styles & img
-import {Style} from './Form.styles'
+import {Container,StyleMap, Main} from './Form.styles'
 import bikeimg from '../../images/bike.png'
 import personimg from '../../images/person.png'
 
@@ -71,56 +71,56 @@ export default function MapContainer(props) {
 	},[cityContent.showLoadCitys])
 
 	return (
-		<Style>
-			{/*KARTA*/}
-			
-			{location ? (
-			<GoogleMapReact 
-				bootstrapURLKeys={{key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY}}
-				defaultCenter={{ lat: location.latitude, lng: location.longitude}}
-				defaultZoom={10}
-				yesIWantToUseGoogleMapApiInternals
-				onGoogleApiLoaded= {({map, maps}) => {
-					mapRef.current = {map, maps};
-				}}
-			>
-				{/*1 Person*/}
+		<Container>
+			<Main>
+			<StyleMap>
+				{/*KARTA*/}
+				{location ? (
+				<GoogleMapReact 
+					bootstrapURLKeys={{key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY}}
+					defaultCenter={{ lat: location.latitude, lng: location.longitude}}
+					defaultZoom={10}
+					yesIWantToUseGoogleMapApiInternals
+					onGoogleApiLoaded= {({map, maps}) => {
+						mapRef.current = {map, maps};
+					}}
+				>
+					{/*1 Person*/}
 
-				<Marker 
-					key={1} 
-					lat={location.latitude} 
-					lng={location.longitude}
-					>
-					<div >
-						<img className = "crime-marker" src={personimg} alt="person" />
-					</div>	
-				</Marker>
-				{/*Alla cyklar*/}
-
-				{loadScooters.loadScooters && (
-				ScooterArray.map(scooter => {
-					return (
 					<Marker 
-						key={scooter._id} 
-						lat={scooter.position.lat} 
-						lng={scooter.position.lng}
+						key={1} 
+						lat={location.latitude} 
+						lng={location.longitude}
 						>
-						<div onClick={() => setScooter({scooter, showScooter: true})}className="crime-marker">
-						<img className = "scooter" src={bikeimg} alt="scooter"/>
-						</div>
-					</Marker>)
-					})
-				)}
-			</GoogleMapReact>
-			):(<p>Loading...</p> )}
+						<div >
+							<img className = "crime-marker" src={personimg} alt="person" />
+						</div>	
+					</Marker>
+					{/*Alla cyklar*/}
+
+					{loadScooters.loadScooters && (
+					ScooterArray.map(scooter => {
+						return (
+						<Marker 
+							key={scooter._id} 
+							lat={scooter.position.lat} 
+							lng={scooter.position.lng}
+							>
+							<div onClick={() => setScooter({scooter, showScooter: true})}className="crime-marker">
+							<img className = "scooter" src={bikeimg} alt="scooter"/>
+							</div>
+						</Marker>)
+						})
+					)}
+				</GoogleMapReact>
+				):(<p>Loading...</p> )}
+			</StyleMap>
+			</Main>
 
 			{/*POPUP*/}
 			{scooter || cityContent || loadStationContent ? (
-			<PopUp key={"popupkey"} PopupInfo={PopupInfo}></PopUp>
+				<PopUp key={"popupkey"} PopupInfo={PopupInfo}></PopUp>
 			): (null) }
-
-		</Style>
+		</Container>
 	);
 }
-
-
