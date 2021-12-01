@@ -11,6 +11,7 @@ import Footer from './components/Footer'
 import Welcome from './routes/welcome/welcome';
 import Home from './routes/Home';
 import History from './routes/History';
+import LandingPage from './components/landingPage';
 //logga in => spara användaruppgifter i state, state sätts av localStorage ? 
 
 
@@ -21,9 +22,11 @@ export default function App() {
 
 	useEffect(() => {
 		let loggedInUser = localStorage.getItem("user");
-		if (loggedInUser) {
+		let tag = localStorage.getItem("tag");
+
+		if (loggedInUser && tag) {
 			loggedInUser = JSON.parse(loggedInUser)
-		  	setUser(loggedInUser);
+		  	setUser({user: loggedInUser, tag: tag});
 		}
 	  }, []);
 
@@ -48,19 +51,13 @@ export default function App() {
 	<Header/>
 	<Routes>
 		<Route path="/" element={ <Welcome/>} />
-			<Route path="login" element={ <FormLogin/>} />
-			<Route path="account" element={<Account/> } />
-			<Route path="history" element={ <History/>} />
-			<Route path="home" element={<PrivateRoute> <Home/> </PrivateRoute>} />
-			<Route path="admin" element={<PrivateRoute> <Admin/> </PrivateRoute>} >
-				<Route index element={
-						<main style={{ padding: "1rem" }}>
-							<p>Select an invoice</p>
-						</main>
-						}
-				/>			
-			</Route>
-		{/* <Route path=":invoiceId" element={ <PrivateRoute> <Invoice/> </PrivateRoute> } />  */}
+		<Route path="login/landingpage" element={ <LandingPage/>} />
+		<Route path="login" element={ <FormLogin/> } />
+		<Route path="login/home" element={ <PrivateRoute> <Home/> </PrivateRoute>} />
+		<Route path="account" element={ <PrivateRoute><Account/> </PrivateRoute>} />
+		<Route path="history" element={ <PrivateRoute> <History/> </PrivateRoute>} />
+		<Route path="admin" element={<PrivateRoute> <Admin/> </PrivateRoute>} >
+		</Route>
 		<Route path="*" element={ <Loader/>}/>
 	</Routes>
 	<Footer/>

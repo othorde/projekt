@@ -4,17 +4,16 @@ import React from 'react'
 import { Loading, FourOFour, Wrapper } from './Form.styles.js'
 
 
-const Loader = () => {
-    
+const Loader = (props) => {
+    console.log(props)
     return (
         <>
         <Wrapper>
             <Loading>
             <div class="loader"></div>
             </Loading>
-            <FourOFour> 
+            <FourOFour width={props.width}> 
                 <div class="FourOFour"> 
-                    <h2>404 Page not found :(</h2> 
                 </div> 
             </FourOFour>
         </Wrapper>

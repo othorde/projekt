@@ -59,6 +59,7 @@ export const Nav = styled.div `
 		text-decoration: none;
 		color: #f1f1f1;
 		margin: 0em 4em 0em 2em;
+		transition: color 0.3s linear;
 
 	}
 	a:hover {

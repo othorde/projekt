@@ -35,10 +35,41 @@ export const SignIn = styled.div `
 
 	.register {
 		
+		a{
+			text-decoration: none;
+			color: black;
+			:hover {
+				color: white;
+			}
+
+		}
+
+		div {
+			display:flex;
+			flex:1;
+			width: 100%;
+			min-width: 6em;
+			padding: 15px;
+			margin-top: 5px;
+			margin-bottom: 5px;
+
+			border-radius: 8px;
+			border: none;
+			background: #FFD343;
+			text-align: center;
+			font-size: 1.3em;
+			font-weight: 900;
+
+			
+		}
+
+
 		border: 2px;
 		padding: 2em;
 		min-width: 14em;
 		width: 450px;
+		min-height: 20em;
+
 		align-items: center;
 		margin: 0 auto;
 		background-color: #1f2a32;
@@ -54,47 +85,6 @@ export const SignIn = styled.div `
 	
 	}
 
-
-
-	/* Full-width input fields */
-	input[type=text], input[type=password] {
-		display:flex;
-		flex:1;
-		width: 100%;
-		min-width: 6em;
-		padding: 15px;
-		margin-top: 10px;
-		margin-bottom: 10px;
-
-		border-radius: 8px;
-		border: none;
-		background: #f1f1f1;
-		text-align: left;
-		font-size: 1em;
-
-	}
-
-	label {
-		width:100%
-	}
-
-
-	input[type=submit] {
-
-		flex:1;
-		text-align: center;
-		margin: 0 auto;
-		align-items: center;
-		margin-top: 10px;
-		width: 100%;
-		min-width: 6em;
-
-	}
-
-	input[type=text]:focus, input[type=password]:focus {
-		background-color: #ddd;
-		outline: none;
-	}
 
 `;
 

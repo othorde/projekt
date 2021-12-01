@@ -14,12 +14,15 @@ export default function MapContainer(props) {
 	const [coordinates, setCoordinates] = useState({start: {}, stop: {}})
 
 	useEffect(async() => {
-		setCoordinates({
-			startLat: parseFloat(props.showMapForUser.startCoord.lat),
-			startLng: parseFloat(props.showMapForUser.startCoord.lng),
-			stopLat: parseFloat(props.showMapForUser.stopCoord.lat),
-			stopLng: parseFloat(props.showMapForUser.stopCoord.lng),
-		})
+		function setCoord () {
+			setCoordinates({
+				startLat: parseFloat(props.showMapForUser.startCoord.lat),
+				startLng: parseFloat(props.showMapForUser.startCoord.lng),
+				stopLat: parseFloat(props.showMapForUser.stopCoord.lat),
+				stopLng: parseFloat(props.showMapForUser.stopCoord.lng),
+			})
+		}
+		setCoord()
 	}, [])
 
 

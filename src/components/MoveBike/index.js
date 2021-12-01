@@ -15,7 +15,7 @@ export default function MoveBike(props) {
        */
     async function getLoadStationsForMovingBike() {
         let city = await Api.getACity(props.city);
-        city[0].charging_posts.map(elem => {
+        city[0].charging_posts.forEach(elem => {
             setCharging_posts([elem])
         })
     }

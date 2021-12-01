@@ -22,9 +22,9 @@ const options = {
 export default function MapContainer(props) {
 	//hooks
 	const mapRef = useRef();
-	const { loadStationContent, err1, showInfoForLoadStation } = useLoadStationsToMap(mapRef, props);
-	const { cityContent, errorForCity, showInfoForCity } = useCityToMap(mapRef, props);
-	const { location, err } = useCurrentLocation(options);
+	const { loadStationContent, showInfoForLoadStation } = useLoadStationsToMap(mapRef, props);
+	const { cityContent, showInfoForCity } = useCityToMap(mapRef, props);
+	const { location } = useCurrentLocation(options);
 	const [scooter, setScooter] = useState([]);
 	const [PopupInfo, setPopupInfo] = useState(null);
 

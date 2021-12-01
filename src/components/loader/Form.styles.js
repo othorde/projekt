@@ -12,6 +12,9 @@ export const Wrapper = styled.div `
 	}
 `;
 
+
+
+
 export const FourOFour = styled.div `
 	.FourOFour {
 		margin: 100px auto;
@@ -25,7 +28,7 @@ export const FourOFour = styled.div `
 export const Loading = styled.div `
 .loader {
     margin: 200px auto;
-    font-size: 25px;
+    font-size: 25px; 
     width: 1em;
     height: 1em;
     border-radius: 50%;

@@ -1,71 +1,35 @@
-import React, {useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-
+import React from "react";
 //styles
 import { Wrapper, Content, SignIn, Delimiter, ScooterImg } from './Form.styles.js'
-import scooterPic from '../../images/scooter.png'
+import scooterPic from '../../images/scooter.png';
+import github from '../../images/github.png'
 
 //other
-import AppContext from '../../AppContext';
+
+require('dotenv').config()
 
 
 
 const FormLogin = () => {
-    let myContext = useContext(AppContext);
-    const [inputs, setInputs] = useState({});
-    const navigate = useNavigate();
-
-    const handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        setInputs(values => ({...values, [name]: value}))
-    }
-
-    const handleSubmit = async (event)  => {
-        // kontrollera inlogg, kolla med servern om användaruppg är ok
-        // nu sparar jag lösen som vnaligt lösen, fixa
-        localStorage.setItem('user', JSON.stringify(inputs));
-        myContext.toggleAuth(true);
-        navigate("/home")
-        event.preventDefault();
-    }
 
     return (
         <Wrapper>
             <Content>
-               <ScooterImg>
+                <ScooterImg>
                     <img src={scooterPic} alt="download google" width="95%" height="95%" />
-               </ScooterImg>
-
+                </ScooterImg>
                 <SignIn>
-                    <form onSubmit={handleSubmit} className = "register">
-                        <label >
-                        <input
-                            placeholder ="Email"
-                            type="text" 
-                            name="username"
-                            required
-                            value={inputs.username || ""} 
-                            onChange={handleChange}
-                        />
-                        </label>
-                        <label>
-                            <input 
-                            placeholder ="Lösenord"
-                            type="password"
-                            name="psw"
-                            required
-                            value={inputs.psw || ""} 
-                            onChange={handleChange}
-                            />
-                            </label>
-                            <input type="submit" value="Logga in" />
-                            <Delimiter></Delimiter>
-                            <input type="submit" value="Skapa konto" />
+                    <form className = "register">
+
+                        <img src={github} alt="download google" width="40%" height="40%" />
+                        <Delimiter/>
+
+                        <div>
+                            <a href={`https://github.com/login/oauth/authorize?scope=user&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&redirect_uri=http://localhost:3000/login/landingpage`}> Logga in via Github</a>
+                        </div>
                     </form>
 
                 </SignIn>
-
             </Content>
         </Wrapper>
     )

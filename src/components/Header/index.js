@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, Outlet, useNavigate  } from "react-router-dom";
 //style
 import { Container, Logga, Nav, SignOut, StyledMenu } from './Form.styles.js';
@@ -8,13 +8,30 @@ import Burger from "../BurgerMenu/index";
 import AppContext from "../../AppContext";
 
 const Header = () => {
+    let tag = localStorage.getItem("tag");
 
+
+    const [customer, setCustomer] = useState(Boolean);
+    const [admin, setAdmin] = useState(Boolean);
     const [open, setOpen] = useState(false);
     const myContext = useContext(AppContext);
     const auth = myContext.auth;
     let navigate = useNavigate();
-    let admin = true; /* byt ut denna sen, checka om det är admin vid inlogg */
-    let user = false; /* byt ut denna sen, checka om det är admin vid inlogg */
+
+    useEffect(() => {
+
+        function checkWhoLoggedIn(){
+            let tag = localStorage.getItem("tag");
+            if (tag == '"customer"' || myContext.user.tag == "customer") {
+                setCustomer(true);
+            } else if (tag == '"admin"' || myContext.user.tag == "admin") {
+                setAdmin(true);
+            }
+        }
+        checkWhoLoggedIn()
+
+    }, [tag])
+
 
     const handleSubmit = async (event)  => {
         myContext.toggleAuth(false);
@@ -29,16 +46,15 @@ const Header = () => {
         <Burger open={open} setOpen={setOpen}> </Burger>
         }
             <StyledMenu open={open}>
-                <Link to="/home" > Svenska Elsparkcyklar</Link> 
-
-                <Link to="/home" > Hem </Link> 
+                <Link to="/login/home" > Svenska Elsparkcyklar</Link> 
+                <Link to="/login/home" > Hem </Link> 
                 {admin &&
                 <>
                 <Link to="/admin" > Admin </Link> 
                 <Link to="/account" > Hantera kunder </Link>
                 </>
                 }
-                {user &&
+                {customer === true &&
                 <>
                 <Link to="/account" > Konto </Link>
                 <Link to="/history" > Historik </Link>
@@ -53,14 +69,14 @@ const Header = () => {
             {auth && (
             <>
                 <Nav>
-                    <Link to="/home" > Hem </Link> 
+                    <Link to="/login/home" > Hem </Link> 
                     {admin &&
                     <>
                     <Link to="/admin" > Admin </Link> 
                     <Link to="/account" > Hantera kunder </Link>
                     </>
                     }
-                    {user &&
+                    {customer === true &&
                     <>
                     <Link to="/account" > Konto </Link>
                     <Link to="/history" > Historik </Link>
