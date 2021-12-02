@@ -1,6 +1,6 @@
 import React, {useState } from "react";
 //components
-import Map from '../Map/index';
+import Map from '../../components/Map/index';
 
 //Styles
 import {

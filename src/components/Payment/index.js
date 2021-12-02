@@ -1,4 +1,4 @@
-import {React, useState} from "react";
+import {React, useState, useEffect} from "react";
 //components
 import Api from "../../api.js";
 //styles
@@ -13,8 +13,15 @@ const initialValue = {
 const Payment = (props) => {
     const [msgForUser, setMsgForUser] = useState(initialValue);
     const [onePayment, setOnePayment] = useState(0);
+    const [adminOrNot, setAdminOrNot] = useState(false);
 
-    // KOLLA vad meddelandena blir från backend
+    useEffect(() => {
+        if (props && props.customer) {
+            setAdminOrNot(true)
+        }
+    }, [props])
+
+
     const handleSubmit = async (event)  => {
         event.preventDefault();
 
@@ -26,16 +33,26 @@ const Payment = (props) => {
         let currentBalance;
         let newBalance;
 
-        if (onePayment && typeof(props.userDetails.data._id, String)) {
+        if (onePayment && props) {
 
-            currentBalance = props.userDetails.data.balance;
-            newBalance = parseInt(currentBalance) + parseInt(onePayment);
-            showMsgOnePay = true;
-            id = props.userDetails.data._id;
-            console.log(newBalance, "hääär")
+            if(!adminOrNot) {
+                id = props.userDetails.data._id;
+                currentBalance = props.userDetails.data.balance;
+                newBalance = parseInt(currentBalance) + parseInt(onePayment);
+                showMsgOnePay = true;
+            }
+            if(adminOrNot) { // om admin justerar blir det det belopp man skriver in.
+                id = props.customer.id; 
+                newBalance = onePayment; 
+            }
+
             if (newBalance) {
                 result = await Api.updateUserFunds(newBalance, id);
                 msg = "Din insättning har gått igenom";
+
+                if(adminOrNot) {
+                    msg = "Saldot är justerat";
+                }
             }
         } else {
             msg = "Något gick fel... testa igen senare (id)"
@@ -54,11 +71,11 @@ const Payment = (props) => {
 	return (
         <Content>
             <StylePayment>
-            {msgForUser.showMsgOnePay ? <p>{msgForUser.msg}</p> : (<p> {"Sätt in valfritt belopp "}</p>)}
+            {msgForUser.showMsgOnePay ? <p>{msgForUser.msg}</p> : (<p> {adminOrNot ? (`VARNING! \n Du justerar kunds saldo`) : ("Sätt in valfritt belopp ")}</p>)}
             <form onSubmit={handleSubmit} className = "register">
                 <label>
                 <input
-                    placeholder="Belopp att sätta in"
+                    placeholder={adminOrNot ? ("Nytt saldo") : ("Belopp att sätta in")}
                     type="number" 
                     name="onepayment"
                     required
@@ -67,7 +84,7 @@ const Payment = (props) => {
                 />
                 </label>
                 <Delimiter></Delimiter>
-                <input type="submit" value="Sätt in" />
+                <input type="submit" value={adminOrNot ? ("Ändra saldo") : ("Sätt in")} />
             </form>
             </StylePayment>
 

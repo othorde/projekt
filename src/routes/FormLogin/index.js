@@ -8,8 +8,6 @@ import github from '../../images/github.png'
 
 require('dotenv').config()
 
-
-
 const FormLogin = () => {
 
     return (
@@ -20,15 +18,12 @@ const FormLogin = () => {
                 </ScooterImg>
                 <SignIn>
                     <form className = "register">
-
                         <img src={github} alt="download google" width="40%" height="40%" />
                         <Delimiter/>
-
                         <div>
                             <a href={`https://github.com/login/oauth/authorize?scope=user&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&redirect_uri=http://localhost:3000/login/landingpage`}> Logga in via Github</a>
                         </div>
                     </form>
-
                 </SignIn>
             </Content>
         </Wrapper>

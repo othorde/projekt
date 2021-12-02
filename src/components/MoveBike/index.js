@@ -60,7 +60,6 @@ export default function MoveBike(props) {
                 let speed = "0";
                 let battery = "100";
                 let response = await Api.updateAScooter(props.id, speed, battery, newPosition, logg);
-                console.log(response)
                 
             }
         }

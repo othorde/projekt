@@ -5,7 +5,6 @@ import { Loading, FourOFour, Wrapper } from './Form.styles.js'
 
 
 const Loader = (props) => {
-    console.log(props)
     return (
         <>
         <Wrapper>

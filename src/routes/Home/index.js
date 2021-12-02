@@ -23,7 +23,7 @@ export default function Home() {
 	return (
 		<Container>
 			<WelcomeMessage> 
-				<h2>Välkommen {myContext.user.username}</h2>
+				<h2>Välkommen {myContext.userHook.value.user || myContext.local.user }</h2>
 				<p>Uppdatera denna texten med något vettigt</p>
 				<div class="container">
 					<img src={newBike} alt="New bike" width="100%" height="100%" /> 

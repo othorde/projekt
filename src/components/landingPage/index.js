@@ -53,17 +53,21 @@ export default function LandingPage() {
 						code: requestData.code,
 					})
 				})).json();
-
-			/* HÄR MÅSTE KOLLA SÅ ATT LOGGIN ÄR OK FRÅN VÅRT API SÄTT SEN ALLA PARAMETRAR TILL ANVÄNDAREN
-				FIXA SEN SÅ ATT HAN NAVIGERAS VIDARE TILL LOGINHOME
-			*/
-			// Om backend skickar användaruppg, be sen om att logga in användaren
+				/* loggar in genom api och sätter user värden i localStorage samt i hook */
 			if (res && res.login) {
 				result = await Api.logginUserViaGit(res.login)
 				if (result && result.data.type === "success") {
 					localStorage.clear();
 					localStorage.setItem('user', JSON.stringify(res.login));
 					localStorage.setItem('tag', JSON.stringify(result.data.user.tag));
+					localStorage.setItem('id', JSON.stringify(result.data.user.id));
+
+					const user = {
+						user: res.login,
+						tag: result.data.user.tag,
+						id: result.data.user.id,
+					}
+					myContext.setUserValues(user)
 					myContext.toggleAuth(true);
 					setLoggedInUser(true)
 				}
@@ -73,7 +77,6 @@ export default function LandingPage() {
 			}
 
 		} catch (error) {
-			console.log((error))
 			setLoggedInUser("Not OK")
 			myContext.toggleAuth(false);
 		}

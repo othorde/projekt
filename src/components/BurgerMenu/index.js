@@ -3,7 +3,6 @@ import { StyledBurger  } from './Form.styles.js';
 import { bool, func } from 'prop-types';
 
 const Burger = ({open, setOpen}) => {
-	console.log(open)
 	return (
     <StyledBurger open={open} onClick={() => setOpen(!open)}>
 		<div />

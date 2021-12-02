@@ -24,7 +24,7 @@ export default function User(props) {
         if (props.userDetails) {
             data = props.userDetails.data;
         }
-        if(data && data.trips) {
+        if(data && data.trips.length > 0) {
             let totalCost = 0;
             let firstTrip;
             let totalNumberOfTrips;
@@ -44,6 +44,15 @@ export default function User(props) {
                 firstTrip: firstTrip,
                 totalNumberOfTrips: totalNumberOfTrips,
                 lastTrip: lastTrip,
+                balance: data.balance
+            }));
+        } else if (data && data.trips.length === 0) {
+            setUserInfo(({
+                username: data.username,
+                totalCost: "0",
+                firstTrip: "Du har ännu inte gjort någon resa",
+                totalNumberOfTrips: "Du har ännu inte gjort någon resa ",
+                lastTrip: "Du har ännu inte gjort någon resa ",
                 balance: data.balance
             }));
         }

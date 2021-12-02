@@ -24,6 +24,16 @@ const Api =  {
         }
     },
 
+    getAllUsers: async() => {
+        try {
+            const endpoint = `${API_URL}/customers`;
+            let res = await (await fetch(endpoint)).json();
+            return res
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
     getACity: async (whatCity) => {
         console.log(whatCity)
         try {
@@ -112,7 +122,7 @@ const Api =  {
                 })).json();
             console.log(res.data.result)
             
-            if(res.data.result === "Object: 619b5e6fe8cf630e43c0aff4 updated") {
+            if(res.data.result === `Object: ${id} updated`) {
                 return true
             } else {
                 return false

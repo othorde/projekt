@@ -1,11 +1,12 @@
-import {React, useState, useEffect} from "react";
+import {React, useState, useEffect, useContext} from "react";
 
 //components
 import MapForUser from '../../components/MapForUser/index'
-import Api from "../../api";
 //styles
 import {Container, Main, UserHistory, MapContainer} from './Form.styles'
-
+//other
+import Api from "../../api";
+import Appcontext from '../../AppContext'
 
 const initialValue = {
     showMap: false,
@@ -13,24 +14,41 @@ const initialValue = {
     stopCoord: "",
 }
 
-const History  = ()  => {
+const History = (props)  => {
 
     const [userHistory, setUserHistory] = useState([]);
     const [showMapForUser, setShowMapForUser] = useState(initialValue);
+    const [message, setMessage] = useState("Loading.....");
+
+
+    const myContext = useContext(Appcontext)
+    let user = myContext.userHook;
     let data;
 
-    useEffect(() => {
 
+    useEffect(() => {
         async function fetchData() {
-            let res = await Api.getAUser("619b5e6fe8cf630e43c0aff4");
-            console.log(data)
-            if (res && res.data) {
-                data = res.data;
-                setUserHistory(data.trips)
+            if(user && user.value.id) {
+                let id = user.value.id;
+                /* Om props läs därifrån */
+                if(props && props.customer) {
+                    id = props.customer.id;
+                }
+                let res = await Api.getAUser(id);
+                if (res && res.data) {
+
+                    data = res.data;
+
+                    if(data.trips.length > 0) {
+                        setUserHistory(data.trips)
+                    } else {
+                        setMessage("Ingen resa gjord")
+                    }
+                }
             }
         }
         fetchData();
-    }, [])
+    }, [user])
 
 
     // räknar ut tiden som resan tog
@@ -56,11 +74,17 @@ const History  = ()  => {
     }
     /// visa karta
     function showMap(startCoord, stopCoord, e) {
+        let pageY = e.pageY;
+            if(props && props.customer) {
+                pageY = pageY - 200;
+            }
+
+
         setShowMapForUser({
             showMap: !showMapForUser.showMap,
             startCoord: startCoord,
             stopCoord: stopCoord,
-            pageY: e.pageY
+            pageY: pageY
         })
     }
 
@@ -73,7 +97,7 @@ const History  = ()  => {
             <Main showMap = {showMapForUser.showMap} >
                 <UserHistory> 
                     <table>
-                    <caption>Din Historik</caption>
+                    <caption> {props && props.customer ? (`${props.customer.username} Historik`) : (`Din Historik`)}</caption>
                     <thead>
                         <tr>
                             <th scope="col">Datum</th>
@@ -99,7 +123,7 @@ const History  = ()  => {
                         <td data-label="Kostnad">{elem.price}:- </td>
                         </tr>
                     )
-                    ) : (<p> Loading.... </p>)}
+                    ) : (<p style={{fontWeight: 900}}> {message} </p>)}
                     </tbody>
                     </table>
                 </UserHistory>

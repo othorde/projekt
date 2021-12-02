@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
 
+
+
+
 export const Container = styled.div `{
     min-height: 100vh;
     width: 100%; 
@@ -15,6 +18,8 @@ export const Container = styled.div `{
 		flex-direction: column;
 		width: 100%;
 		height: 85%;
+		padding-left: 1em;
+
 	}
 }
     
@@ -22,8 +27,8 @@ export const Container = styled.div `{
 
 export const Main = styled.div `{
 	display: flex;
-	flex-direction: column;
-	width: ${props => props.showMap ? "60%" : "100%"};
+	flex-direction: row;
+	width: "100%"};
 	transition: all 1s;
     background-color: #8CF3F3;
     padding-right:2em;
@@ -31,46 +36,82 @@ export const Main = styled.div `{
 	display: inline-block;
 	
 	@media (max-width: 1000px) {
-		flex-direction: column;
+		flex-direction: row;
 		width: 90%;
 		height: 90%;
 		padding-right:0em;
+		padding-left:0em;
 
 	}
 }
 `
 
-export const MapContainer = styled.div `{
-    
+export const StylePayment = styled.div `{
+	
+	
+	@media (max-width: 600px) {
+		margin:0;
+		padding:0;
+		position: absolute;
+		height: 100%;
+		max-height: 25em;
+		width: 100%;
+		min-width: 250px;
+		background:#8CF3F3;
+		border: 2px solid black;
+		z-index: 1000;
+		top: calc(${props => props.pageY}px + -100px );
+
+
+	}
+}
+`
+
+export const StyleHistory = styled.div `{
+	
+	
+	@media (max-width: 600px) {
+		.div {
+			margin:0;
+			padding:0;
+			position: absolute;
+			top: 100px;
+			max-height: 25em;
+			width: 100%;
+			min-width: 250px;
+			height: 100%;
+			background:#8CF3F3;
+			border: 2px solid black;
+			z-index: 1000;
+		}
+		
+	}
+}
+`
+
+export const ForwardBackwards = styled.div `{
+	
 	display: flex;
-	text-align: center;
-	flex-direction: column;
-	width: ${props => props.showMap ? "40%":"0%"};
-	transition: all 1s;
-	max-height: 600px;
-	padding-left:1em;
-	padding-right:1em;
-	margin 0 auto;
+	min-width: 220px;
 
-	@media screen and (max-width: 1000px) {
-		position: absolute;
-		top: calc(${props => props.pageY}px + 60px);
-		width: 80%;
-		padding-left:0em;
+	.back {
+		margin-right:auto;
+		:hover {
+			color:#F47BA6;
+		}
+
 	}
+	.forward {
+		margin-left:auto;
+		:hover {
+			color:#F47BA6;
+		}
 
-	@media screen and (max-width: 700px) {
-		position: absolute;
-		top: calc(${props => props.pageY}px + 230px);
-		max-height: 200px;
-		width: ${props => !props.showMap ? "0px" : "75%"};
-		padding-left:0em;
+
 	}
 }
-
 `
-
-export const UserHistory = styled.div `
+export const UserInfo = styled.div `
 
 	background-color: #f9f9f9;
 	min-width: 160px;
@@ -84,6 +125,7 @@ export const UserHistory = styled.div `
 	overflow: hidden;
 	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 	background-color: #C6F4F4;
+
 
     button {
         background:#8CF3F3;
@@ -102,6 +144,8 @@ export const UserHistory = styled.div `
         transition: all 0.5s;
         cursor: pointer;
         margin: 5px;
+		width: 90%;
+		font-size: clamp(0.8rem, 1.1vw, 1rem);
       }
       
       button span {
@@ -199,7 +243,13 @@ export const UserHistory = styled.div `
         background: #ccc;
     }
 	
-	@media screen and (max-width: 700px) {
+	@media screen and (max-width: 1000px) {
+		button {
+			font-size: 1rem;
+			width: 50%;	
+			max-width: 10em;
+
+		}
 		table {
 			border: 0;
 		}

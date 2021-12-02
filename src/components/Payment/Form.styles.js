@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 
 export const Content = styled.div `
-   
+
     padding:2em;
     border: 2px;
     min-width:14em;
@@ -45,6 +45,7 @@ export const StylePayment = styled.div `
 		flex-direction: column;
 	}
 
+	
     input {
         width: 100%;
         min-width: 10em;
@@ -58,11 +59,10 @@ export const StylePayment = styled.div `
 
 		@media (max-width: 1000px) {
 			font-size: 0.9em;
+			
 		}
 		@media (max-width: 700px) {
 			font-size: 1em;
-		
-
 		}
     }
 
