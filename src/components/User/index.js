@@ -20,7 +20,6 @@ export default function User(props) {
 
     useEffect(() => {
 
-
         if (props.userDetails) {
             data = props.userDetails.data;
         }

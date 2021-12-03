@@ -4,6 +4,11 @@ import {React} from "react";
 import {PopUpStyle} from './Form.styles'
 import MoveBike from "../MoveBike";
 
+/* Denna komponent visar i princip bara upp allt innehåll som skickas till den 
+   genom onclickevent på ikoner som finns på kartan. Informationen skickas hit 
+   som sedan populerar tabellen. Props skickas vidare till movebike om admin
+   vill förflytta cykel
+*/
 export default function PopUp(props) {
     let content;
     let whatToShow;
@@ -12,7 +17,7 @@ export default function PopUp(props) {
         content = props.PopupInfo.content
         whatToShow = props.PopupInfo.whatToShow
     }
-
+    console.log(content, "HÄR")
 	return (
 		<PopUpStyle >
         { whatToShow === "Scooter" ? (
@@ -22,6 +27,8 @@ export default function PopUp(props) {
             <thead>
                 <tr>
                     <th scope="col">Scooter ID</th>
+                    <th scope="col">Aktiv</th>
+                    <th scope="col">Användare</th>
                     <th scope="col">Batteri</th>
                     <th scope="col">Stad</th>
                     <th scope="col">Latitude</th>
@@ -34,6 +41,8 @@ export default function PopUp(props) {
             <tbody>
                 <tr>
                 <td data-label="Scooter ID"> {content._id} </td>
+                <td data-label="Aktiv"> {content.is_active === true ? "I användning" : "Används ej"} </td>
+                <td data-label="Användare"> {content.active_user === "null" ? "Ingen användare" : content.active_user} </td>
                 <td data-label="Batteri"> {content.battery} </td>
                 <td data-label="Stad">{content.city_location} </td>
                 <td data-label="Latitude"> {content.position.lat} </td>
@@ -43,13 +52,14 @@ export default function PopUp(props) {
                 </tr>
             </tbody>
             </table>
-                {console.log("ta bort sen")}
             <MoveBike 
                 id = {content._id}
                 city = {content.city_location}
                 position = {content.position}
                 battery = {content.battery}
                 speed = {content.speed}
+                is_active = {content.is_active}
+                active_user = {content.active_user}
                 >
             </MoveBike>
             </>

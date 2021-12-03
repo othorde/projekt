@@ -82,7 +82,7 @@ const Api =  {
         }
     },
 
-    updateAScooter: async (id, speed, battery, newPosition, logg) => {
+    updateAScooter: async (id, speed, battery, newPosition, active_user, is_active) => {
         try {
             const endpoint = `${API_URL}/scooter`;
 
@@ -92,20 +92,59 @@ const Api =  {
                     body: JSON.stringify({
                         _id: id,
                         speed: speed,
-                        battery: battery
-                        // position: newPosition,
-                        // logg: logg
+                        battery: battery,
+                        lat: newPosition.lat,
+                        lng: newPosition.lng,
                     })
                     })).json();
-            console.log(res)
             return res
         } catch (error) {
             console.log((error))
         }
 	},
 
-    // EJ Gjorde som den ska, bara dummy
-    // Samma med updateUserSubscription måste skapas
+    updateAScootersUser: async (id) => {
+        try {
+            const endpoint = `${API_URL}/scooter/setuser`;
+
+            let res = await (
+                await fetch(endpoint, {
+                    ...defaultConfigPut,
+                    body: JSON.stringify({
+                        _id: id,
+                    })
+                    })).json();
+            return res
+        } catch (error) {
+            console.log((error))
+        }
+	},
+
+
+    updateAScootersLogg: async (varForUpdate) => {
+        try {
+            const endpoint = `${API_URL}/scooter/insertLogg`;
+            let res = await (
+                await fetch(endpoint, {
+                    ...defaultConfigPut,
+                    body: JSON.stringify({
+                        _id: varForUpdate.id,
+                        active_user: varForUpdate.active_user,
+                        event: varForUpdate.event,
+                        start_lat: varForUpdate.start_lat,
+                        start_lng: varForUpdate.start_lng,
+                        start_time: varForUpdate.time,
+                        end_lat: varForUpdate.end_lat,
+                        end_lng: varForUpdate.end_lng,
+                        end_time: varForUpdate.time,
+                    })
+                    })).json();
+            return res
+        } catch (error) {
+            console.log((error))
+        }
+	},
+
 
     updateUserFunds: async (addToBalance, id) => {
         try {

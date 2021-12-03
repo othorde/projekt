@@ -11,14 +11,18 @@ import {Container,StyleMap, Main} from './Form.styles'
 import bikeimg from '../../images/bike.png'
 import personimg from '../../images/person.png'
 
-// options till userLocation
+// options till userLocation hur länge den ska vara
 const options = {
 	enableHighAccuracy: true,
 	timeout: 1000 * 60 * 1, // 1 min
 	maximumAge: 1000 * 60 * 60, // 1 hour
 };
 
-
+/* Denna komponent är kartan till admin. Den kan nyttjas via mapref.
+   Populerar kartan genom att hämta från api. Scootrar hämtas direkt
+   från props. För att kunna lägga till polygons hämtas dessa med egenskapade
+   Hooks , se de komponenter som börjar med use.
+*/
 export default function MapContainer(props) {
 	//hooks
 	const mapRef = useRef();
@@ -44,7 +48,7 @@ export default function MapContainer(props) {
 			showInfoForLoadStation(false)
 			setPopupInfo({content: scooter.scooter, whatToShow: "Scooter"});
 		}
-	},[scooter.showScooter])
+	},[scooter.showScooter, scooter, setScooter])
 
 
 	useEffect(() => {
@@ -70,8 +74,11 @@ export default function MapContainer(props) {
 		}
 	},[cityContent.showLoadCitys])
 
+
+
 	return (
 		<Container>
+			VISA LOGGEN
 			<Main>
 			<StyleMap>
 				{/*KARTA*/}
@@ -86,7 +93,6 @@ export default function MapContainer(props) {
 					}}
 				>
 					{/*1 Person*/}
-
 					<Marker 
 						key={1} 
 						lat={location.latitude} 
@@ -96,8 +102,8 @@ export default function MapContainer(props) {
 							<img className = "crime-marker" src={personimg} alt="person" />
 						</div>	
 					</Marker>
-					{/*Alla cyklar*/}
 
+					{/*Alla scootrar*/}
 					{loadScooters.loadScooters && (
 					ScooterArray.map(scooter => {
 						return (
@@ -117,7 +123,7 @@ export default function MapContainer(props) {
 			</StyleMap>
 			</Main>
 
-			{/*POPUP*/}
+			{/*POPUP fönster*/}
 			{scooter || cityContent || loadStationContent ? (
 				<PopUp key={"popupkey"} PopupInfo={PopupInfo}></PopUp>
 			): (null) }

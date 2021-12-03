@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, {useState, useEffect} from "react";
 //components
 import Map from '../../components/Map/index';
 
@@ -33,6 +33,27 @@ const Admin = () => {
 
 	// hämtar ju alla scootrar här varje gång man trycker.
 	// Kanske onödigt? Samtidigt vill man få det uppdaterat?
+
+
+	// useEffect(() => {
+	// 	const interval = setInterval (async () => {
+	// 		try {
+	// 			let res = await Api.getAllScooters();  
+	// 			setIfToShowScooter(prevState => ({
+	// 				loadScooters: !prevState.loadScooters,
+	// 				content: res
+	// 			}));
+	// 		} catch (error) {
+	// 			console.log(error)
+	// 		}
+	// 		console.log("HEJ")
+	// 	}, 10000);
+	// 	return () => clearInterval(interval);
+	// 	}, []);
+	
+
+
+
 	const getScooters = async() => {
         try {
             let res = await Api.getAllScooters();  
@@ -63,12 +84,11 @@ return (
 			<StyledBtn onClick= {getScooters}> Cyklar </StyledBtn>
 			<StyledBtn onClick= {getCitys}> Städer </StyledBtn>
 			<StyledBtn onClick= {getLoadStations}> Laddstationer </StyledBtn>
-			<StyledBtn onClick= {null}> Accepterade platser </StyledBtn>
+			<StyledBtn onClick= {setInterval}> Visa live </StyledBtn>
 		</Nav>
 		<MapContainer>
 			<Map ifToShowScooter={ifToShowScooter} ifToShowCity={ifToShowCity} ifToShowLoadStations={ifToShowLoadStations} ></Map>
 		</MapContainer>
-		<ShowLogg>VISA LOGGEN </ShowLogg>
 	</Container>
   )
 }
