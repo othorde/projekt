@@ -11,7 +11,6 @@ const useLoadCitysToMap = (mapRef, props, changePopUpInfo) => {
     const[cityContent, setCityContent] = useState(initalValue); // håller content för onClick
     //sparar res i state, så slipper hämta från servern hela tiden. Kanske ändra om vi ska köra nån realtime
     const[resFromApi, setResFromApi] = useState(null); 
-    const [errorForCity, setErrorForCity] = useState();
     
     const handleSucces = (res) => {
     var cityname;
@@ -44,7 +43,9 @@ const useLoadCitysToMap = (mapRef, props, changePopUpInfo) => {
         });
 
         cityname.setMap(map);
-        setcityObject(oldArray => [...oldArray, cityname]);
+        var holdArr = cityObject;
+        holdArr.push(cityname);
+        setcityObject(holdArr);
 
         })
     };
@@ -53,9 +54,7 @@ const useLoadCitysToMap = (mapRef, props, changePopUpInfo) => {
         setCityContent({showLoadCitys: trueOrFalse });
 	}
 
-    const handleError = (error) => {
-        setErrorForCity(error.message);
-    };
+
 
     // tar bort loadinstations från kartan, Ska man rensa i states? Isf kommer backend att kallas.
     // Kommer behövas om man ska få realtiduppdateringar, typ timer
@@ -84,13 +83,12 @@ const useLoadCitysToMap = (mapRef, props, changePopUpInfo) => {
             } else if (resFromApi !== null) {
                 handleSucces(resFromApi);
             } else {
-                handleError("Error")
-                return;
+                console.log("Error")
             }
         }
         fetchData();
     },[mapRef, props.ifToShowCity.loadCity])
-    return {cityContent, errorForCity, showInfoForCity};
+    return {cityContent, showInfoForCity};
 };
 export default useLoadCitysToMap;
 

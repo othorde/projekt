@@ -6,7 +6,8 @@ export const Container = styled.div `
 	background-color: #8CF3F3;
     margin 0 auto;
     min-height: 100vh;
-    width: 100%; 
+    width: 100%;
+	
 
 	/* ipads */
     @media (max-width: 700px) {

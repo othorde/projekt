@@ -6,7 +6,6 @@ export const Delimiter = styled.div `
 	width: 100%;
     height: 2px;
 	margin: 20px 16px;
-    
 `; 
 
 
@@ -24,57 +23,34 @@ export const Content = styled.div `
     border-top: 2px solid black;
 `;
 
-export const About = styled.div `
+export const FooterLink = styled.div `
     flex:1;
-    font-size: 1.1em;
+    font-size: 1.3em;
+    font-weight: bold;
     text-align: center;
     margin: auto;
     margin-bottom: 2.5em;
-
     width: 33%;
-    a {
-        text-decoration: none;
-        color: #f1f1f1;
-    }
-    a:hover {
-        color: #ffd343;
-    }
-
-`;
-
-export const Project = styled.div `
-    flex:1;
-    font-size: 1.1em;
-    width: 33%;
-    text-align: center;
-    margin: auto;
-    margin-bottom: 2.5em;
+    
 
     a {
         text-decoration: none;
         color: #f1f1f1;
+        transition: color 0.3s linear;
+
+        .Av { 
+            display: none;
+            transition: color 0.3s linear;
+        }
     }
     a:hover {
-        color: #ffd343;
+        color: #F47BA6;
+
+        .Oss { 
+            display: none;
+        }
+        .Av { display: inline;
+        }
     }
 
 `;
-
-export const Us = styled.div `
-    flex:1;
-    font-size: 1.1em;
-    width: 33%;
-    text-align: center;
-    margin: auto;
-    margin-bottom: 2.5em;
-
-    a {
-        text-decoration: none;
-        color: #f1f1f1;
-    }
-    a:hover {
-        color: #ffd343;
-    }
-
-`;
-

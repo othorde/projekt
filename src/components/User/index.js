@@ -69,7 +69,6 @@ export default function User(props) {
                         <th scope="col">Första resan</th>
                         <th scope="col">Senaste resan</th>
                         <th scope="col">Antal resor</th>
-                        <th scope="col">Total kostnad för resor</th>
                         <th scope="col">På kontot</th>
                     </tr>
                 </thead>
@@ -79,7 +78,6 @@ export default function User(props) {
                     <td data-label="Första resan"> {userInfo.firstTrip} </td>
                     <td data-label="Senaste Resan"> {userInfo.lastTrip} </td>
                     <td data-label="Antal resor">{userInfo.totalNumberOfTrips} </td>
-                    <td data-label="Total kostnad för resor">{userInfo.totalCost}:- </td>
                     <td data-label="På konton">{userInfo.balance}:- </td>
                     </tr>
                 </tbody>

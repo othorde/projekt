@@ -9,7 +9,6 @@ let initalValue = {
 const useLoadStationToMap = (mapRef, props) => {
     const[loadStationObject, setLoadStationObject] = useState([]); // håller objektet så att man kan ta bort det från kartan
     const[loadStationContent, setLoadStationContent] = useState(initalValue); // håller content för onClick
-    // sparar res i state, så slipper hämta från servern hela tiden. Kanske ändra om vi ska köra nån realtime
     const[resFromApi, setResFromApi] = useState(null); 
     const [error1, setError1] = useState();
     const handleSucces = (res) => {
@@ -20,10 +19,11 @@ const useLoadStationToMap = (mapRef, props) => {
     res.forEach(cityCoords => {
         cityCoords.charging_posts.forEach(loadStations => {         
             let polyGon = 
-                ([cityCoords.position.polygonePart1,
-                    cityCoords.position.polygonePart2,
-                    cityCoords.position.polygonePart3,
-                    cityCoords.position.polygonePart4
+                ([
+                    loadStations.position.polygonePart1,
+                    loadStations.position.polygonePart2,
+                    loadStations.position.polygonePart3,
+                    loadStations.position.polygonePart4,
                 ]);
             loadStationName = new maps.Polygon({
                 paths: polyGon,
@@ -40,9 +40,14 @@ const useLoadStationToMap = (mapRef, props) => {
                     loadStations
                 }));
             });
+        /* Kopierar tidigare state + lägger in nytt element
+        sedan sätter state = holdArr => arbetar ej direkt mot state */
         loadStationName.setMap(map);
-        setLoadStationObject(oldArray => [...oldArray, loadStationName]);
+        var holdArr = loadStationObject;
+        holdArr.push(loadStationName);
+        setLoadStationObject(holdArr);
         })
+
     })
 };
 
@@ -60,6 +65,7 @@ const useLoadStationToMap = (mapRef, props) => {
 	function removeLoadingStationsFromMap() { 
 		if (loadStationObject !== null) {
 			loadStationObject.forEach(loadStation => {
+                console.log(loadStationObject)
 				loadStation.setMap(null);
 			})
 		}
@@ -84,7 +90,6 @@ const useLoadStationToMap = (mapRef, props) => {
             handleError("Error")
             return;
         }
-        // geolocation.getCurrentPosition(handleSucces, handleError, options)
     },[mapRef, props.ifToShowLoadStations.loadStation])
     
     return {loadStationObject, loadStationContent, error1, showInfoForLoadStation};

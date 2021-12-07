@@ -21,7 +21,8 @@ export const UserInfoContainer = styled.div `
 	display: flex;
 	flex-direction: column;
 	width: 60%;
-	padding: 2em;
+	padding-left: 4em;
+	padding-top: 4em;
 
     @media (max-width: 700px) {
         flex-direction: column;

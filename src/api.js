@@ -10,9 +10,7 @@ const defaultConfig = {
 	},
 };
 
-
 const Api =  {
-
 
     getAUser: async(id) => {
         try {
@@ -171,6 +169,31 @@ const Api =  {
         }
 	},
 
+
+    updateZone: async (city, amount_of_bikes, color) => {
+     
+        try {
+            const endpoint = `${API_URL}/cities/posts/update`;
+            let res;
+            res = await(
+                await fetch(endpoint, {
+                    ...defaultConfigPut,
+                    body: JSON.stringify({
+                        city: city,
+                        amount_of_bikes: amount_of_bikes,
+                        color: color
+                    })
+                })).json();
+            
+            if(res.data.result === `Object: undefined updated`) {
+                return true
+            } else {
+                return false
+            }
+        } catch (error) {
+            console.log((error))
+        }
+	},
 }
 
 export default Api

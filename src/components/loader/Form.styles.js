@@ -13,8 +13,6 @@ export const Wrapper = styled.div `
 `;
 
 
-
-
 export const FourOFour = styled.div `
 	.FourOFour {
 		margin: 100px auto;

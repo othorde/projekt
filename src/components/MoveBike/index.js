@@ -9,49 +9,38 @@ export default function MoveBike(props) {
     const [moveBikeToColor, setMoveBikeToColor] = useState({})
     const [message, setMessage] = useState("")
 
-    /* Får vilken färgkod som scootern ska skickas till
-        kontrollerar med färger för staden
-        räknar ut nya koordinater. random plats inom zonen.
-        Uppdaterar, antal cyklar i nuvarande zon samt ny zon
-    */
 
-
-    /* funktionen hämtar den stad där cykeln befinner sig 
-       loopar igenom och sparar position och färgkod för laddningsstationen 
-       Kontrollera denna när vi har fler laddningsstationer
-       Bör va graphQl sen
-    */
-
+    /* hämtar alla laddstationer sparar i state */
     async function getLoadStationsForMovingBike() {
-        let city = await Api.getACity(props.city);
-        city[0].charging_posts.forEach(elem => {
-            setCharging_posts([elem])
-        })
+        let city = await Api.getACity(props.city);    
+        setCharging_posts(city[0].charging_posts)
     }
-
+    /* När admin förflyttar cykel */
     const handleSubmit = async () => {
+        let newPosition = calculateScooterNewPosition()
 
-        if (moveBikeToColor !== "noValue") {
-            updateScooter();
-            updateScootersUser();
-            updateScooterLogg();
-            // updateScooterZones();
+        if (moveBikeToColor === '') {
+            setMessage("Välj först vart du vill förflytta cykeln")
+        } else {
 
+            if ( newPosition ) {
+                updateScooter(newPosition);
+                updateScootersUser();
+                updateScooterLogg(newPosition);
+                updateZon();
+            }
+          
         }
     }
 
-    async function updateScooter() {
+    async function updateScooter(newPosition) {
 
         var position = props.position;
-        var newPosition;
         var speed = "0";
         var battery = "100";
         var response;
-        charging_posts.filter(elem=> elem.color.includes(moveBikeToColor) ? newPosition = elem.position : position = null)
-        newPosition = calculateScooterNewPosition()
         if (position !== null) {
             response = await Api.updateAScooter(props.id, speed, battery, newPosition); //uppdaterar scootern
-            console.log(response)
             if(response === `Object: ${props.id} updated`) {
                 return true;
             }
@@ -61,18 +50,16 @@ export default function MoveBike(props) {
     async function updateScootersUser() {
 
         var response = await Api.updateAScootersUser(props.id);  //uppdaterar scooterns användare
-        console.log(response)
         if(response === `Object: ${props.id} updated`) {
             return true;
         }
     }
 
-    async function updateScooterLogg() {
+    async function updateScooterLogg(newPosition) {
 
         var active_user = "null";
-        var event = getEventString();
-        var {time, dateTime} = getTime();
-        var newPosition = calculateScooterNewPosition();
+        var event = getEventString(newPosition);
+        var {time} = getTime();
 
         const varForUpdate = {
             id: props.id,
@@ -86,7 +73,6 @@ export default function MoveBike(props) {
         }
         var response = await Api.updateAScootersLogg(varForUpdate);
         if(response && response.data.result === `Object: ${props.id} updated`) {
-            console.log("HÄÄÄÄÄÄÄR")
             setMessage("Cykel förflyttad, logg uppdaterad")
         } else {
             setMessage("Något gick fel")
@@ -95,19 +81,24 @@ export default function MoveBike(props) {
 
     /* UPPDATERA ZONER */
 
-    /* Tid för eventet (loggen) */
+    /* Tid för eventet (loggen) +1 i månad, så blir det rätt
+        Lägger även till en nolla om minuter är under 10. 
+        annars blir det 18.5 istför 18.05
+    */
     function getTime() {
         var today = new Date();
-        var date = today.getFullYear()+'-'+(today.getMonth())+'-'+today.getDate();
-        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var min = today.getMinutes();
+        if(min < 10) {
+            min = `0${min}`
+        }
+        var time = today.getHours() + ":" + min;
         var dateTime = date+' '+time;
         return {time, dateTime}
     }
 
     /* String för event (loggen) */
-    function getEventString() {
-
-        var newPosition = calculateScooterNewPosition();
+    function getEventString(newPosition) {
         var {time, dateTime} = getTime();
         var movedBy = myContext.userHook.value.user;
         var event = `${dateTime} \n 
@@ -121,16 +112,43 @@ export default function MoveBike(props) {
     }
 
     /* Räknar ut ny position inom den zon som scootern ska flyttas till
-        Kontrollera denna uträkningen */
+        Om den nya zonen ej är inom området så anropas denna funktionen igen
+        för att hitta en ny position som stämmer. Matten är inte exakt.
+    */
     function calculateScooterNewPosition() {
-        var newPosition;
-        var position = props.position;
+        let newPosition;
+        let position = props.position;
+        var insidePoly = false;
+
         charging_posts.filter(elem=> elem.color.includes(moveBikeToColor) ? newPosition = elem.position : position = null)
         let lat = newPosition.polygonePart1.lat + (Math.random() * (newPosition.polygonePart4.lat - newPosition.polygonePart1.lat)); // lat = y
         let lng = newPosition.polygonePart1.lng + (Math.random() * (newPosition.polygonePart4.lng - newPosition.polygonePart1.lng)); //lng = x
+        var polygone= [
+            [newPosition.polygonePart1.lat, newPosition.polygonePart1.lng],
+            [newPosition.polygonePart2.lat, newPosition.polygonePart2.lng],
+            [newPosition.polygonePart3.lat, newPosition.polygonePart3.lng],
+            [newPosition.polygonePart4.lat, newPosition.polygonePart4.lng]
+        ]
         newPosition = {lat: lat, lng: lng}
+
+        var newPositionArr = [newPosition.lat, newPosition.lng]
+        var pointInPolygon = require('point-in-polygon');
+        var insidePoly = pointInPolygon(newPositionArr, polygone);
+
+        if(!insidePoly) {
+            calculateScooterNewPosition()
+        }
         return newPosition
     }
+
+   
+
+
+    /* uppdaterar zonen */
+    async function updateZon() {
+        await Api.updateZone(props.city, 1, moveBikeToColor);
+    }
+
 
     useEffect(() => {
         setTimeout(() => setMessage(""), 5000);
@@ -145,7 +163,7 @@ export default function MoveBike(props) {
             }}
             value = {moveBikeToColor}
             >
-            <option value={'noValue'}>-- Välj vart cykeln ska förflyttas --</option>
+            <option value={''}>-- Välj vart cykeln ska förflyttas --</option>
             {charging_posts.map(elem => elem !== null  &&
                 <option key={elem.color}value={elem.color}>
                 {elem.color + " zon"}

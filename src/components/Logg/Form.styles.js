@@ -1,46 +1,47 @@
 import styled from "styled-components";
 
-export const PopUpStyle = styled.div `{
 
-    background-color: #C6F4F4;
+
+
+export const StyleLogg = styled.div `{
+	display: flex;
+	width: 100px;
+	flex-direction: column;
+
 	height: 100%;
-	width: 100%;
+	width: 10em;
+	max-width: 20em;
     text-align: left;
     box-shadow: 0 10 20px rgb(0 0 0 / 15%);
-    padding: 1em;
-    margin: 3em 0em 1em 0em;
-	border: 2px solid black;
-    
-    div {
-        
-        display: flex;
-        flex-direction: column;
+    margin-left: 2em;
+	overflow-y: scroll;
 
-        
-    }
+	@media screen and (max-width: 1000px) { 
+		width: 95%;
+		max-width: none;
+	}
 
-    table {
+	table {
 		position: relative;
 		border: 1px solid #ccc;
 		border-collapse: collapse;
 		padding: 0;
 		width: 100%;
 		table-layout: fixed;
-		
 	}
 	
 	table caption {
 		font-size: 1.5em;
 		margin: .5em 0 .75em;
 		font-weight: bold;
-
 	}
+
 	thead tr{
 		color: #ffffff;
 		text-aling: left;
 		font-weight:bold;
-		
 	}
+
 	th {
 		background-color: #1f2a32;
 	}
@@ -75,16 +76,7 @@ export const PopUpStyle = styled.div `{
     }
 	
 	
-	@media (max-width: 720px) {
-		flex-direction: column;
-		width: 100%;
-		height: 100%;
-		padding: 0em;
-    }
-
-	@media screen and (max-width: 1800px) {
-		flex-direction: column;
-		width: 100%;
+		width: 40%;
 		height: 100%;
 	    padding: 0em;
 
@@ -135,47 +127,8 @@ export const PopUpStyle = styled.div `{
 		table td:last-child {
 			border-bottom: 0;
 		}
-	}   
+	}  
+
 
 }
-
-
-button {
-    margin-bottom: 1em;
-	width: 100%;
-	max-width: 15em;
-	background: #292929;
-	color: #F1F1F1;
-	border: 1px solid #ffd343;
-	:hover {
-		background: #ffd343;
-		color: black;
-		border: 1px solid black;
-	}
-
-	@media screen and (max-width: 1800px) {
-		margin: 1em;
-	}
-}
-
-select {
-    margin: 2em 1em 2em 0em;
-    padding: 0.7em;
-	width: 100%;
-	max-width: 20em;
-	font-size: 0.9em;
-	@media screen and (max-width: 1800px) {
-		margin: 1em;
-	}
-
-}
-p {
-    padding: 0em;
-    margin: 0em;
-    display: inline;
-    font-size: 1.2em;
-    font-weight: bold;
-}
-
-}
-`;
+`

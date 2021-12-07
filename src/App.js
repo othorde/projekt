@@ -13,7 +13,7 @@ import Welcome from './routes/welcome/welcome';
 import Home from './routes/Home';
 import History from './routes/History';
 import Customers from './routes/Customers';
-
+import Logg from './components/Logg';
 
 
 export default function App() {
@@ -66,7 +66,8 @@ export default function App() {
 		<Route path="account" element={ <PrivateRoute><Account/> </PrivateRoute>} />
 		<Route path="history" element={ <PrivateRoute> <History/> </PrivateRoute>} />
 		<Route path="customers" element={ <PrivateRoute> <Customers/> </PrivateRoute>} />
-		<Route path="admin" element={<PrivateRoute> <Admin/> </PrivateRoute>} >
+		<Route path="admin" element={<PrivateRoute> <Admin/> </PrivateRoute>} />
+		<Route path="testing" element={<Logg/>} >
 		</Route>
 		<Route path="*" element={ <Loader/>}/>
 	</Routes>

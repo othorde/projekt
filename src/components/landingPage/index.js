@@ -98,7 +98,7 @@ export default function LandingPage() {
 
   return (
     <Wrapper>
-		{!loggedInUser == "Not OK" ? 
+		{!loggedInUser === "Not OK" ? 
 		<p>Det gick inte att logga in just nu</p> 
 		: (
         	<Loader></Loader>

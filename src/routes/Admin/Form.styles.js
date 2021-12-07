@@ -20,11 +20,14 @@ export const Nav = styled.div `
 	display: flex;
 	flex-direction: column;
 	width: 10%;
-	padding: 1em 1em 0em 1em;
+	padding: 2em 1em 0em 1em;
     flex: 1 1 auto;
+	max-width: 175px;
+	min-width: 175px;
 
 
 	@media screen and (max-width: 720px) {
+		
 		width: 85%;
 		border: none;
 		margin: 1em 2em 2em 1em;
@@ -33,23 +36,6 @@ export const Nav = styled.div `
 	}
 `;
 
-export const ShowLogg = styled.div `
-	display: flex;
-	flex-direction: column;
-	width: 20%;
-	padding: 2em 2em;
-	padding-bottom: 8em;
-    flex: 1 1 auto;
-	padding: 2em;
-	background-color: #7ecfcf;
-
-	@media screen and (max-width: 720px) {
-		width: 91%;
-		border: 2px solid black;
-		margin: 1em 2em 2em 1em;
-		height: 100%;
-	}
-`;
 
 export const MapContainer = styled.div `
 	display: flex;
@@ -64,7 +50,7 @@ export const MapContainer = styled.div `
 	@media screen and (max-width: 720px) {
 		flex-direction: row;
 		padding: 1em;
-		width: 100%;
+		width: 95%;
 		height: 100%;
 		min-width: 250px;
 	}
@@ -73,27 +59,28 @@ export const MapContainer = styled.div `
 
 export const StyledBtn = styled.button `
 	display: flex;
-	border: 1px solid #ffd343;
+	border: 1px solid transparent;
 	border-radius: 4px;
 	background: #292929;
 	color: #F1F1F1;
 	font-weight: 600;
-	font-size: clamp(0.7em, 1vw, 1.2vw);
+	font-size: 1em;
 	text-transform: none;
 	padding: 0.75 rem 1.25 rem;
-	margin: 0 0 0.5
-	rem 0;
+	margin: 0.5 0.5 0.5;
 	vertical-align: middle;
-	text-align: center;
+	text-align: left;
 	cursor: pointer;
 	text-decoration: none;
 	line-height: 1;
-	max-width: 9em;
-	min-width: 100px;
+	max-width: 10em;
+	min-width: 10em;
+	width: 100%;
 
 	@media screen and (max-width: 720px) {
 		font-size: 1em;
-		font-size: clamp(1em, 1.3em, 1.4vw);
+		font-size: clamp(1em, 1.3em, 1.3vw);
+		
 	}
 
 	:hover {

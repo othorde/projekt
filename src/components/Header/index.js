@@ -23,9 +23,9 @@ const Header = () => {
 
         function checkWhoLoggedIn(){
             let tag = localStorage.getItem("tag");
-            if (tag == '"customer"' || myContext.userLocal.tag == "customer") {
+            if (tag === '"customer"' || myContext.userLocal.tag === "customer") {
                 setCustomer(true);
-            } else if (tag == '"admin"' || myContext.userLocal.tag == "admin") {
+            } else if (tag === '"admin"' || myContext.userLocal.tag === "admin") {
                 setAdmin(true);
             }
         }

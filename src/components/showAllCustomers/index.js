@@ -13,8 +13,6 @@ import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 //other
 import Api from "../../api";
 
-
-
 const initialValue = {
     showCustomer: false,
     id: "",
@@ -52,15 +50,13 @@ const ShowAllCustomers = ()  => {
     }, [])
 
     useEffect(() => {
-     
     }, [allCustomers, setAllCustomers])
 
     /* Om admin vill se specifik kund. Sätter state som blir true och visas som History i return */
     function showSpecificCustomer(id, username, e) {
-        
+
         setChangeCustomerBalance(initialValueCustomerBalance)// resetar dvs visar ej denna längre
         setShowCustomerTrips({
-            
             showCustomer: !showCustomerTrips.showCustomer,
             id: id,
             username: username,
@@ -71,11 +67,11 @@ const ShowAllCustomers = ()  => {
     function changeUserBalance(id, username, e) {
 
         setShowCustomerTrips(initialValue) // resetar dvs visar ej denna längre
+
         setChangeCustomerBalance({
             show: !changeCustomerBalance.show,
             id: id,
             username: username,
-            pageY: e.pageY
         })
     }
 
@@ -110,7 +106,6 @@ const ShowAllCustomers = ()  => {
     }
 
 
-
 	return (
         <>
         {showCustomerTrips.showCustomer ? ( 
@@ -121,10 +116,7 @@ const ShowAllCustomers = ()  => {
             onClick= {showSpecificCustomer}> Tillbaka </button>
             ): (null)
         }
-        <p style={{fontWeight:"bold"}}>Sök kund (Id)</p>
-        <Container>
-
-            
+        <Container>            
             <Main>
                 {allCustomers.length > 0 ? (
                     !showCustomerTrips.showCustomer &&
@@ -168,7 +160,7 @@ const ShowAllCustomers = ()  => {
                 </StyleHistory>
                 </>
                 }
-                {changeCustomerBalance.show &&
+                {changeCustomerBalance.show && 
                 <StylePayment pageY = {changeCustomerBalance.pageY}>
                         <Payment customer={changeCustomerBalance}></Payment>
                 </StylePayment>

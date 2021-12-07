@@ -13,36 +13,23 @@ export default function PopUp(props) {
     let content;
     let whatToShow;
 
+    console.log(props)
+
     if (props.PopupInfo && props.PopupInfo.content ) {
         content = props.PopupInfo.content
         whatToShow = props.PopupInfo.whatToShow
     }
-    console.log(content, "HÄR")
 	return (
 		<PopUpStyle >
         { whatToShow === "Scooter" ? (
             <>
         <table>
             <caption>{whatToShow}</caption>
-            <thead>
-                <tr>
-                    <th scope="col">Scooter ID</th>
-                    <th scope="col">Aktiv</th>
-                    <th scope="col">Användare</th>
-                    <th scope="col">Batteri</th>
-                    <th scope="col">Stad</th>
-                    <th scope="col">Latitude</th>
-                    <th scope="col">Longitude</th>
-                    <th scope="col">Starttid</th>
-                    <th scope="col">Hastighet</th>
-
-                </tr>
-            </thead>
             <tbody>
                 <tr>
                 <td data-label="Scooter ID"> {content._id} </td>
                 <td data-label="Aktiv"> {content.is_active === true ? "I användning" : "Används ej"} </td>
-                <td data-label="Användare"> {content.active_user === "null" ? "Ingen användare" : content.active_user} </td>
+                <td data-label="Användare"> {content.active_user === null ? "Ingen användare" : content.active_user} </td>
                 <td data-label="Batteri"> {content.battery} </td>
                 <td data-label="Stad">{content.city_location} </td>
                 <td data-label="Latitude"> {content.position.lat} </td>
@@ -68,12 +55,6 @@ export default function PopUp(props) {
         { whatToShow === "City" ? (
         <table>
             <caption>{whatToShow}</caption>
-            <thead>
-                <tr>
-                    <th scope="col">Stad</th>
-                    <th scope="col">Antal cyklar</th>
-                </tr>
-            </thead>
             <tbody>
                 <tr>
                 <td data-label="Stad"> {content.city} </td>
@@ -84,22 +65,28 @@ export default function PopUp(props) {
         ) : null } 
  
         {whatToShow === "LoadStation" ? (
-                    <table>
-                    <caption>{whatToShow}</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Latitude</th>
-                            <th scope="col">Longitude</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                        <td data-label="Latitude"> {content.position.polygonePart1.lat} </td>
-                        <td data-label="Longitude"> {content.position.polygonePart2.lng} </td>
-                        </tr>
-                    </tbody>
-                </table>
-                ) : null } 
+            <table>
+                <caption>Laddstation ({content.color})</caption>
+                <tbody>
+                    <tr>
+                    <td data-label="Antal cyklar"> {content.amount_of_bikes_post} </td>
+                    <td data-label="Färgkod"> {content.color} </td>
+                    </tr>
+                </tbody>
+            </table>
+        ) : null }
+
+        {whatToShow === "ParkingZone" ? (
+            <table>
+                <caption>Parkeringzon ({content.color})</caption>
+                <tbody>
+                    <tr>
+                        <td data-label="Antal cyklar"> {content.amount_of_bikes_zone} </td>
+                        <td data-label="Färgkod"> {content.color} </td>
+                    </tr>
+                </tbody>
+            </table>
+        ) : null } 
             <>
             </>
 		</PopUpStyle>	

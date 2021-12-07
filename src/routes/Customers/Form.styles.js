@@ -12,6 +12,7 @@ export const Container = styled.div `{
 	padding: 2em;
     padding-bottom: 8em;    /* Footer height */
 
+
 	@media (max-width: 1000px) {
 		flex-direction: column;
 		width: 100%;

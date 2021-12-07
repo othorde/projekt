@@ -16,10 +16,10 @@ export default function MapContainer(props) {
 	useEffect(async() => {
 		function setCoord () {
 			setCoordinates({
-				startLat: parseFloat(props.showMapForUser.startCoord.lat),
-				startLng: parseFloat(props.showMapForUser.startCoord.lng),
-				stopLat: parseFloat(props.showMapForUser.stopCoord.lat),
-				stopLng: parseFloat(props.showMapForUser.stopCoord.lng),
+				startLat: parseFloat(props.showMapForUser.startCoord[0]),
+				startLng: parseFloat(props.showMapForUser.startCoord[1]),
+				stopLat: parseFloat(props.showMapForUser.stopCoord[0]),
+				stopLng: parseFloat(props.showMapForUser.stopCoord[1]),
 			})
 		}
 		setCoord()

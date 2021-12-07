@@ -8,12 +8,9 @@ import {
 	Nav, 
 	MapContainer, 
 	StyledBtn, 
-	ShowLogg
 } from './Form.styles';
 import Api from '../../api';
-/* link / navLinkto (to) prop använder invoice number för att ladda sidan med
-  rätt id
-*/
+
 
 let initalValue = {
 	loadScooters: false,
@@ -26,45 +23,56 @@ let initalValueLoadStations = {
 	loadStation: false,
 }
 
+let initalValueParkingZone = {
+	loadParkingZone: false,
+}
+
 const Admin = () => {
 	const [ifToShowScooter, setIfToShowScooter] = useState(initalValue);
 	const [ifToShowCity, setIfToShowCity] = useState(initalValueLoadCitys);
 	const [ifToShowLoadStations, setIfToShowLoadStations] = useState(initalValueLoadStations);
+	const [ifToShowParkingZone, setIfToShowParkingZone] = useState(initalValueParkingZone);
 
 	// hämtar ju alla scootrar här varje gång man trycker.
 	// Kanske onödigt? Samtidigt vill man få det uppdaterat?
 
-
-	// useEffect(() => {
-	// 	const interval = setInterval (async () => {
-	// 		try {
-	// 			let res = await Api.getAllScooters();  
-	// 			setIfToShowScooter(prevState => ({
-	// 				loadScooters: !prevState.loadScooters,
-	// 				content: res
-	// 			}));
-	// 		} catch (error) {
-	// 			console.log(error)
-	// 		}
-	// 		console.log("HEJ")
-	// 	}, 10000);
-	// 	return () => clearInterval(interval);
-	// 	}, []);
-	
-
-
+	useEffect(()=>{
+    
+		getScooters()
+		const interval=setInterval(()=>{
+			getScooters()
+		 }, 10000)
+		   
+		   
+		 return()=>clearInterval(interval)
+	},[])
 
 	const getScooters = async() => {
         try {
             let res = await Api.getAllScooters();  
-			setIfToShowScooter(prevState => ({
-				loadScooters: !prevState.loadScooters,
+			setIfToShowScooter({
+				loadScooters: true,
 				content: res
-			}));
+			});
         } catch (error) {
 			console.log(error)
         }
     }
+	
+	/* om vi ska ha knapp för cyklar */
+	// const getScooters = async() => {
+    //     try {
+    //         let res = await Api.getAllScooters();  
+	// 		setIfToShowScooter(prevState => ({
+	// 			loadScooters: !prevState.loadScooters,
+	// 			content: res
+	// 		}));
+			
+    //     } catch (error) {
+	// 		console.log(error)
+    //     }
+    // }
+
 	const getCitys = async() => {
 		setIfToShowCity(prevState => ({
 			loadCity: !prevState.loadCity,
@@ -77,17 +85,27 @@ const Admin = () => {
 		}));
 	}
 
+	const getParkingZone = async() => {
+		setIfToShowParkingZone(prevState => ({
+			loadParkingZone: !prevState.loadParkingZone,
+		}));
+	}
+
 
 return (
 	<Container>
 		<Nav>
-			<StyledBtn onClick= {getScooters}> Cyklar </StyledBtn>
 			<StyledBtn onClick= {getCitys}> Städer </StyledBtn>
 			<StyledBtn onClick= {getLoadStations}> Laddstationer </StyledBtn>
-			<StyledBtn onClick= {setInterval}> Visa live </StyledBtn>
+			<StyledBtn onClick= {getParkingZone}>  Parkeringszoner </StyledBtn>
 		</Nav>
 		<MapContainer>
-			<Map ifToShowScooter={ifToShowScooter} ifToShowCity={ifToShowCity} ifToShowLoadStations={ifToShowLoadStations} ></Map>
+			<Map 
+				ifToShowScooter={ifToShowScooter}
+			 	ifToShowCity={ifToShowCity} 
+				ifToShowLoadStations={ifToShowLoadStations} 
+				ifToShowParkingZone={ifToShowParkingZone} >
+			</Map>
 		</MapContainer>
 	</Container>
   )

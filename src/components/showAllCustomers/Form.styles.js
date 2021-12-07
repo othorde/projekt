@@ -61,8 +61,6 @@ export const StylePayment = styled.div `{
 		border: 2px solid black;
 		z-index: 1000;
 		top: calc(${props => props.pageY}px + -100px );
-
-
 	}
 }
 `

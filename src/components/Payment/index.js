@@ -15,7 +15,7 @@ const Payment = (props) => {
     const [onePayment, setOnePayment] = useState(0);
     const [adminOrNot, setAdminOrNot] = useState(false);
 
-    useEffect(() => {
+    useEffect(() => { /* Om det är admin som ska göra justeringen på saldot */
         if (props && props.customer) {
             setAdminOrNot(true)
         }

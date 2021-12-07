@@ -20,11 +20,9 @@ const Account = () => {
 	// Lägg också till funktion för att kolla så att det finns en användar inloggad
     useEffect(() => {
         async function fetchData() {
-
 			if(user && user.value.id) {
 				let res = await Api.getAUser(user.value.id);
 				setUserDetails(res);
-			
 			}
         }
         fetchData();

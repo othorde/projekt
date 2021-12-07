@@ -199,7 +199,7 @@ export const UserHistory = styled.div `
         background: #ccc;
     }
 	
-	@media screen and (max-width: 700px) {
+	@media screen and (max-width: 1400px) {
 		table {
 			border: 0;
 		}
