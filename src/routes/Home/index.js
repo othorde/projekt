@@ -28,7 +28,7 @@ export default function Home() {
 				<div class="container">
 					<img src={newBike} alt="New bike" width="100%" height="100%" /> 
 					<div class="middle">
-						<div class="text">Pssst vår nya cykel har 20% längre batteritid</div>
+						<div class="text">Vår nya cykel har 20% längre batteritid</div>
 					</div>
 				</div>	
 			</WelcomeMessage>

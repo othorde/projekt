@@ -8,14 +8,13 @@ import {Container, Main, UserHistory, MapContainer} from './Form.styles'
 //other
 import Api from "../../api";
 import Appcontext from '../../AppContext'
-var pointInPolygon = require('point-in-polygon');
+import {checkIfCoordInParkingZone, checkIfCoordInChargingPost } from '../../helperfunction/helpers'
 
 const initialValue = {
     showMap: false,
     startCoord: "",
     stopCoord: "",
 }
-
 
 const History = (props)  => {
 
@@ -87,10 +86,10 @@ const History = (props)  => {
 
             var tripEnded = [trip.stop.position.lat, trip.stop.position.lng];
             var tripStarted = [trip.start.position.lat, trip.start.position.lng];
-            var startAtParkingZone = checkIfCoordInParkingZone(tripStarted);
-            var endedAtParkingZone = checkIfCoordInParkingZone(tripEnded);
-            var startChargePoint = checkIfCoordInChargingPost(tripStarted);
-            var endedAtChargePoint = checkIfCoordInChargingPost(tripEnded);
+            var startAtParkingZone = checkIfCoordInParkingZone(tripStarted, allParkingZones);
+            var endedAtParkingZone = checkIfCoordInParkingZone(tripEnded, allParkingZones);
+            var startChargePoint = checkIfCoordInChargingPost(tripStarted, allCharging_posts);
+            var endedAtChargePoint = checkIfCoordInChargingPost(tripEnded, allCharging_posts);
 
             /* Om en resa börjar i fri parkering och slutar på en definerad blir startavg lägre */
             if(startAtParkingZone === undefined || startChargePoint === undefined) {
@@ -99,7 +98,6 @@ const History = (props)  => {
                     discount = 2;
                 }
             }
-            console.log(endedAtParkingZone, endedAtChargePoint)
             /* extra avg om man ej lämnar inom stationerna */
             if(endedAtParkingZone === undefined && endedAtChargePoint === undefined) {
                 startFee = 12;
@@ -128,54 +126,6 @@ const History = (props)  => {
         return userInvoice
     }
 
-    /*  loopara igenom alla chargingposts, 
-        ser om koordinaterna finns inuti polygon,
-        retunerar endast true */
-    function checkIfCoordInParkingZone(tripEnded) {
-        let res;
-        for (var elem of allParkingZones) {
-            let polyGon = [
-                [elem.position.polygonePart1.lat,
-                elem.position.polygonePart1.lng],
-                [elem.position.polygonePart2.lat,
-                elem.position.polygonePart2.lng],
-                [elem.position.polygonePart3.lat,
-                elem.position.polygonePart3.lng],
-                [elem.position.polygonePart4.lat,
-                elem.position.polygonePart4.lng]
-            ]
-            res = checkIfPointInPolyGon(tripEnded, polyGon);
-
-            if(res === true) {
-                return true
-            }
-        }
-    }
-
-    /*  loopara igenom alla chargingposts,
-        ser om koordinaterna finns inuti polygon,
-        retunerar endast true */
-    function checkIfCoordInChargingPost(tripEnded) {
-        let res;
-        for (var elem of allCharging_posts) {
-            let polyGon = [
-                [elem.position.polygonePart1.lat,
-                elem.position.polygonePart1.lng],
-                [elem.position.polygonePart2.lat,
-                elem.position.polygonePart2.lng],
-                [elem.position.polygonePart3.lat,
-                elem.position.polygonePart3.lng],
-                [elem.position.polygonePart4.lat,
-                elem.position.polygonePart4.lng]
-            ]
-            res = checkIfPointInPolyGon(tripEnded, polyGon);
-
-            if(res === true) {
-                return true
-            }
-       } 
-    }
-
     /* Räknar ut tiden för resan, gör om till sekunder 
         subtraherar och dividerar för att få ut minuter
     */
@@ -195,12 +145,6 @@ const History = (props)  => {
 
         return time
     }
-    /* Retunerar true/false om punkt finns i polygon */
-    function checkIfPointInPolyGon(point, polygone) {
-
-        return pointInPolygon(point, polygone);
-    }
-
 
     /*  visa kartar upp karta, beroende på var användaren klickar */
     function showMap(startCoord, stopCoord, e) {

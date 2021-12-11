@@ -63,6 +63,21 @@ const Api =  {
         }
 	},
 
+    getAllChargePost: async (city, matching) => {
+        try {
+            const endpoint = `${API_URL}/cities/posts/${city}`;
+            let res = await (await fetch(endpoint)).json();
+
+            if(matching) {
+                const result = res.data.filter(elem => elem.color == matching ? elem.amount_of_bikes_post : null);
+                return result
+            }
+            return res.data
+        } catch (error) {
+            console.log(error)
+        }
+	},
+
     // När det är fixat med OAUTH funkar denna antagligen
     logginUserViaGit: async (username)  => {
         try {
@@ -146,7 +161,6 @@ const Api =  {
 
     updateUserFunds: async (addToBalance, id) => {
         try {
-            console.log(addToBalance, id)
             const endpoint = `${API_URL}/customers/balance`;
             let res;
             res = await (
@@ -170,10 +184,36 @@ const Api =  {
 	},
 
 
-    updateZone: async (city, amount_of_bikes, color) => {
-     
+    updateNrBikesChargePost: async (city, amount_of_bikes, color) => {
+        console.log(city, amount_of_bikes, color)
         try {
             const endpoint = `${API_URL}/cities/posts/update`;
+            let res;
+            res = await(
+                await fetch(endpoint, {
+                    ...defaultConfigPut,
+                    body: JSON.stringify({
+                        city: city,
+                        amount_of_bikes: amount_of_bikes,
+                        color: color
+                    })
+                })).json();
+
+            
+            if(res.data.result === `Object: undefined updated`) {
+                return true
+            } else {
+                return false
+            }
+        } catch (error) {
+            console.log((error))
+        }
+	},
+    
+    updateNrBikesParkZone: async (city, amount_of_bikes, color) => {
+     
+        try {
+            const endpoint = `${API_URL}/cities/zones/update`;
             let res;
             res = await(
                 await fetch(endpoint, {

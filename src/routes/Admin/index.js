@@ -59,19 +59,6 @@ const Admin = () => {
         }
     }
 	
-	/* om vi ska ha knapp för cyklar */
-	// const getScooters = async() => {
-    //     try {
-    //         let res = await Api.getAllScooters();  
-	// 		setIfToShowScooter(prevState => ({
-	// 			loadScooters: !prevState.loadScooters,
-	// 			content: res
-	// 		}));
-			
-    //     } catch (error) {
-	// 		console.log(error)
-    //     }
-    // }
 
 	const getCitys = async() => {
 		setIfToShowCity(prevState => ({

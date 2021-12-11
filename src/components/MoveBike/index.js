@@ -2,28 +2,33 @@ import {React, useState, useContext, useEffect} from "react";
 import Api from "../../api";
 import AppContext from "../../AppContext";
 import {StyleMoveBike} from './Form.styles.js'
+import {checkIfCoordInChargingPost, checkIfCoordInParkingZone} from '../../helperfunction/helpers'
+
 
 export default function MoveBike(props) {
     const myContext = useContext(AppContext);
     const [charging_posts, setCharging_posts] = useState([])
-    const [moveBikeToColor, setMoveBikeToColor] = useState({})
+    const [allParkingZones, setAllParkingZones] = useState([])
+    const [moveBikeToColor, setMoveBikeToColor] = useState(null)
     const [message, setMessage] = useState("")
-
+    const [city, setCity] = useState([]) //parkering och laddstationer
 
     /* hämtar alla laddstationer sparar i state */
+    /* måste lägga till fler städer ??????????????????????????? */
     async function getLoadStationsForMovingBike() {
-        let city = await Api.getACity(props.city);    
-        setCharging_posts(city[0].charging_posts)
+        let city = await Api.getACity(props.city);
+        setCity(city[0].city);
+        setCharging_posts(city[0].charging_posts);
+        setAllParkingZones(city[0].parking_zones);
     }
     /* När admin förflyttar cykel */
     const handleSubmit = async () => {
-        let newPosition = calculateScooterNewPosition()
-
-        if (moveBikeToColor === '') {
+        if (moveBikeToColor === '' || moveBikeToColor===null) {
             setMessage("Välj först vart du vill förflytta cykeln")
         } else {
+            let newPosition = calculateScooterNewPosition()
 
-            if ( newPosition ) {
+            if (newPosition) {
                 updateScooter(newPosition);
                 updateScootersUser();
                 updateScooterLogg(newPosition);
@@ -141,27 +146,52 @@ export default function MoveBike(props) {
         return newPosition
     }
 
-   
 
-
-    /* uppdaterar zonen */
+    /* Kontrollerar om start pos för cykel finns i en zon mha helper function
+       Om, uppdatera den zonen. uppdaterar också zonen för slutposition
+    */
     async function updateZon() {
-        await Api.updateZone(props.city, 1, moveBikeToColor);
-    }
+        let startCoords = props.position;
+        let amount_of_bikes;
+        let color;
+        startCoords = [startCoords.lat, startCoords.lng]
+        let coordInParkingZone = checkIfCoordInParkingZone(startCoords, allParkingZones)
+        let coordInChargingPost = checkIfCoordInChargingPost(startCoords, charging_posts)
+        //Uppdaterar zon med -1 om cykel tidigare fanns i en parkeringszon
+        if(coordInParkingZone && coordInParkingZone.returned) {
+            amount_of_bikes = coordInParkingZone.amount_of_bikes_zone - 1;
+            color = coordInParkingZone.color;
 
+            await Api.updateNrBikesParkZone(city, amount_of_bikes, color);
+
+        //Uppdaterar zon med -1 om cykel tidigare fanns i en laddstation
+        } else if (coordInChargingPost && coordInChargingPost.returned) {
+            amount_of_bikes = coordInChargingPost.amount_of_bikes_post - 1;
+            color = coordInChargingPost.color;
+
+            await Api.updateNrBikesChargePost(city, amount_of_bikes, color);
+        }
+        // Uppdaterar alltid den nya zonen(laddstation) med +1
+        let res = await Api.getAllChargePost(city, moveBikeToColor);
+        let amount_of_bikes_in_new_zone = res[0].amount_of_bikes_post + 1;
+
+        await Api.updateNrBikesChargePost(city, amount_of_bikes_in_new_zone, moveBikeToColor);
+    }
 
     useEffect(() => {
         setTimeout(() => setMessage(""), 5000);
+        setMoveBikeToColor("")
     }, [message])
+
 
 	return (
         <StyleMoveBike onClick = {getLoadStationsForMovingBike}> {/* laddar in ny info med onClick */}
             {message && <p style={{color:"red"}}> {message} </p>} {/* meddelande om det går bra/dåligt med uppdatering */}
             <select 
                 data-testid="dropdown" onChange={(e) => {
-                setMoveBikeToColor((e.target.value))
+                    setMoveBikeToColor(e.target.value)
             }}
-            value = {moveBikeToColor}
+            value={moveBikeToColor}
             >
             <option value={''}>-- Välj vart cykeln ska förflyttas --</option>
             {charging_posts.map(elem => elem !== null  &&

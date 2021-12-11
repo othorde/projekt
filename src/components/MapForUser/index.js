@@ -97,7 +97,7 @@ export default function MapContainer(props) {
 				</div>	
 			</Marker>
 			</GoogleMapReact>
-			: console.log("HEJ")}
+			: null}
 		</Style>
 	);
 }
