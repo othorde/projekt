@@ -33,7 +33,7 @@ const Logg = (props) => {
             </tbody>
             </table>
         ): (
-            console.log("HEj")
+            null
          )}
 
         </StyleLogg>

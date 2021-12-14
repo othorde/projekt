@@ -1,24 +1,28 @@
 import {React, useEffect, useState} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+//hooks
+import { useFetchAllCustomers } from "../../Hooks/useFetchAllCustomers";
 //components
-import Loader from "../loader/loader";
-import History from "../../routes/History";
+import Loader from "../Loader";
+import History from "../History";
 import Payment from "../Payment";
-
 //styles
-import {Container, Main, UserInfo, StylePayment, StyleHistory, ForwardBackwards} from './Form.styles'
-import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
-
+import {
+    Container,
+    Main,
+    UserInfo,
+    StylePayment,
+    StyleHistory,
+    ForwardBackwards} from './Form.styles';
+import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 //other
-import Api from "../../api";
 
+/* värden från början */
 const initialValue = {
     showCustomer: false,
     id: "",
     username: "",
     from: "admin"
-
 }
 
 const initialValueCustomerBalance = {
@@ -34,26 +38,18 @@ const initialValueIndex = {
     nrOfResults: "",
 }
 
+/* Visar alla användare, kan också se specifika resor samt ändra kontobalans */
 const ShowAllCustomers = ()  => {
-
-    const [allCustomers, setAllCustomers] = useState([]);
+    const {allCustomers, errorAllCustomers} = useFetchAllCustomers(); // hämtar alla anv från hook
     const [showCustomerTrips, setShowCustomerTrips] = useState(initialValue);
     const [changeCustomerBalance, setChangeCustomerBalance] = useState(initialValueCustomerBalance);
-    const [pageIndex, setpageIndex] = useState(initialValueIndex);
+    const [pageIndex, setPageIndex] = useState(initialValueIndex);
 
     useEffect(() => {
-        async function getFromApi() {
-            let res = await Api.getAllUsers();
-            setAllCustomers(res.data);
-        }
-        getFromApi();
-    }, [])
-
-    useEffect(() => {
-    }, [allCustomers, setAllCustomers])
+    }, [allCustomers, errorAllCustomers])
 
     /* Om admin vill se specifik kund. Sätter state som blir true och visas som History i return */
-    function showSpecificCustomer(id, username, e) {
+    function showSpecificCustomer(id, username) {
 
         setChangeCustomerBalance(initialValueCustomerBalance)// resetar dvs visar ej denna längre
         setShowCustomerTrips({
@@ -64,10 +60,9 @@ const ShowAllCustomers = ()  => {
         })
     }
     /* Om admin vill justera kontobalans. Sätter state som blir true och visas som user i return */
-    function changeUserBalance(id, username, e) {
-
+    function changeUserBalance(id, username) {
+        
         setShowCustomerTrips(initialValue) // resetar dvs visar ej denna längre
-
         setChangeCustomerBalance({
             show: !changeCustomerBalance.show,
             id: id,
@@ -75,7 +70,7 @@ const ShowAllCustomers = ()  => {
         })
     }
 
-    /* kollar vilken sida användaren är på. Hur många användare som finns att visa */
+    /* kollar vilken sida användaren är på & hur många användare som finns att visa */
     function changeIndex(whereTo) {
         let perPage = 20;
         let newStartIndex = pageIndex.start;
@@ -97,17 +92,17 @@ const ShowAllCustomers = ()  => {
                 newStopIndex = 19;
             }
         }
-
-        setpageIndex({
+        /* sätter */
+        setPageIndex({
             start: newStartIndex,
             stop: newStopIndex,
             nrOfResults: allCustomers.length,
         });
     }
 
-
 	return (
         <>
+        {/* Tillbaka btn */}
         {showCustomerTrips.showCustomer ? ( 
         <button style={{
             height: "3em", 
@@ -135,7 +130,7 @@ const ShowAllCustomers = ()  => {
                     </thead>
                     <tbody>
                     {allCustomers.slice([pageIndex.start], [pageIndex.stop]).map(elem => /* elem.tag !== "admin" && */
-                        <tr>
+                        <tr key={elem._id}>
                         <td data-label="Id"> {elem._id}  </td>
                         <td data-label="Användarnamn"> {elem.username} </td>
                         <td data-label="På kontot">{elem.balance}:- </td>
@@ -153,6 +148,7 @@ const ShowAllCustomers = ()  => {
                 ) : (
                     <Loader/>
                 )}
+                {/* Om man vill se anv alla resor */}
                 {showCustomerTrips.showCustomer && 
                 <>
                 <StyleHistory>
@@ -160,6 +156,7 @@ const ShowAllCustomers = ()  => {
                 </StyleHistory>
                 </>
                 }
+                {/* Om man vill ändra användarens kontobalans */}
                 {changeCustomerBalance.show && 
                 <StylePayment pageY = {changeCustomerBalance.pageY}>
                         <Payment customer={changeCustomerBalance}></Payment>
@@ -167,7 +164,7 @@ const ShowAllCustomers = ()  => {
                 }
             </Main>
         </Container>
-
+        {/* Visar pilarna, endast vid vyn där alla anv är med, tar bort när man går in på enskild anv */}
         {!showCustomerTrips.showCustomer &&
         <>
         <p style={{"fontWeight":"bold"}}>Visar {pageIndex.start}-{pageIndex.stop} av {allCustomers.length} resultat </p>  
@@ -178,13 +175,7 @@ const ShowAllCustomers = ()  => {
         </>
         }
         </>
-    
     )
 }
 
 export default ShowAllCustomers
-
-
-
-
-

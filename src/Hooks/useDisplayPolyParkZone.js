@@ -6,12 +6,18 @@ let initalValue = {
 	loadParkingZone: []
 }
 
-const useLoadParkingZones = (mapRef, props) => {
+/* Skapar polygons för städer, tar emot mapRef som är objektet för kartan.
+   Samt props för att se om polys för map ska tas bort/läggas till på kartan.
+*/
+const useDisplayPolyParkZone = (mapRef, props) => {
     const[parkingZoneObject, setParkingZoneObject] = useState([]); // håller objektet så att man kan ta bort det från kartan
     const[parkingZoneContent, setParkingZoneContent] = useState(initalValue); // håller content för onClick
-    // sparar res i state, så slipper hämta från servern hela tiden. Kanske ändra om vi ska köra nån realtime
-    const[resFromApi, setResFromApi] = useState(null); 
+    const[parkingZoneError, setParkingZoneError] = useState(false); // håller content för onClick
 
+    /* Tar emot res från getData. Loopar igenom. Skapar poly av
+       alla koordinater som tillhör städer. Lägger på onclickevent.
+       Sparar objekten i state, så de senare kan tas bort.
+    */
     const handleSucces = (res) => {
     var parkingZoneName;
     const map = mapRef.current.map;
@@ -35,7 +41,7 @@ const useLoadParkingZones = (mapRef, props) => {
                 fillOpacity: 0.35,
                 });
             
-            parkingZoneName.addListener('click', (event) => {
+            parkingZoneName.addListener('click', () => {
                 setParkingZoneContent(prevState => ({
                     showParkingZone: !prevState.showParkingZone,
                     loadParkingZone: parking_zone
@@ -51,43 +57,33 @@ const useLoadParkingZones = (mapRef, props) => {
     })
 };
 
-    // funktion som kan toggla state, från andra komponenter
+    // funktion som togglar state, från andra komponenter
     const showInfoForParkingZone = (trueOrFalse) => {
         setParkingZoneContent({ showParkingZone: trueOrFalse});
 	}
 
-    // tar bort loadinstations från kartan, Ska man rensa i states? Isf kommer backend att kallas.
-    // Kommer behövas om man ska få realtiduppdateringar, typ timer
+    // tar bort poly för parkeringszoner från kartan genom att sätta mapobj för alla polys till null
 	function removeParkingZonesFromMap() { 
-		
-			parkingZoneObject.forEach(parkingZone => {
-				parkingZone.setMap(null);
-			})
-		
-        return
+        parkingZoneObject !== null && parkingZoneObject.forEach(parkingZone => {
+            parkingZone.setMap(null);
+        })
 	}
 
-    useEffect(async () => {
-        // Om loadParkingZone ska tas bort från kartan
-        if (props.ifToShowParkingZone.loadParkingZone === false ) {
-            removeParkingZonesFromMap()
-            return
+    //körs vid mount och förändring av prop om poly för städer ska visas = hämtar, annars tar bort med removeCitysFromMap
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setParkingZoneError(false)
+                let res = await Api.getAllCitys();
+                handleSucces(res);
+            } catch (error) {
+                setParkingZoneError(true)
+            }
         }
-        // Om state är null == ej hämtat från backend ännu
-        if (resFromApi === null) {
-            let res = await Api.getAllCitys();
-            setResFromApi(res);
-            handleSucces(res)
-        // Annars använd det som är sparat i state
-        } else if (resFromApi != null) {
-            handleSucces(resFromApi);
-        } else {
-            console.log("Error")
-            return;
-        }
-    },[mapRef, props.ifToShowParkingZone.loadParkingZone])
+        !props.ifToShowParkingZone.loadParkingZone ? removeParkingZonesFromMap() : fetchData()
+    }, [props.ifToShowParkingZone.loadParkingZone])
     
-    return {parkingZoneObject, parkingZoneContent, showInfoForParkingZone};
+    return {parkingZoneObject, parkingZoneContent, parkingZoneError, showInfoForParkingZone};
 };
-export default useLoadParkingZones;
+export default useDisplayPolyParkZone;
 

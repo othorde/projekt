@@ -5,15 +5,18 @@ import Api from "../../api.js";
 import { Content, Delimiter, StylePayment} from "./Form.styles.js";
 
 const initialValue = {
-    showMsgSubs: false,
-    showMsgOnePay: false,
+    showMsg: false,
     msg: ""
 }
 
+/* Denna komponent används på två ställen,
+   hantera kunder och konto.
+   Tar props för att hämta info om användare
+*/
 const Payment = (props) => {
     const [msgForUser, setMsgForUser] = useState(initialValue);
     const [onePayment, setOnePayment] = useState(0);
-    const [adminOrNot, setAdminOrNot] = useState(false);
+    const [adminOrNot, setAdminOrNot] = useState(false); // Om det är admin som ska ändra eller ej
 
     useEffect(() => { /* Om det är admin som ska göra justeringen på saldot */
         if (props && props.customer) {
@@ -21,57 +24,51 @@ const Payment = (props) => {
         }
     }, [props])
 
-
+    /* När användaren klickar på uppdatera Nytt saldo/Ändra saldo */
     const handleSubmit = async (event)  => {
         event.preventDefault();
-
-        let showMsgSubs = false;
-        let showMsgOnePay = false;
+        let showMsg = false;
         let msg = "";
         let result;
         let id;
         let currentBalance;
         let newBalance;
 
-        if (onePayment && props) {
-
-            if(!adminOrNot) {
+        if (onePayment && props) { // Om state är satt, dvs vilket belopp som ska sättas in / justeras till
+            if(adminOrNot) { // Om det är en admin
+                id = props.customer.id;  // om admin justerar blir det det belopp man skriver in.
+                newBalance = onePayment;
+            } else {
                 id = props.userDetails.data._id;
                 currentBalance = props.userDetails.data.balance;
-                newBalance = parseInt(currentBalance) + parseInt(onePayment);
-                showMsgOnePay = true;
+                newBalance = parseInt(currentBalance) + parseInt(onePayment); 
             }
-            if(adminOrNot) { // om admin justerar blir det det belopp man skriver in.
-                id = props.customer.id; 
-                newBalance = onePayment; 
-            }
-
-            if (newBalance) {
+            /* Uppdaterar användarens kontobalans */
+            try {
+                showMsg = true;
                 result = await Api.updateUserFunds(newBalance, id);
-                msg = "Din insättning har gått igenom";
-
-                if(adminOrNot) {
-                    msg = "Saldot är justerat";
+                if(result === true) {
+                    msg = "Din insättning har gått igenom";
+                    if(adminOrNot) {
+                        msg = "Saldot är justerat";
+                    }
                 }
+            } catch (error) {
+                msg = "Något gick fel. Beror på servern.";
             }
-        } else {
-            msg = "Något gick fel... testa igen senare (id)"
-        } 
-        if (result !== true) {
-            msg = "Något gick fel... testa igen senare"
         } 
         setMsgForUser({ 
-            showMsgSubs: showMsgSubs,
-            showMsgOnePay: showMsgOnePay,
+            showMsg: showMsg,
             msg: msg,
         })
         setOnePayment(0);
     }
 
+    /* Tennary operator används för att justera texten beroende på vem det är som ska göra förändringen */
 	return (
         <Content>
             <StylePayment>
-            {msgForUser.showMsgOnePay ? <p>{msgForUser.msg}</p> : (<p> {adminOrNot ? (`VARNING! \n Du justerar kunds saldo`) : ("Sätt in valfritt belopp ")}</p>)}
+            {msgForUser.showMsg ? <p>{msgForUser.msg}</p> : (<p> {adminOrNot ? (`VARNING! \n Du justerar kunds saldo`) : ("Sätt in valfritt belopp ")}</p>)}
             <form onSubmit={handleSubmit} className = "register">
                 <label>
                 <input
@@ -87,7 +84,6 @@ const Payment = (props) => {
                 <input type="submit" value={adminOrNot ? ("Ändra saldo") : ("Sätt in")} />
             </form>
             </StylePayment>
-
         </Content>
 	);
 }

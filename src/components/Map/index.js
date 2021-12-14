@@ -1,51 +1,50 @@
 import {React, useEffect, useState, useRef } from "react";
 //googlemap
 import GoogleMapReact from "google-map-react";
+//hooks
+import useCurrentLocation from "../../Hooks/useCurrentPosition";
+import useDisplayPolyChargeStation from "../../Hooks/useDisplayPolyChargeStation";
+import useDisplayPolyParkZone from "../../Hooks/useDisplayPolyParkZone";
+import useDisplayPolyCities from "../../Hooks/useDisplayPolyCities";
 //components
-import useCurrentLocation from "../../Hooks/currentPosition";
-import useLoadStationsToMap from "../../Hooks/loadStationsToMap";
-import useLoadParkingZones from "../../Hooks/loadParkingZoneToMap";
-import useCityToMap from "../../Hooks/loadCitysToMap";
 import PopUp from "../PopUp";
 import Logg from "../Logg";
+import Loader from "../Loader"
 //styles & img
 import {Container,StyleMap, Main} from './Form.styles'
 import bikeimg from '../../images/bike.png'
 import personimg from '../../images/person.png'
 
-// options till userLocation hur länge den ska vara
+// options till userLocation
 const options = {
 	enableHighAccuracy: true,
 	timeout: 1000 * 60 * 1, // 1 min
 	maximumAge: 1000 * 60 * 60, // 1 hour
 };
 
-/* Denna komponent är kartan till admin. Den kan nyttjas via mapref.
+/* Denna komponent är kartan till admin.
    Populerar kartan genom att hämta från api. Scootrar hämtas direkt
-   från props. För att kunna lägga till polygons hämtas dessa med 
-   Hooks , se mappen hooks.
+   från props(Admin route). För att kunna lägga till polygons hämtas dessa med 
+   Hooks, se mappen hooks.
 */
 export default function MapContainer(props) {
 	//hooks
 	const mapRef = useRef();
-	const { loadStationContent, showInfoForLoadStation } = useLoadStationsToMap(mapRef, props);
-	const { cityContent, showInfoForCity } = useCityToMap(mapRef, props);
-	const { parkingZoneContent, showInfoForParkingZone } = useLoadParkingZones(mapRef, props);
-
+	const { loadStationContent, showInfoForLoadStation } = useDisplayPolyChargeStation(mapRef, props);
+	const { cityContent, showInfoForCity } = useDisplayPolyCities(mapRef, props);
+	const { parkingZoneContent, showInfoForParkingZone } = useDisplayPolyParkZone(mapRef, props);
 	const { location } = useCurrentLocation(options);
+	//State
 	const [scooter, setScooter] = useState([]);
 	const [PopupInfo, setPopupInfo] = useState(null);
-
 	///Variabel
 	const loadScooters = props.ifToShowScooter;
-	const ScooterArray = props.ifToShowScooter.content; 	// ScooterArray =  bikeArray.slice(0, 200); // innan jag fixar med cluster max 200
+	const ScooterArray = props.ifToShowScooter.content;
+	// Marker på kartan 1 person
 	const Marker = ({ children }) => <div>{children}</div>;
 
-	// Dessa useEffect sätter de andra värdena till false så att rätt info visas i rutan för innehåll
-	//fundera på om det finns något bättre/snyggare sätt om man ska kunna toggla mellan de olika
-	// Alternativ är att ladda in allt här, men då blir index.js kladdig 
-	// Har flera fetch vilket är ganska onödigt men om vi ska använda graphql senare så är strukturen m hooks att föredra.
-	// Om vi inte använder graphQl så hämta allt på en gång kanske och spara i state => populera
+
+	/*  Dessa useEffect sätter de andra värdena till false så att rätt info visas i rutan för innehåll (PopUp)*/ 
 	useEffect(() => {
 		if (scooter.showScooter === true) {
 			showInfoForCity(false);
@@ -54,7 +53,6 @@ export default function MapContainer(props) {
 			setPopupInfo({content: scooter.scooter, whatToShow: "Scooter"});
 		}
 	},[scooter.showScooter, scooter, setScooter])
-
 
 	useEffect(() => {
 		if (loadStationContent.showLoadStations === true) {
@@ -67,7 +65,6 @@ export default function MapContainer(props) {
 			setPopupInfo({content: loadStationContent.loadStations, whatToShow: "LoadStation"});
 		}
 	},[loadStationContent.showLoadStations])
-
 
 	useEffect(() => {
 		if (cityContent.showLoadCitys === true) {
@@ -93,14 +90,11 @@ export default function MapContainer(props) {
 		}
 	},[parkingZoneContent.showParkingZone])
 
-
-
 	return (
-
 		<Container>
 			<Main> 
 			<StyleMap>
-				{/*KARTA*/}
+				{/* Visar karta */}
 				{location ? (
 				<GoogleMapReact 
 					bootstrapURLKeys={{key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY}}
@@ -111,7 +105,7 @@ export default function MapContainer(props) {
 						mapRef.current = {map, maps};
 					}}
 				>
-					{/*1 Person*/}
+					{/*Visar användaren på kartan */}
 					<Marker 
 						key={1} 
 						lat={location.latitude} 
@@ -122,7 +116,7 @@ export default function MapContainer(props) {
 						</div>	
 					</Marker>
 
-					{/*Alla scootrar*/}
+					{/*Visar alla scootrar*/}
 					{loadScooters.loadScooters && (
 					ScooterArray.map(scooter => {
 						return (
@@ -138,17 +132,15 @@ export default function MapContainer(props) {
 						})
 					)}
 				</GoogleMapReact>
-				):(<p>Loading...</p> )}
+				):(<Loader/> )}
 			</StyleMap>
-			
 
-			{/*POPUP fönster*/}
+			{/*Visar POPUP fönster, info skickas hit beroende på vad användaren vill se*/}
 			{scooter || cityContent || loadStationContent ? (
 				<PopUp key={"popupkey"} PopupInfo={PopupInfo}></PopUp>
 			): (null) }
 			</Main>
 			<Logg scooter= {scooter}/>	
-
 		</Container>
 	);
 }

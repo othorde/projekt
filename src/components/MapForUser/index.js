@@ -60,16 +60,12 @@ export default function MapContainer(props) {
 	  
 		window.setInterval(() => {
 		  count = (count + 1) % 200;
-	  
 		  const icons = polyLine.get("icons");
-	  
 		  icons[0].offset = count / 2 + "%";
 		  polyLine.set("icons", icons);
 		}, 20);
 	  }
 	  
-
-
 
 	return (
 		<Style>

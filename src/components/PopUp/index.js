@@ -87,8 +87,6 @@ export default function PopUp(props) {
                 </tbody>
             </table>
         ) : null } 
-            <>
-            </>
 		</PopUpStyle>	
 	);
 }

@@ -22,13 +22,8 @@ import g2 from '../../images/g2.png';
 const Welcome = () => {
     const navigate = useNavigate()
     const login = (e)  => {
-        // slå ihop dessa
         e.preventDefault()
         navigate("/login")    
-    }
-    const register = (e)  => {
-        e.preventDefault()
-        navigate("/login")
     }
 
     return (
@@ -49,12 +44,11 @@ const Welcome = () => {
                     </form>
                 </Btn>
                 <Btn2>
-                    <form onSubmit={register} >
+                    <form onSubmit={login} >
                         <input type="submit" value="Registrera"/>
                     </form>
                 </Btn2>
                 </BtnContainer>
-
             </Content >
             <Picture><img src={welcomePage} alt="guy on scooter" width="100%" height="100%" /></Picture>
         </Wrapper>

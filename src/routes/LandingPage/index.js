@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 // components
-import Loader from '../loader/loader'
+import Loader from '../../components/Loader'
 // style
 import {Wrapper} from "./Form.styles";
 //other
@@ -11,7 +11,11 @@ import Api from "../../api";
 
 require('dotenv').config()
 
-
+/* Hämtar ut url koden. Skickar sedan koden till backend.
+   Så att den kan göra de request som behövs till github. 
+   Får sedan tillbaka användaruppg, som används för att logga in användaren
+   genom vårt api.
+*/
 export default function LandingPage() {
   const [loggedInUser, setLoggedInUser] = useState(Boolean);
   const navigate = useNavigate();
@@ -22,7 +26,7 @@ export default function LandingPage() {
     const url = window.location.href;
     const hasCode = url.includes("?code=");
 
-    // Om github skickar tillbaka kod
+    // Om github skickar tillbaka kod, ta ut koden ur URL strängen
     if (hasCode) {
       const newUrl = url.split("?code=");
       window.history.pushState({}, null, newUrl[0]);
@@ -92,8 +96,6 @@ export default function LandingPage() {
 			navigate("/login/home")
 		}
 	}, [loggedInUser, setLoggedInUser])
-
-
 
 
   return (

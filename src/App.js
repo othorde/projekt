@@ -1,17 +1,17 @@
 import {React, useState, useEffect} from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Loader from './components/loader/loader';
+import Loader from './components/Loader';
 import AppContext from './AppContext';
 import Header from './components/Header';
 import Footer from './components/Footer'
-import LandingPage from './components/landingPage';
+import LandingPage from './routes/LandingPage';
 import FormLogin from './routes/FormLogin';
 import Account from "./routes/Account";
 import Admin from "./routes/Admin";
 import Welcome from './routes/welcome/welcome';
 import Home from './routes/Home';
-import History from './routes/History';
+import UserHistory from './routes/History';
 import Customers from './routes/Customers';
 import Logg from './components/Logg';
 
@@ -64,7 +64,7 @@ export default function App() {
 		<Route path="login" element={ <FormLogin/> } />
 		<Route path="login/home" element={ <PrivateRoute> <Home/> </PrivateRoute>} />
 		<Route path="account" element={ <PrivateRoute><Account/> </PrivateRoute>} />
-		<Route path="history" element={ <PrivateRoute> <History/> </PrivateRoute>} />
+		<Route path="history" element={ <PrivateRoute> <UserHistory/> </PrivateRoute>} />
 		<Route path="customers" element={ <PrivateRoute> <Customers/> </PrivateRoute>} />
 		<Route path="admin" element={<PrivateRoute> <Admin/> </PrivateRoute>} />
 		<Route path="testing" element={<Logg/>} >

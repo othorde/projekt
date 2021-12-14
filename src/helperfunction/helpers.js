@@ -3,6 +3,11 @@
 
 export function checkIfCoordInParkingZone(coords, allParkingZones) {
     let res;
+    let zone = {
+        returned: false,
+        color: "",
+        amount_of_bikes_zone: ""
+    };
 
     for (var elem of allParkingZones) {
         let polyGon = [
@@ -16,24 +21,31 @@ export function checkIfCoordInParkingZone(coords, allParkingZones) {
             elem.position.polygonePart4.lng]
         ]
         res = checkIfPointInPolyGon(coords, polyGon);
+        console.log(res)
 
         if(res === true) {
-            let res = {
+            zone = {
                 returned: true,
                 color: elem.color,
                 amount_of_bikes_zone: elem.amount_of_bikes_zone
             }
-            return res
+        } else {
+            continue
         }
     }
+    return zone
 }
 
- /*  loopara igenom alla chargingposts,
-        ser om koordinaterna finns inuti polygon,
-        retunerar endast true */
+ /* loopar igenom alla chargingposts, ser om koordinaterna finns inuti polygon, retunerar endast true */
 export function checkIfCoordInChargingPost(coords, allCharging_posts) {
 
     let res;
+    let zone = {
+        returned: false,
+        color: "",
+        amount_of_bikes_post: ""
+    };
+
     for (var elem of allCharging_posts) {
         let polyGon = [
             [elem.position.polygonePart1.lat,
@@ -47,18 +59,18 @@ export function checkIfCoordInChargingPost(coords, allCharging_posts) {
         ]
 
         res = checkIfPointInPolyGon(coords, polyGon);
-
-        if(res === true) {
-            let zone = {
+        if (res === true) {
+            zone = {
                 returned: true,
                 color: elem.color,
                 amount_of_bikes_post: elem.amount_of_bikes_post
             }
-            return zone
+        } else {
+            continue
         }
-    } 
+    }
+    return zone;
 }
-
 
 /* Retunerar true/false om punkt finns i polygon */
 export function checkIfPointInPolyGon(point, polygone) {

@@ -18,7 +18,7 @@ const Api =  {
             let res = await (await fetch(endpoint)).json();
             return res
         } catch (error) {
-            console.log(error)
+            return false
         }
     },
 
@@ -28,18 +28,17 @@ const Api =  {
             let res = await (await fetch(endpoint)).json();
             return res
         } catch (error) {
-            console.log(error)
+            return false
         }
     },
 
     getACity: async (whatCity) => {
-        console.log(whatCity)
         try {
             const endpoint = `${API_URL}/cities/${whatCity}`;
             let res = await (await fetch(endpoint)).json();
             return res.data
         } catch (error) {
-            console.log(error)
+            return false
         }
 	},
 
@@ -49,7 +48,7 @@ const Api =  {
             let res = await (await fetch(endpoint)).json();
             return res.data
         } catch (error) {
-            console.log(error)
+            return false
         }
 	},
 
@@ -59,7 +58,7 @@ const Api =  {
             let res = await (await fetch(endpoint)).json();
             return res.data
         } catch (error) {
-            console.log(error)
+            return false
         }
 	},
 
@@ -74,7 +73,7 @@ const Api =  {
             }
             return res.data
         } catch (error) {
-            console.log(error)
+            return false
         }
 	},
 
@@ -91,7 +90,7 @@ const Api =  {
             return res
 
         } catch (error) {
-            console.log(error)
+            return false
         }
     },
 
@@ -110,9 +109,12 @@ const Api =  {
                         lng: newPosition.lng,
                     })
                     })).json();
-            return res
+            if(res.data.result === `Object: ${id} updated`) {
+                return true
+            }
+            return false      
         } catch (error) {
-            console.log((error))
+            return false      
         }
 	},
 
@@ -126,10 +128,13 @@ const Api =  {
                     body: JSON.stringify({
                         _id: id,
                     })
-                    })).json();
-            return res
+                })).json();
+            if(res.data.result === `Object: ${id} updated`) {
+                return true
+            }
+            return false      
         } catch (error) {
-            console.log((error))
+            return false      
         }
 	},
 
@@ -151,10 +156,14 @@ const Api =  {
                         end_lng: varForUpdate.end_lng,
                         end_time: varForUpdate.time,
                     })
-                    })).json();
-            return res
+                })).json();
+
+            if(res.data.result === `Object: ${varForUpdate.id} updated`) {
+                return true
+            }
+            return false
         } catch (error) {
-            console.log((error))
+            return false      
         }
 	},
 
@@ -171,7 +180,6 @@ const Api =  {
                         balance: addToBalance,
                     })
                 })).json();
-            console.log(res.data.result)
             
             if(res.data.result === `Object: ${id} updated`) {
                 return true
@@ -179,13 +187,12 @@ const Api =  {
                 return false
             }
         } catch (error) {
-            console.log((error))
+            return false
         }
 	},
 
 
     updateNrBikesChargePost: async (city, amount_of_bikes, color) => {
-        console.log(city, amount_of_bikes, color)
         try {
             const endpoint = `${API_URL}/cities/posts/update`;
             let res;
@@ -199,14 +206,13 @@ const Api =  {
                     })
                 })).json();
 
-            
-            if(res.data.result === `Object: undefined updated`) {
+            if(res.data.result === `City post: ${city} updated`) {
                 return true
             } else {
                 return false
             }
         } catch (error) {
-            console.log((error))
+            return false
         }
 	},
     
@@ -225,13 +231,13 @@ const Api =  {
                     })
                 })).json();
             
-            if(res.data.result === `Object: undefined updated`) {
+            if(res.data.result === `City zone: ${city} updated`) {
                 return true
             } else {
                 return false
             }
         } catch (error) {
-            console.log((error))
+            return false
         }
 	},
 }

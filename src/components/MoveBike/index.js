@@ -4,7 +4,6 @@ import AppContext from "../../AppContext";
 import {StyleMoveBike} from './Form.styles.js'
 import {checkIfCoordInChargingPost, checkIfCoordInParkingZone} from '../../helperfunction/helpers'
 
-
 export default function MoveBike(props) {
     const myContext = useContext(AppContext);
     const [charging_posts, setCharging_posts] = useState([])
@@ -12,51 +11,59 @@ export default function MoveBike(props) {
     const [moveBikeToColor, setMoveBikeToColor] = useState(null)
     const [message, setMessage] = useState("")
     const [city, setCity] = useState([]) //parkering och laddstationer
-
-    /* hämtar alla laddstationer sparar i state */
-    /* måste lägga till fler städer ??????????????????????????? */
+    
+    /* hämtar alla ladd/parkeringszoner sparar i state 
+        KONTROLLERA SÅ att denna fungerar med flera städer
+    */
     async function getLoadStationsForMovingBike() {
-        let city = await Api.getACity(props.city);
-        setCity(city[0].city);
-        setCharging_posts(city[0].charging_posts);
-        setAllParkingZones(city[0].parking_zones);
+        try {
+            let city = await Api.getACity(props.city);
+            setCity(city[0].city);
+            setCharging_posts(city[0].charging_posts);
+            setAllParkingZones(city[0].parking_zones);
+        } catch (error) {
+            setMessage("Något gick fel vid hämtningen från servern")
+        }
     }
-    /* När admin förflyttar cykel */
+    /* När admin förflyttar cykel 
+        Behöver uppdatera en del, alla är beroende av varandra
+        så måste kolla först att det går igenom innan nästa
+    */
     const handleSubmit = async () => {
-        if (moveBikeToColor === '' || moveBikeToColor===null) {
+        if (moveBikeToColor === '' || moveBikeToColor === null) { // Om inget val görs
             setMessage("Välj först vart du vill förflytta cykeln")
         } else {
-            let newPosition = calculateScooterNewPosition()
-
+            let newPosition = calculateScooterNewPosition();
             if (newPosition) {
                 updateScooter(newPosition);
                 updateScootersUser();
                 updateScooterLogg(newPosition);
                 updateZon();
             }
-          
         }
     }
 
+    /* Uppdaterar själva scootern */
     async function updateScooter(newPosition) {
-
         var position = props.position;
         var speed = "0";
         var battery = "100";
-        var response;
+
         if (position !== null) {
-            response = await Api.updateAScooter(props.id, speed, battery, newPosition); //uppdaterar scootern
-            if(response === `Object: ${props.id} updated`) {
-                return true;
+            var response = await Api.updateAScooter(props.id, speed, battery, newPosition); //uppdaterar scootern
+            console.log(response, "SCOOTER")
+            if(response === false) {
+                setMessage("Kunde ej uppdatera scootern");
             }
-       }
+        }
     }
-
+    /* uppdaterar scooterns användare */
     async function updateScootersUser() {
+        var response = await Api.updateAScootersUser(props.id);
+        console.log(response, "SCOOTERUSER")
 
-        var response = await Api.updateAScootersUser(props.id);  //uppdaterar scooterns användare
-        if(response === `Object: ${props.id} updated`) {
-            return true;
+        if(response === false) {
+            setMessage("Kunde ej uppdatera användaren");
         }
     }
 
@@ -77,10 +84,12 @@ export default function MoveBike(props) {
             end_lng: newPosition.lng,
         }
         var response = await Api.updateAScootersLogg(varForUpdate);
-        if(response && response.data.result === `Object: ${props.id} updated`) {
+        console.log(response, "SCOOTERLOGG")
+
+        if(response) {
             setMessage("Cykel förflyttad, logg uppdaterad")
         } else {
-            setMessage("Något gick fel")
+            setMessage("Något gick fel, kunde ej uppdatera logg")
         }  
     }
 
@@ -141,58 +150,83 @@ export default function MoveBike(props) {
         var insidePoly = pointInPolygon(newPositionArr, polygone);
 
         if(!insidePoly) {
-            calculateScooterNewPosition()
+            return calculateScooterNewPosition()
+        } 
+        if(insidePoly) {
+            return newPosition
         }
-        return newPosition
     }
 
 
     /* Kontrollerar om start pos för cykel finns i en zon mha helper function
-       Om, uppdatera den zonen. uppdaterar också zonen för slutposition
+       OM, uppdatera den zonen med minus 1. uppdaterar alltid zonen för slutposition med +1
     */
     async function updateZon() {
+        let res;
         let startCoords = props.position;
         let amount_of_bikes;
         let color;
-        startCoords = [startCoords.lat, startCoords.lng]
-        let coordInParkingZone = checkIfCoordInParkingZone(startCoords, allParkingZones)
-        let coordInChargingPost = checkIfCoordInChargingPost(startCoords, charging_posts)
-        //Uppdaterar zon med -1 om cykel tidigare fanns i en parkeringszon
-        if(coordInParkingZone && coordInParkingZone.returned) {
+        startCoords = [startCoords.lat, startCoords.lng];
+        let coordInParkingZone = checkIfCoordInParkingZone(startCoords, allParkingZones);
+        let coordInChargingPost = checkIfCoordInChargingPost(startCoords, charging_posts);
+        
+        //Uppdaterar zon med -1 OM cykel tidigare fanns i en parkeringszon
+        if(coordInParkingZone && coordInParkingZone.returned === true) {
+
             amount_of_bikes = coordInParkingZone.amount_of_bikes_zone - 1;
             color = coordInParkingZone.color;
+            res = await Api.updateNrBikesParkZone(city, amount_of_bikes, color);
+            console.log(res, "updateZon1")
 
-            await Api.updateNrBikesParkZone(city, amount_of_bikes, color);
+            if(res === false){
+                setMessage("Kund ej uppdatera parkeringszonen")
+            }
+        }
+        //Uppdaterar zon med -1 OM cykel tidigare fanns i en laddstation
+        if (coordInChargingPost && coordInChargingPost.returned === true) {
 
-        //Uppdaterar zon med -1 om cykel tidigare fanns i en laddstation
-        } else if (coordInChargingPost && coordInChargingPost.returned) {
             amount_of_bikes = coordInChargingPost.amount_of_bikes_post - 1;
             color = coordInChargingPost.color;
+            res = await Api.updateNrBikesChargePost(city, amount_of_bikes, color);
+            console.log(res, "updateZon1")
 
-            await Api.updateNrBikesChargePost(city, amount_of_bikes, color);
+            if(res === false){
+                setMessage("Kund ej uppdatera laddstationen")
+            }
         }
-        // Uppdaterar alltid den nya zonen(laddstation) med +1
-        let res = await Api.getAllChargePost(city, moveBikeToColor);
+        //Kollar alltid hur många cyklar som finns i station
+        res = await Api.getAllChargePost(city, moveBikeToColor);
+
+        if(res === false) {
+            setMessage("Kund ej hämta antal cyklar i laddstation")
+        }
         let amount_of_bikes_in_new_zone = res[0].amount_of_bikes_post + 1;
 
-        await Api.updateNrBikesChargePost(city, amount_of_bikes_in_new_zone, moveBikeToColor);
+        // Uppdaterar alltid den nya zonen(laddstation) med +1
+        res = await Api.updateNrBikesChargePost(city, amount_of_bikes_in_new_zone, moveBikeToColor);
+        if(res === false) {
+            setMessage("Kund ej uppdatera laddstationen")
+        }
     }
 
+    /* timer för meddelande */
     useEffect(() => {
-        setTimeout(() => setMessage(""), 5000);
+        setTimeout(() => setMessage(""), 8000);
         setMoveBikeToColor("")
     }, [message])
 
 
 	return (
         <StyleMoveBike onClick = {getLoadStationsForMovingBike}> {/* laddar in ny info med onClick */}
-            {message && <p style={{color:"red"}}> {message} </p>} {/* meddelande om det går bra/dåligt med uppdatering */}
+            {/* meddelande om det går bra/dåligt med uppdatering */}
+            {message && <p style={{color:"red", "paddingLeft": "1em"}}> {message} </p>} 
             <select 
                 data-testid="dropdown" onChange={(e) => {
                     setMoveBikeToColor(e.target.value)
             }}
             value={moveBikeToColor}
             >
+            {/* Options för vart cyklen ska flyttas */}
             <option value={''}>-- Välj vart cykeln ska förflyttas --</option>
             {charging_posts.map(elem => elem !== null  &&
                 <option key={elem.color}value={elem.color}>

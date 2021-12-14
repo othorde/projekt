@@ -6,12 +6,18 @@ let initalValue = {
 	city: []
 }
 
-const useLoadCitysToMap = (mapRef, props, changePopUpInfo) => {
+/* Skapar polygons för städer, tar emot mapRef som är objektet för kartan.
+   Samt props för att se om polys för map ska tas bort/läggas till på kartan.
+*/
+const useDisplayPolyCities = (mapRef, props) => {
     const[cityObject, setcityObject] = useState([]); // håller objektet så att man kan ta bort det från kartan
     const[cityContent, setCityContent] = useState(initalValue); // håller content för onClick
-    //sparar res i state, så slipper hämta från servern hela tiden. Kanske ändra om vi ska köra nån realtime
-    const[resFromApi, setResFromApi] = useState(null); 
-    
+    const[cityError, setCityError] = useState(false); 
+
+    /* Tar emot res från getData. Loopar igenom. Skapar poly av
+       alla koordinater som tillhör städer. Lägger på onclickevent.
+       Sparar objekten i state, så de senare kan tas bort.
+    */
     const handleSucces = (res) => {
     var cityname;
     const map = mapRef.current.map;
@@ -34,8 +40,7 @@ const useLoadCitysToMap = (mapRef, props, changePopUpInfo) => {
             fillOpacity: 0.35,
             });
         
-        cityname.addListener('click', (event) => {
-
+        cityname.addListener('click', () => {
             setCityContent(prevState => ({
                 showLoadCitys: !prevState.showLoadCitys,
                 city
@@ -46,49 +51,35 @@ const useLoadCitysToMap = (mapRef, props, changePopUpInfo) => {
         var holdArr = cityObject;
         holdArr.push(cityname);
         setcityObject(holdArr);
-
         })
     };
-    // funktion som kan toggla state, från andra komponenter
+    // funktion som togglar state, från andra Map komponent
     const showInfoForCity = (trueOrFalse) => {
         setCityContent({showLoadCitys: trueOrFalse });
 	}
 
-
-
-    // tar bort loadinstations från kartan, Ska man rensa i states? Isf kommer backend att kallas.
-    // Kommer behövas om man ska få realtiduppdateringar, typ timer
+    // tar bort poly för städer från kartan genom att sätta mapobj för alla stadspoly till null
 	function removeCitysFromMap() { 
-		if (cityObject !== null) {
-			cityObject.forEach(city => {
-				city.setMap(null);
-			})
-		}
-        return
+        cityObject !== null && cityObject.forEach(city => {
+            city.setMap(null);
+        })
 	}
 
+    //körs vid mount och förändring av prop om poly för städer ska visas = hämtar, annars tar bort med removeCitysFromMap
     useEffect(() => {
-        async function fetchData() {
-            // Om loadStations ska tas bort från kartan
-            if (props.ifToShowCity.loadCity === false ) {
-                removeCitysFromMap(mapRef)
-                return
-            }
-            // Om state är null == ej hämtat från backend ännu
-            if (resFromApi === null) {
+        const getData = async () => {
+            try {
+                setCityError(false)
                 let res = await Api.getAllCitys();
-                setResFromApi(res);
                 handleSucces(res)
-            // Annars använd det som är sparat i state
-            } else if (resFromApi !== null) {
-                handleSucces(resFromApi);
-            } else {
-                console.log("Error")
+            } catch (error) {
+                setCityError(true)
             }
         }
-        fetchData();
-    },[mapRef, props.ifToShowCity.loadCity])
-    return {cityContent, showInfoForCity};
+        !props.ifToShowCity.loadCity ? removeCitysFromMap() : getData()
+    }, [props.ifToShowCity.loadCity])
+
+    return {cityContent, cityError, showInfoForCity};
 };
-export default useLoadCitysToMap;
+export default useDisplayPolyCities;
 
