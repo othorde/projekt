@@ -1,32 +1,31 @@
-
 import {React} from "react";
-//styles
-import {PopUpStyle} from './Form.styles'
+//komponent
 import MoveBike from "../MoveBike";
+//styles
+import {PopUpStyle} from './Form.styles';
 
 /* Denna komponent visar i princip bara upp allt innehåll som skickas till den 
    genom onclickevent på ikoner som finns på kartan. Informationen skickas hit 
    som sedan populerar tabellen. Props skickas vidare till movebike om admin
    vill förflytta cykel
 */
-export default function PopUp(props) {
+export default function PopUp({PopupInfo}) {
     let content;
     let whatToShow;
 
-    console.log(props)
-
-    if (props.PopupInfo && props.PopupInfo.content ) {
-        content = props.PopupInfo.content
-        whatToShow = props.PopupInfo.whatToShow
+    if (PopupInfo && PopupInfo.content ) {
+        content = PopupInfo.content
+        whatToShow = PopupInfo.whatToShow
     }
 	return (
 		<PopUpStyle >
+        {/* Scooter */}
         { whatToShow === "Scooter" ? (
             <>
         <table>
             <caption>{whatToShow}</caption>
             <tbody>
-                <tr>
+                <tr key={content._id}>
                 <td data-label="Scooter ID"> {content._id} </td>
                 <td data-label="Aktiv"> {content.is_active === true ? "I användning" : "Används ej"} </td>
                 <td data-label="Användare"> {content.active_user === null ? "Ingen användare" : content.active_user} </td>
@@ -56,31 +55,31 @@ export default function PopUp(props) {
         <table>
             <caption>{whatToShow}</caption>
             <tbody>
-                <tr>
+                <tr key={content.city}>
                 <td data-label="Stad"> {content.city} </td>
                 <td data-label="Antal cyklar"> {content.amount_of_bikes} </td>
                 </tr>
             </tbody>
         </table>
         ) : null } 
- 
+        {/* LaddStation */}
         {whatToShow === "LoadStation" ? (
             <table>
                 <caption>Laddstation ({content.color})</caption>
                 <tbody>
-                    <tr>
+                    <tr key = {content.color}>
                     <td data-label="Antal cyklar"> {content.amount_of_bikes_post} </td>
                     <td data-label="Färgkod"> {content.color} </td>
                     </tr>
                 </tbody>
             </table>
         ) : null }
-
+        {/* Parkeringszon */}
         {whatToShow === "ParkingZone" ? (
             <table>
                 <caption>Parkeringzon ({content.color})</caption>
                 <tbody>
-                    <tr>
+                    <tr key = {content.color}>
                         <td data-label="Antal cyklar"> {content.amount_of_bikes_zone} </td>
                         <td data-label="Färgkod"> {content.color} </td>
                     </tr>
@@ -90,20 +89,3 @@ export default function PopUp(props) {
 		</PopUpStyle>	
 	);
 }
-
-
-
-//  fungerar som REACt component till kartan
-
-// import React from "react";
-
-// const PopUp = ({ text, tooltip, store }) => (
-//   <div className="circle">
-//     <span className="circleText" title={tooltip}>
-//       {text, store}
-//     </span>
-//   </div>
-// );
-
-// export default PopUp;
-

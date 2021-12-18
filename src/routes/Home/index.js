@@ -1,7 +1,6 @@
 import {React, useContext} from "react"
 import AppContext from "../../AppContext.js";
 // components
-
 //picture && styles
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeadset, faCreditCard, faHardHat } from '@fortawesome/free-solid-svg-icons'
@@ -16,7 +15,11 @@ import {
 	Icon3
 } from "./Form.styles.js";
 
-
+/* Efter inloggning hamnar man här. Som en startsida.
+   gör egentligen ingenting.
+   Visar lite ikoner från fontawesome
+   och en bild
+*/
 export default function Home() {
 
     const myContext = useContext(AppContext);
@@ -24,11 +27,11 @@ export default function Home() {
 		<Container>
 			<WelcomeMessage> 
 				<h2>Välkommen {myContext.userHook.value.user || myContext.local.user }</h2>
-				<p>Uppdatera denna texten med något vettigt</p>
-				<div class="container">
+				<p> </p>
+				<div className="container">
 					<img src={newBike} alt="New bike" width="100%" height="100%" /> 
-					<div class="middle">
-						<div class="text">Vår nya cykel har 20% längre batteritid</div>
+					<div className="middle">
+						<div className="text">Vår nya cykel har 20% längre batteritid</div>
 					</div>
 				</div>	
 			</WelcomeMessage>

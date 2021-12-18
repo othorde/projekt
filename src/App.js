@@ -13,7 +13,6 @@ import Welcome from './routes/welcome/welcome';
 import Home from './routes/Home';
 import UserHistory from './routes/History';
 import Customers from './routes/Customers';
-import Logg from './components/Logg';
 
 
 export default function App() {
@@ -34,18 +33,22 @@ export default function App() {
 	  }, []);
 
 	function PrivateRoute({ children }) {
-		const authorized = auth;
-		return authorized === true ? children : <Navigate to="/login" />;
+		return auth === true ? children : <Navigate to="/login" />;
 	}  
 
+	// sätter auth true/false, om false kan man ej logga in
+	// skickar med den i useContext, så andra komponenter kan nyttja den
     const toggleAuth = (value) => {
 		setAuth(value)
     };
 
+	// Togglar state, skickar med den i useContext, 
+	// så andra komponenter kan nyttja den
 	const setUserValues = (value) => {
 		setUserHook({value})
     };
 
+	/* Appcontext, fungerar som globala variabler */
 	const userInfo = {
 		setUserValues,
 		toggleAuth,
@@ -66,8 +69,7 @@ export default function App() {
 		<Route path="account" element={ <PrivateRoute><Account/> </PrivateRoute>} />
 		<Route path="history" element={ <PrivateRoute> <UserHistory/> </PrivateRoute>} />
 		<Route path="customers" element={ <PrivateRoute> <Customers/> </PrivateRoute>} />
-		<Route path="admin" element={<PrivateRoute> <Admin/> </PrivateRoute>} />
-		<Route path="testing" element={<Logg/>} >
+		<Route path="admin" element={<PrivateRoute> <Admin/> </PrivateRoute>} >
 		</Route>
 		<Route path="*" element={ <Loader/>}/>
 	</Routes>

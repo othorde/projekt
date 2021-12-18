@@ -10,6 +10,7 @@ import {useFetchAllCities} from '../../Hooks/useFetchAllCities'
 import {Container, Main, UserHistory, MapContainer} from './Form.styles'
 //other
 import {checkIfCoordInParkingZone, checkIfCoordInChargingPost } from '../../helperfunction/helpers'
+const { v4: uuidv4 } = require('uuid');
 
 const initialValue = {
     showMap: false,
@@ -17,16 +18,18 @@ const initialValue = {
     stopCoord: "",
 }
 
-const History = (props)  => {
-    let user;
+/* Tar props, använder id för att hämta info om användare.  */
+const History = ({user, customer})  => {
+
+    let theUser;
     let id;
-    
-    // För att bestämma vilka props som ska användas
-    if(props && props.user) {
-        user = props.user;
-        id = props.user.value.id
-    } else if ( props && props.customer) {
-        id = props.customer.id;
+ 
+    // Kollar om props finns, skickar in props från två olika komponenter, sätter alltid id.     
+    if(user) {
+        theUser = user;
+        id = user.value.id
+    } else {
+        id = customer.id;
     }
 
     const {aUser, aUserMessage, aUserLoading} = useFetchAUser(id);
@@ -36,128 +39,136 @@ const History = (props)  => {
     const [allParkingZones, setAllParkingZones] = useState([]); // laddstationer
     const [userInvoice, setUserInvoice] = useState([]); // Alla uppg som visas
 
-    /* Loopa städer, sätt värden till state */
+
+    /* Kollar om cities är satt, Loopa städer, sätt värden till state */
     const getAllCities = async () => {
-        if (cities) {
-            cities.forEach(city => {
-                setAllCharging_posts(city.charging_posts);
-                setAllParkingZones(city.parking_zones);
-            });
-        }
+
+        cities && cities.forEach(city => {
+            city.charging_posts.length > 0 && (setAllCharging_posts(city.charging_posts));
+            city.parking_zones.length > 0 && (setAllParkingZones(city.parking_zones));
+        });
     }
 
-    /* Rendera */
+    /* Rendera och kör funktioner vid mount och om något i arrayn ändras */
     useEffect(() => {
         getAllCities()
         checkAllUsersTrips()
-    }, [user, aUser, aUserMessage, cities, loadingCities, aUserLoading])
+    }, [theUser, aUser, aUserMessage, cities, loadingCities, aUserLoading])
 
-    /* rendera om setUserInvoice ändras */
+    /* rita om, om något i arrayn ändras */
     useEffect(() => {
     }, [setUserInvoice, userInvoice, showMapForUser, setShowMapForUser])
 
 
     /* "huvudfunktion" Loopar igenom alla användarens resor och 
         kontrollerar resedetaljer mha de andra funktionerna
+        för att skapa invoice/info om resa
     */
-        function checkAllUsersTrips() {
+    function checkAllUsersTrips() {
 
-            let arrayOfTrips = []
-            aUser.forEach(trip => {
-    
-                let time = getTimeOfTrip(trip.start.time, trip.stop.time)
-                let tripEnded = [trip.stop.position.lat, trip.stop.position.lng];
-                let tripStarted = [trip.start.position.lat, trip.start.position.lng];
-                let startAtParkingZone = checkIfCoordInParkingZone(tripStarted, allParkingZones);
-                let endedAtParkingZone = checkIfCoordInParkingZone(tripEnded, allParkingZones);
-                let startChargePoint = checkIfCoordInChargingPost(tripStarted, allCharging_posts);
-                let endedAtChargePoint = checkIfCoordInChargingPost(tripEnded, allCharging_posts);
-                let prices = checkUserPrices(startAtParkingZone, startChargePoint, endedAtParkingZone, endedAtChargePoint, time);
-    
-                const atrip = { 
-                    tripId: trip.id,
-                    date: trip.date,
-                    startTime: trip.start.time,
-                    stopTime: trip.stop.time,
-                    tripStartedPos: tripStarted,
-                    tripEndedPos: tripEnded,
-                    startAtParkingZone: startAtParkingZone,
-                    endedAtParkingZone: endedAtParkingZone,
-                    startChargePoint: startChargePoint,
-                    endedAtChargePoint: endedAtChargePoint,
-                    timeOfTrip: time,
-                    startFee: prices.startFee,
-                    timeFee: prices.minFee,
-                    discount: prices.discount,
-                    totalCost: (prices.minFee + prices.startFee)
-                }
-                arrayOfTrips.push(atrip);
-            })
-            setUserInvoice(arrayOfTrips)
-        }
+        let arrayOfTrips = [];
+        let time;
+        let tripEnded;
+        let tripStarted;
+        let startAtParkingZone;
+        let endedAtParkingZone;
+        let startChargePoint;
+        let endedAtChargePoint;
+        let prices;
+
+        aUser.forEach(trip => {
+            time = getTimeOfTrip(trip.start.time, trip.stop.time)
+            tripEnded = [trip.stop.position.lat, trip.stop.position.lng];
+            tripStarted = [trip.start.position.lat, trip.start.position.lng];
+            startAtParkingZone = checkIfCoordInParkingZone(tripStarted, allParkingZones);
+            endedAtParkingZone = checkIfCoordInParkingZone(tripEnded, allParkingZones);
+            startChargePoint = checkIfCoordInChargingPost(tripStarted, allCharging_posts);
+            endedAtChargePoint = checkIfCoordInChargingPost(tripEnded, allCharging_posts);
+            prices = checkUserPrices(startAtParkingZone, startChargePoint, endedAtParkingZone, endedAtChargePoint, time);
+            const atrip = { 
+                tripId: trip.id,
+                date: trip.date,
+                startTime: trip.start.time,
+                stopTime: trip.stop.time,
+                tripStartedPos: tripStarted,
+                tripEndedPos: tripEnded,
+                startAtParkingZone: startAtParkingZone,
+                endedAtParkingZone: endedAtParkingZone,
+                startChargePoint: startChargePoint,
+                endedAtChargePoint: endedAtChargePoint,
+                timeOfTrip: time,
+                startFee: prices.startFee,
+                timeFee: prices.minFee,
+                discount: prices.discount,
+                totalCost: (prices.minFee + prices.startFee)
+            }
+            arrayOfTrips.push(atrip);
+        })
+        setUserInvoice(arrayOfTrips)
+    }
 
     /* Räknar ut kunds pris */
     const checkUserPrices = (startAtParkingZone, startChargePoint, endedAtParkingZone, endedAtChargePoint, time) => {
 
-            let prices = {
-                startFee: 10,
-                discount: 0,
-                minFee: 2.5 * time,
+        let prices = {
+            startFee: 10,
+            discount: 0,
+            minFee: 2.5 * time,
+        }
+        /* Om en resa startar i fri parkering och slutar på en definerad blir startavg lägre */
+        if((startAtParkingZone && startAtParkingZone.returned === false)
+        || (startChargePoint && startChargePoint.returned === false)) {
+            if ((endedAtParkingZone && endedAtParkingZone.returned === true) 
+            || (endedAtChargePoint && endedAtChargePoint.returned === true)) {
+                prices.startFee = 8;
+                prices.discount = 2;
+                return prices
             }
-        
-            /* Om en resa börjar i fri parkering och slutar på en definerad blir startavg lägre */
-            if((startAtParkingZone && startAtParkingZone.returned === false)
-            || (startChargePoint && startChargePoint.returned === false)) {
-                if ((endedAtParkingZone && endedAtParkingZone.returned === true) 
-                || (endedAtChargePoint && endedAtChargePoint.returned === true)) {
-                    prices.startFee = 8;
-                    prices.discount = 2;
-                    return prices
-                }
-            }
-
-            /* startavg högre (12) om man ej lämnar inom stationerna */
-            if((endedAtParkingZone && endedAtParkingZone.returned === false)
-                && (endedAtChargePoint && endedAtChargePoint.returned === false)) {
-                    prices.startFee = 12;
-                    return prices
+        }
+        /* startavg högre (12:-) om man friparkerar dvs ej lämnar inom park eller laddstation */
+        if((endedAtParkingZone && endedAtParkingZone.returned === false)
+            && (endedAtChargePoint && endedAtChargePoint.returned === false)) {
+                prices.startFee = 12;
+                return prices
             }
         return prices
     }
 
-    
-
     /* Räknar ut tiden för resan, gör om till sekunder 
-        subtraherar och dividerar för att få ut minuter
+       subtraherar och dividerar för att få ut minuter
     */
-    function getTimeOfTrip(starttime, stoptime) {
-
-        var arrStarttime = starttime.split(".");
-        var arrStoptime = stoptime.split("."); 
-
+    const getTimeOfTrip = (starttime, stoptime) => {
+        
+        var arrStarttime;
+        var arrStoptime;
+        var stopTime;
+        var startTime;
+        var time;
+   
+        arrStarttime = starttime.split(".");
+        arrStoptime = stoptime.split("."); 
         arrStarttime[0] = arrStarttime[0] * 60 * 60;
         arrStarttime[1] = arrStarttime[1] * 60;
         arrStoptime[0] = arrStoptime[0] * 60 * 60;
         arrStoptime[1] = arrStoptime[1] * 60;
-        
-        var stopTime = arrStoptime[0] + arrStoptime[1];
-        var startTime = arrStarttime[0] + arrStarttime[1];
-        var time = (stopTime - startTime) / 60;
+        stopTime = arrStoptime[0] + arrStoptime[1];
+        startTime = arrStarttime[0] + arrStarttime[1];
+        time = (stopTime - startTime) / 60;
 
         return time
     }
 
-    /*  visa upp karta, beroende på var användaren klickar på skärmen
-        det gör att kartan enkelt ses när mna trycker på den och
-        man ex är i mobilläge
+    /*
+        Tar props som visar var användaren trycker på skärmen med musen.
+        Sparar koordinaterna för att visa upp kartan i närheten där man tryckte.
+        Då ser man enkelt kartan vid ex mobilläge.
+        (om props finns)
     */
-    function showMap(startCoord, stopCoord, e) {
+    const showMap = (startCoord, stopCoord, e) => {
 
         let pageY = e.pageY;
-            if(props && props.customer) {
-                pageY = pageY - 200;
-            }
-
+        customer && (pageY = pageY - 200);
+        
         setShowMapForUser({
             showMap: !showMapForUser.showMap,
             startCoord: startCoord,
@@ -166,55 +177,53 @@ const History = (props)  => {
         })
     }
 
-    /* Retunerar, men visar "loading" om userInvoice, loadingCities eller aUserLoading ej är klar */
+    /* Retunerar table, men visar loading komponent om loadingCities eller aUserLoading ej är klar */
 	return (
         <Container>  
             <Main showMap = {showMapForUser.showMap} >
                 <UserHistory> 
-                    {userInvoice.length > 0 && !loadingCities && !aUserLoading ? (
-                    <table>
-                        <caption> Historik </caption>
-                        <thead>
-                            <tr>
-                                <th scope="col">Datum</th>
-                                <th scope="col">Starttid</th>
-                                <th scope="col">Sluttid</th>
-                                <th scope="col">Total tid</th>
-                                <th scope="col">Start avgift</th>
-                                <th scope="col">Rabatt</th>
-                                <th scope="col">Tid avgift</th>
-                                <th scope="col">Visa på karta</th>
-                                <th scope="col">Total kostnad</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {userInvoice.map(elem => 
-                            <tr key={elem.id}>
-                                <td data-label="Datum"> {elem.date} </td>
-                                <td data-label="Starttid">{elem.startTime} </td>
-                                <td data-label="Sluttid">{elem.stopTime} </td>
-                                <td data-label="Total tid">{elem.timeOfTrip} min </td>
-                                <td data-label="Start avgift" >{elem.startFee}:-</td>
-                                <td data-label="Rabatt">{elem.discount}:- </td>
-                                <td data-label="Minutpris">{elem.timeFee}:- </td>
-                                <td data-label="Visa på karta" >
-                                { <button className="button vertical-align:middle" onClick={(e) => 
-                                    showMap(elem.tripStartedPos, elem.tripEndedPos, e)}><span>Färd </span></button>}
-                                </td>
-                                <td data-label="Total kostnad">{elem.totalCost}:- </td>
-                            </tr>
-                            )}
-                        </tbody>
+                    { !loadingCities && !aUserLoading ? (
+                        <table>
+                            <caption> Historik </caption>
+                            <thead>
+                                <tr key={uuidv4()}>
+                                    <th scope="col">Datum</th>
+                                    <th scope="col">Starttid</th>
+                                    <th scope="col">Sluttid</th>
+                                    <th scope="col">Total tid</th>
+                                    <th scope="col">Visa färd på karta</th>
+                                    <th scope="col">Start avgift</th>
+                                    <th scope="col">Rabatt</th>
+                                    <th scope="col">Tid avgift</th>
+                                    <th scope="col">Total kostnad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {userInvoice.length > 0 ? userInvoice.map(elem => 
+                                <tr key={elem._id}>
+                                    <td data-label="Datum"> {elem.date}</td>
+                                    <td data-label="Starttid">{elem.startTime}</td>
+                                    <td data-label="Sluttid">{elem.stopTime}</td>
+                                    <td data-label="Total tid">{elem.timeOfTrip} min</td>
+                                    <td data-label="Visa färd på karta">
+                                    { <button className="button vertical-align:middle" onClick={(e) => 
+                                        showMap(elem.tripStartedPos, elem.tripEndedPos, e)}><span>Färd </span></button>}
+                                    </td>
+                                    <td data-label="Start avgift" >{elem.startFee}:-</td>
+                                    <td data-label="Rabatt">{elem.discount}:-</td>
+                                    <td data-label="Minutpris">{elem.timeFee}:-</td>
+                                    <td data-label="Total kostnad">{elem.totalCost}:- </td>
+                                </tr>
+                                ):  
+                                <tr key={uuidv4()}>
+                                </tr>}
+                            </tbody>
                         </table>
-                        ) : (
-                        <Loader> <p>{aUserMessage || messageCities}</p> </Loader>
-                    )}
+                    ) : ( <Loader> <p>{aUserMessage || messageCities}</p> </Loader> )}
                 </UserHistory>
             </Main>
             <MapContainer showMap = {showMapForUser.showMap} pageY={showMapForUser.pageY} >
-                {showMapForUser.showMap &&
-                    <MapForUser showMapForUser = {showMapForUser}> </MapForUser>
-                }
+                {showMapForUser.showMap && <MapForUser showMapForUser = {showMapForUser}> </MapForUser>}
             </MapContainer>
         </Container>
     )

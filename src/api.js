@@ -66,12 +66,18 @@ const Api =  {
         try {
             const endpoint = `${API_URL}/cities/posts/${city}`;
             let res = await (await fetch(endpoint)).json();
-
+            let result = false;
+            console.log(city, matching, res)
             if(matching) {
-                const result = res.data.filter(elem => elem.color == matching ? elem.amount_of_bikes_post : null);
+                res.data.forEach(element => {
+                    if (element.color === matching) {
+                        console.log(element.color, matching)
+                        result = element.amount_of_bikes_post
+                        
+                    }
+                });
                 return result
             }
-            return res.data
         } catch (error) {
             return false
         }
@@ -193,6 +199,7 @@ const Api =  {
 
 
     updateNrBikesChargePost: async (city, amount_of_bikes, color) => {
+        console.log(city, amount_of_bikes, color)
         try {
             const endpoint = `${API_URL}/cities/posts/update`;
             let res;

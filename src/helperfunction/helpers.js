@@ -1,6 +1,10 @@
 
 /* Används av movebike samt history */
-
+/* Loopar igenom alla allÅarkeringszones och kollar coords finns i array
+   Gör en array och skickar in till checkIfPointInPolygon för att se om 
+   coords finns i polyGon som skickas med. Retunerar zone, som endast är true
+   om coord finns i polygon som är parkeringszon
+*/
 export function checkIfCoordInParkingZone(coords, allParkingZones) {
     let res;
     let zone = {
@@ -21,8 +25,8 @@ export function checkIfCoordInParkingZone(coords, allParkingZones) {
             elem.position.polygonePart4.lng]
         ]
         res = checkIfPointInPolyGon(coords, polyGon);
-        console.log(res)
 
+        // ändra bara zone om res är true
         if(res === true) {
             zone = {
                 returned: true,
@@ -36,7 +40,7 @@ export function checkIfCoordInParkingZone(coords, allParkingZones) {
     return zone
 }
 
- /* loopar igenom alla chargingposts, ser om koordinaterna finns inuti polygon, retunerar endast true */
+ /*  Gör samma som ovan fast loopar chargingposts */
 export function checkIfCoordInChargingPost(coords, allCharging_posts) {
 
     let res;
@@ -59,6 +63,7 @@ export function checkIfCoordInChargingPost(coords, allCharging_posts) {
         ]
 
         res = checkIfPointInPolyGon(coords, polyGon);
+        // ändra bara zone om res är true
         if (res === true) {
             zone = {
                 returned: true,
@@ -70,11 +75,11 @@ export function checkIfCoordInChargingPost(coords, allCharging_posts) {
         }
     }
     return zone;
+
 }
 
 /* Retunerar true/false om punkt finns i polygon */
 export function checkIfPointInPolyGon(point, polygone) {
     var pointInPolygon = require('point-in-polygon');
-
     return pointInPolygon(point, polygone);
 }

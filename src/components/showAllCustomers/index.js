@@ -15,7 +15,6 @@ import {
     StyleHistory,
     ForwardBackwards} from './Form.styles';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-//other
 
 /* värden från början */
 const initialValue = {
@@ -24,26 +23,24 @@ const initialValue = {
     username: "",
     from: "admin"
 }
-
 const initialValueCustomerBalance = {
     show: false,
     id: "",
     username: "",
     pageY: ""
 }
-
 const initialValueIndex = {
     start: 0,
     stop: 19,
     nrOfResults: "",
 }
 
-/* Visar alla användare, kan också se specifika resor samt ändra kontobalans */
+/* Visar alla användare, specifika resor samt ändra kontobalans */
 const ShowAllCustomers = ()  => {
     const {allCustomers, errorAllCustomers} = useFetchAllCustomers(); // hämtar alla anv från hook
     const [showCustomerTrips, setShowCustomerTrips] = useState(initialValue);
     const [changeCustomerBalance, setChangeCustomerBalance] = useState(initialValueCustomerBalance);
-    const [pageIndex, setPageIndex] = useState(initialValueIndex);
+    const [pageIndex, setPageIndex] = useState(initialValueIndex); // vilken sida admin är på, visar 20 resultat från arr
 
     useEffect(() => {
     }, [allCustomers, errorAllCustomers])
@@ -51,7 +48,7 @@ const ShowAllCustomers = ()  => {
     /* Om admin vill se specifik kund. Sätter state som blir true och visas som History i return */
     function showSpecificCustomer(id, username) {
 
-        setChangeCustomerBalance(initialValueCustomerBalance)// resetar dvs visar ej denna längre
+        setChangeCustomerBalance(initialValueCustomerBalance)// resetar denna dvs visar ej denna längre
         setShowCustomerTrips({
             showCustomer: !showCustomerTrips.showCustomer,
             id: id,
@@ -92,7 +89,7 @@ const ShowAllCustomers = ()  => {
                 newStopIndex = 19;
             }
         }
-        /* sätter */
+        /* sätter värden för vilken sida(index) samt hur lång arrayn är, så vi vet max antal sidor*/
         setPageIndex({
             start: newStartIndex,
             stop: newStopIndex,
@@ -102,12 +99,9 @@ const ShowAllCustomers = ()  => {
 
 	return (
         <>
-        {/* Tillbaka btn */}
+        {/* Tillbaka btn, visas endast när alla man är inne på en specifik användare */}
         {showCustomerTrips.showCustomer ? ( 
-        <button style={{
-            height: "3em", 
-            width: "7em",
-            }} 
+        <button style={{ height: "3em", width: "7em", border: "1px solid black"}} 
             onClick= {showSpecificCustomer}> Tillbaka </button>
             ): (null)
         }
@@ -117,7 +111,7 @@ const ShowAllCustomers = ()  => {
                     !showCustomerTrips.showCustomer &&
                 <UserInfo>
                     <table>
-                    <caption>Alla kunder</caption>
+                    <caption>Alla Användare</caption>
                     <thead>
                         <tr>
                             <th scope="col">Id</th>
@@ -129,7 +123,7 @@ const ShowAllCustomers = ()  => {
                         </tr>
                     </thead>
                     <tbody>
-                    {allCustomers.slice([pageIndex.start], [pageIndex.stop]).map(elem => /* elem.tag !== "admin" && */
+                    {allCustomers.slice([pageIndex.start], [pageIndex.stop]).map(elem => 
                         <tr key={elem._id}>
                         <td data-label="Id"> {elem._id}  </td>
                         <td data-label="Användarnamn"> {elem.username} </td>
@@ -148,7 +142,7 @@ const ShowAllCustomers = ()  => {
                 ) : (
                     <Loader/>
                 )}
-                {/* Om man vill se anv alla resor */}
+                {/* Om man vill se användarens alla resor */}
                 {showCustomerTrips.showCustomer && 
                 <>
                 <StyleHistory>

@@ -1,5 +1,5 @@
 import {useState, useEffect } from 'react'
-import Api from '../api';
+import Api from '../Api';
 
 /* Hämtar alla städer */
 export const  useFetchAllCities = () => {

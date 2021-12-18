@@ -1,15 +1,11 @@
 import {React} from "react";
-
 //components
 import ShowAllCustomers from "../../components/showAllCustomers";
-
 //styles
 import {Container, Main} from './Form.styles'
 //other
 
-
-const Customers  = ()  => {
-
+const Customers = ()  => {
 	return (
         <Container>  
             <Main>

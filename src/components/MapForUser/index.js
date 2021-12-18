@@ -7,7 +7,7 @@ import GoogleMapReact from "google-map-react";
 import {Style} from './Form.styles'
 import person from '../../images/person.png'
 
-export default function MapContainer(props) {
+export default function MapContainer({showMapForUser}) {
 
 	const Marker = ({ children }) => <div>{children}</div>;
 	const mapRef = useRef();
@@ -16,10 +16,10 @@ export default function MapContainer(props) {
 	useEffect(async() => {
 		function setCoord () {
 			setCoordinates({
-				startLat: parseFloat(props.showMapForUser.startCoord[0]),
-				startLng: parseFloat(props.showMapForUser.startCoord[1]),
-				stopLat: parseFloat(props.showMapForUser.stopCoord[0]),
-				stopLng: parseFloat(props.showMapForUser.stopCoord[1]),
+				startLat: parseFloat(showMapForUser.startCoord[0]),
+				startLng: parseFloat(showMapForUser.startCoord[1]),
+				stopLat: parseFloat(showMapForUser.stopCoord[0]),
+				stopLng: parseFloat(showMapForUser.stopCoord[1]),
 			})
 		}
 		setCoord()

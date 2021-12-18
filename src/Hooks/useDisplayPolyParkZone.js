@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import Api from '../api';
+import Api from '../Api';
 
 let initalValue = {
 	showParkingZone: false,
@@ -9,7 +9,7 @@ let initalValue = {
 /* Skapar polygons för städer, tar emot mapRef som är objektet för kartan.
    Samt props för att se om polys för map ska tas bort/läggas till på kartan.
 */
-const useDisplayPolyParkZone = (mapRef, props) => {
+const useDisplayPolyParkZone = (mapRef, {ifToShowParkingZone}) => {
     const[parkingZoneObject, setParkingZoneObject] = useState([]); // håller objektet så att man kan ta bort det från kartan
     const[parkingZoneContent, setParkingZoneContent] = useState(initalValue); // håller content för onClick
     const[parkingZoneError, setParkingZoneError] = useState(false); // håller content för onClick
@@ -69,9 +69,14 @@ const useDisplayPolyParkZone = (mapRef, props) => {
         })
 	}
 
-    //körs vid mount och förändring av prop om poly för städer ska visas = hämtar, annars tar bort med removeCitysFromMap
+
+
+
+    //körs vid mount och förändring av prop om poly för städer ska visas = hämtar,
+    // annars tar bort med removeCitysFromMap
     useEffect(() => {
-        const fetchData = async () => {
+
+        const getData = async () => {
             try {
                 setParkingZoneError(false)
                 let res = await Api.getAllCitys();
@@ -80,8 +85,16 @@ const useDisplayPolyParkZone = (mapRef, props) => {
                 setParkingZoneError(true)
             }
         }
-        !props.ifToShowParkingZone.loadParkingZone ? removeParkingZonesFromMap() : fetchData()
-    }, [props.ifToShowParkingZone.loadParkingZone])
+
+        if(ifToShowParkingZone.loadParkingZone) {
+            getData()
+            const interval=setInterval(()=>{
+                getData()
+            }, 10000)
+            return()=>clearInterval(interval)
+        }
+        ifToShowParkingZone.loadParkingZone === false && removeParkingZonesFromMap();
+    }, [ifToShowParkingZone.loadParkingZone])
     
     return {parkingZoneObject, parkingZoneContent, parkingZoneError, showInfoForParkingZone};
 };

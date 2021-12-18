@@ -33,19 +33,19 @@ const Welcome = () => {
                     <h1> Snabba och prisvärdiga resor! </h1>
                     <h2> Ladda ner appen idag </h2>
                     <Downloadable>
-                        <AStore><img src={g2} alt="download Appstore" width="100%" height="100%" /></AStore>
-                        <Gplay><img src={g1} alt="download google" width="100%" height="100%" /></Gplay>
+                        <AStore><img src={g2} alt="download Appstore" width="100%" height="90%" /></AStore>
+                        <Gplay><img src={g1} alt="download google" width="100%" height="90%" /></Gplay>
                     </Downloadable>
                 </Textbox>
                 <BtnContainer>
                 <Btn>    
                     <form onSubmit={login} >
-                        <input type="submit" value="Logga in"/>
+                        <input type="submit" value="Logga in" style={{border: "1px solid black"}}/>
                     </form>
                 </Btn>
                 <Btn2>
                     <form onSubmit={login} >
-                        <input type="submit" value="Registrera"/>
+                        <input type="submit" value="Registrera" style={{border: "1px solid black"}}/>
                     </form>
                 </Btn2>
                 </BtnContainer>

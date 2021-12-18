@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import Api from "../api";
+import Api from "../Api";
 
 // hämtar alla användare som finns registrerade vid mount
 // retunerar alla och error

@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import Api from '../api';
+import Api from '../Api';
 
 let initalValue = {
 	showLoadCitys: false,
@@ -9,7 +9,7 @@ let initalValue = {
 /* Skapar polygons för städer, tar emot mapRef som är objektet för kartan.
    Samt props för att se om polys för map ska tas bort/läggas till på kartan.
 */
-const useDisplayPolyCities = (mapRef, props) => {
+const useDisplayPolyCities = (mapRef, {ifToShowCity}) => {
     const[cityObject, setcityObject] = useState([]); // håller objektet så att man kan ta bort det från kartan
     const[cityContent, setCityContent] = useState(initalValue); // håller content för onClick
     const[cityError, setCityError] = useState(false); 
@@ -65,8 +65,10 @@ const useDisplayPolyCities = (mapRef, props) => {
         })
 	}
 
-    //körs vid mount och förändring av prop om poly för städer ska visas = hämtar, annars tar bort med removeCitysFromMap
+    // Om props ändras samt vid mount.
+    // Är props true hämta data. Om false ta bort från karta
     useEffect(() => {
+
         const getData = async () => {
             try {
                 setCityError(false)
@@ -76,8 +78,16 @@ const useDisplayPolyCities = (mapRef, props) => {
                 setCityError(true)
             }
         }
-        !props.ifToShowCity.loadCity ? removeCitysFromMap() : getData()
-    }, [props.ifToShowCity.loadCity])
+        // Hämta data vid if
+        if(ifToShowCity.loadCity) {
+            getData()
+            const interval=setInterval(()=>{
+                getData()
+            }, 10000)
+            return()=>clearInterval(interval)
+        }
+        ifToShowCity.loadCity === false && removeCitysFromMap()  
+    }, [ifToShowCity.loadCity])
 
     return {cityContent, cityError, showInfoForCity};
 };

@@ -3,13 +3,14 @@ import React from "react";
 import { Wrapper, Content, SignIn, Delimiter, ScooterImg } from './Form.styles.js'
 import scooterPic from '../../images/scooter.png';
 import github from '../../images/github.png'
-
 //other
-
 require('dotenv').config()
 
+/* Login, trycker man på länken skickas info till github om 
+   att en anv vill logga in. redirectas till landingpage som sköter resterande
+   för inloggning genom github. Se landingpage.
+*/
 const FormLogin = () => {
-
     return (
         <Wrapper>
             <Content>

@@ -10,30 +10,27 @@ import AppContext from "../../AppContext";
 const Header = () => {
     let tag = localStorage.getItem("tag");
 
-
     const [customer, setCustomer] = useState(Boolean);
-    const [admin, setAdmin] = useState(true); //ändra till boolen sen
+    const [admin, setAdmin] = useState(false); //ändra till boolen sen
     const [open, setOpen] = useState(false);
     const myContext = useContext(AppContext);
     const auth = myContext.auth;
     let navigate = useNavigate();
 
-
+    /* Kollar om admin eller customer, sätter värdet i state */
     useEffect(() => {
-
         function checkWhoLoggedIn(){
             let tag = localStorage.getItem("tag");
-            if (tag === '"customer"' || myContext.userLocal.tag === "customer") {
-                setCustomer(true);
-            } else if (tag === '"admin"' || myContext.userLocal.tag === "admin") {
+            setCustomer(true);
+            if (tag === '"admin"') {
                 setAdmin(true);
+                setCustomer(false);
             }
         }
         checkWhoLoggedIn()
-
     }, [tag])
 
-
+    /* Logga ut */
     const handleSubmit = async (event)  => {
         myContext.toggleAuth(false);
         myContext.setUserValues(null)
@@ -41,7 +38,6 @@ const Header = () => {
         navigate("/");
         event.preventDefault();
     }
-
     return (
         <> {/* Burgermenu */}
         {auth &&
@@ -56,7 +52,7 @@ const Header = () => {
                 <Link to="/account" > Hantera kunder </Link>
                 </>
                 }
-                {customer === true &&
+                {customer &&
                 <>
                 <Link to="/account" > Konto </Link>
                 <Link to="/history" > Historik </Link>
@@ -64,7 +60,6 @@ const Header = () => {
             }
             <Outlet/>
         </StyledMenu>
-
         {/* Menu */}
         <Container>
             <Logga> Svenska Elsparkcyklar </Logga>
@@ -78,7 +73,7 @@ const Header = () => {
                     <Link to="/customers" > Hantera kunder </Link>
                     </>
                     }
-                    {customer === true &&
+                    {customer &&
                     <>
                     <Link to="/account" > Konto </Link>
                     <Link to="/history" > Historik </Link>

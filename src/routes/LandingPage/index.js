@@ -6,58 +6,53 @@ import Loader from '../../components/Loader'
 import {Wrapper} from "./Form.styles";
 //other
 import AppContext from "../../AppContext";
-import Api from "../../api";
-
+import Api from "../../Api";
+import {PROXY_URL, defaultConfigAuthenticate} from '../../config'
 
 require('dotenv').config()
 
-/* Hämtar ut url koden. Skickar sedan koden till backend.
-   Så att den kan göra de request som behövs till github. 
+/* Hämtar ut url koden av github, som redirectar hit. Skickar sedan koden till backend
+   så att den kan göra de request som behövs till github. 
    Får sedan tillbaka användaruppg, som används för att logga in användaren
    genom vårt api.
 */
 export default function LandingPage() {
-  const [loggedInUser, setLoggedInUser] = useState(Boolean);
-  const navigate = useNavigate();
-  const myContext = useContext(AppContext);        
+	const [loggedInUser, setLoggedInUser] = useState(Boolean);
+	const navigate = useNavigate();
+	const myContext = useContext(AppContext);        
 
-  useEffect(() => {
-    // Hämtar url från webbläsare
-    const url = window.location.href;
-    const hasCode = url.includes("?code=");
-
-    // Om github skickar tillbaka kod, ta ut koden ur URL strängen
-    if (hasCode) {
-      const newUrl = url.split("?code=");
-      window.history.pushState({}, null, newUrl[0]);
-      
-      const requestData = {
-        code: newUrl[1]
-      };
-
-	  // skickar till backend vad den ska göra
-      const proxy_url = "http://localhost:1337/api/oauth/authenticate";
-		async function getGitInfo() {
-			const defaultConfig = {
-				method: 'POST',
-				headers: {
-				'Content-Type': 'application/json',
-					"Access-Control-Allow-Origin": "*"
-				},
+	useEffect(() => {
+		// Hämtar url från webbläsare
+		const url = window.location.href;
+		const hasCode = url.includes("?code=");
+		
+		// Om github skickar tillbaka kod, ta ut koden ur URL strängen
+		if (hasCode) {
+			const newUrl = url.split("?code=");
+			window.history.pushState({}, null, newUrl[0]);
+			const requestData = {
+				code: newUrl[1]
 			};
+			getGitInfo(requestData);
+		}
+	}, []);
 
+
+	/* tar emot reqData från useEffect, skickar till backend och tar emot inlogg uppg. mha info från github */
+	async function getGitInfo(requestData) {
+		setLoggedInUser("Not OK")
+		myContext.toggleAuth(false);
 		try {
-			const endpoint = `${proxy_url}`;
 			let res;
 			let result;
 			res = await (
-				await fetch(endpoint, {
-					...defaultConfig,
+				await fetch(PROXY_URL, {
+					...defaultConfigAuthenticate,
 					body: JSON.stringify({
 						code: requestData.code,
 					})
 				})).json();
-				/* loggar in genom api och sätter user värden i localStorage samt i hook */
+			/* loggar in genom api och sätter user värden i localStorage samt i hook */
 			if (res && res.login) {
 				result = await Api.logginUserViaGit(res.login)
 				if (result && result.data.type === "success") {
@@ -75,36 +70,27 @@ export default function LandingPage() {
 					myContext.toggleAuth(true);
 					setLoggedInUser(true)
 				}
-			} else {
-				setLoggedInUser("Not OK")
-				myContext.toggleAuth(false);
 			}
-
 		} catch (error) {
 			setLoggedInUser("Not OK")
 			myContext.toggleAuth(false);
 		}
 	}
-	getGitInfo();
-	}
-  }, []);
 
-	
+	/* När loggedInUser eller set ändras navigera till home
+	   om tag är satt och loggedInUser är true */
 	useEffect(() => {
 		let tag = localStorage.getItem("tag");
-		if(loggedInUser === true && tag) {
-			navigate("/login/home")
-		}
+		(loggedInUser === true && tag) && navigate("/login/home")
 	}, [loggedInUser, setLoggedInUser])
 
-
-  return (
-    <Wrapper>
-		{!loggedInUser === "Not OK" ? 
-		<p>Det gick inte att logga in just nu</p> 
-		: (
-        	<Loader></Loader>
-		)}
-    </Wrapper>
-  );
+	return (
+		<Wrapper>
+			{!loggedInUser === "Not OK" ? 
+			<p>Det gick inte att logga in just nu</p> 
+			: (
+				<Loader></Loader>
+			)}
+		</Wrapper>
+	);
 }

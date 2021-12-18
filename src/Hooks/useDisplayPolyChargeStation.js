@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import Api from '../api';
+import Api from '../Api';
 
 let initalValue = {
 	showLoadStations: false,
@@ -10,7 +10,7 @@ let initalValue = {
    genom att hämta från db och sen skriva ut. mapRef är kartan. Tar mot props om 
    den ska tas bort från kartan/läggas till.
 */
-const useDisplayPolyChargeStation = (mapRef, props) => {
+const useDisplayPolyChargeStation = (mapRef, {ifToShowLoadStations}) => {
     const[loadStationObject, setLoadStationObject] = useState([]); // sparar objektet i state så att man kan ta bort det från kartan
     const[loadStationContent, setLoadStationContent] = useState(initalValue); // håller content för onClick
     const[loadStationError, setLoadStationError] = useState(false); // håller content för onClick
@@ -65,28 +65,37 @@ const useDisplayPolyChargeStation = (mapRef, props) => {
 	}
 
     // tar bort loadinstations från kartan genom att sätta mapobj som är sparat i state till null.
-	function removeLoadingStationsFromMap() {
+	const removeLoadingStationsFromMap = () => {
         loadStationContent !== null && loadStationObject.forEach(loadStation => {
             loadStation.setMap(null);
         })
 	}
 
-    //Om props ändras och vid mount, kollar om loadStation är false, om ta bort annars hämta data
-    useEffect(() => {
-        const getData = async () => {
-            try {
-                setLoadStationError(false)
-                let res = await Api.getAllCitys();
-                handleSucces(res)
-            } catch (error) {
-                setLoadStationError(true)
-            }
+    // Hämta data
+    const getData = async () => {
+        try {
+            setLoadStationError(false)
+            let res = await Api.getAllCitys();
+            handleSucces(res)
+        } catch (error) {
+            setLoadStationError(true)
         }
-        !props.ifToShowLoadStations.loadStation ? removeLoadingStationsFromMap(mapRef) : getData()
-    }, [props.ifToShowLoadStations.loadStation])
+    }
 
-    
+    // Om props ändras samt vid mount.
+    // Är props true hämta data. Om false ta bort från karta
+    useEffect(()=>{
+        if(ifToShowLoadStations.loadStation) {
+            getData()
+            const interval=setInterval(()=>{
+                getData()
+            }, 10000)
+            return()=>clearInterval(interval)
+        }
+        ifToShowLoadStations.loadStation === false && removeLoadingStationsFromMap()  
+    },[ifToShowLoadStations.loadStation])
+
     return {loadStationObject, loadStationContent, loadStationError, showInfoForLoadStation};
-};
+}
 export default useDisplayPolyChargeStation;
 

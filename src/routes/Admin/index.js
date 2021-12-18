@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react";
 //components
 import Map from '../../components/Map/index';
-
 //Styles
 import {
 	Container, 
@@ -9,7 +8,9 @@ import {
 	MapContainer, 
 	StyledBtn, 
 } from './Form.styles';
-import Api from '../../api';
+//other
+import Api from '../../Api';
+
 
 let initalValue = {
 	loadScooters: false,
@@ -35,8 +36,8 @@ const Admin = () => {
 	const [ifToShowLoadStations, setIfToShowLoadStations] = useState(initalValueLoadStations);
 	const [ifToShowParkingZone, setIfToShowParkingZone] = useState(initalValueParkingZone);
 
+	// vid mount, anropa getScooters samt var 10 sekund
 	useEffect(()=>{
-    
 		getScooters()
 		const interval=setInterval(()=>{
 			getScooters()
@@ -61,6 +62,7 @@ const Admin = () => {
 			})
         }
     }
+
 	/* Dessa tre funktionerna togglar state, vilket tar bort eller lägger till elementen på kartan */
 	const getCitys = async() => {
 		setIfToShowCity(prevState => ({

@@ -13,9 +13,10 @@ import Loader from "../Loader"
 //styles & img
 import {Container,StyleMap, Main} from './Form.styles'
 import bikeimg from '../../images/bike.png'
+
 import personimg from '../../images/person.png'
 
-// options till userLocation
+// options till userLocation, hur länge ska location sparas
 const options = {
 	enableHighAccuracy: true,
 	timeout: 1000 * 60 * 1, // 1 min
@@ -94,7 +95,7 @@ export default function MapContainer(props) {
 		<Container>
 			<Main> 
 			<StyleMap>
-				{/* Visar karta */}
+				{/* Visar karta när location är satt*/}
 				{location ? (
 				<GoogleMapReact 
 					bootstrapURLKeys={{key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY}}

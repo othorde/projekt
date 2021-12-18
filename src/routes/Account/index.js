@@ -6,7 +6,7 @@ import Payment from "../../components/Payment/index.js";
 import { Container, UserInfoContainer, PaymentContainer, Christmas } from "./Form.styles.js";
 import christmas from "../../images/christmas.jpg"
 //Other
-import Api from "../../api.js";
+import Api from "../../Api.js";
 import AppContext from "../../AppContext.js";
 
 /* Sidan account. Hämtar användaren från useContext, skickar vidare infon till komponenterna */
@@ -14,8 +14,8 @@ const Account = () => {
 
     const[userDetails, setUserDetails] = useState(null); // användaruppg
 	const[userDetailsError, setUserDetailsError] = useState(null); //Om error
-	const myContext = useContext(AppContext);
-	const user = myContext.userHook;
+	const myContext = useContext(AppContext); 
+	const user = myContext.userHook; // hook hämtar vissa anv uppg
 
 	/* Hämtar användaruppg från servern (vid mount samt om usern ändras) */
     useEffect(() => {
@@ -42,8 +42,8 @@ const Account = () => {
 					<User userDetails={userDetails}> </User>
 						<Christmas>
 							<img src={christmas} alt="download google" width="100%" height="100%"/>
-							<div class="middle">
-								<div class="text">Håll utkik... snart börjar mellandagsrean! </div>
+							<div className="middle">
+								<div className="text">Håll utkik... snart börjar mellandagsrean! </div>
 							</div>
 						</Christmas>
 				</UserInfoContainer>

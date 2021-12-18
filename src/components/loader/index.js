@@ -4,15 +4,15 @@ import React from 'react'
 import { Loading, FourOFour, Wrapper } from './Form.styles.js'
 
 
-const Loader = (props) => {
+const Loader = ({width}) => {
     return (
         <>
         <Wrapper>
             <Loading>
-            <div class="loader"></div>
+            <div className="loader"></div>
             </Loading>
-            <FourOFour width={props.width}> 
-                <div class="FourOFour"> 
+            <FourOFour width={width}> 
+                <div className="FourOFour"> 
                 </div> 
             </FourOFour>
         </Wrapper>

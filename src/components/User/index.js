@@ -1,6 +1,7 @@
 import {React, useEffect, useState} from "react";
 import {Content, UserInfo} from "./Form.style"
 
+/* sätter alla värden initialt till loading, i väntan på att den ska bli klar */
 const initialValue = {
     username: "Loading...",
     email: "Loading...",
@@ -11,17 +12,25 @@ const initialValue = {
     balance: "Loading..."
 }
 
-export default function User(props) {
-    // get user by username
-    // Kanske får hämta data redan vid inlogg, 
-    // ska ändå hämtas för att kolla om user eller admin
+export default function User({userDetails}) {
+
     const [userInfo, setUserInfo] = useState(initialValue);
-    let data;
 
+    /* vid mount och om userDetails ändras så sätt värden. 
+       Sätter generaliserade värden och senare specifika om användaren gjort resor
+    */
     useEffect(() => {
-
-        if (props.userDetails) {
-            data = props.userDetails.data;
+        let data;
+        if (userDetails) {
+            data = userDetails.data;
+            setUserInfo(({
+                username: data.username,
+                totalCost: "0",
+                firstTrip: "Du har ännu inte gjort någon resa",
+                totalNumberOfTrips: "Du har ännu inte gjort någon resa ",
+                lastTrip: "Du har ännu inte gjort någon resa ",
+                balance: data.balance
+            }));
         }
         if(data && data.trips.length > 0) {
             let totalCost = 0;
@@ -45,18 +54,10 @@ export default function User(props) {
                 lastTrip: lastTrip,
                 balance: data.balance
             }));
-        } else if (data && data.trips.length === 0) {
-            setUserInfo(({
-                username: data.username,
-                totalCost: "0",
-                firstTrip: "Du har ännu inte gjort någon resa",
-                totalNumberOfTrips: "Du har ännu inte gjort någon resa ",
-                lastTrip: "Du har ännu inte gjort någon resa ",
-                balance: data.balance
-            }));
-        }
-    }, [props.userDetails])
+        } 
+    }, [userDetails])
 
+    /* Populerar tabell */
 	return (
         <Content>
             {
@@ -73,7 +74,7 @@ export default function User(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr key={userInfo.username}>
                     <td data-label="Användarnamn"> {userInfo.username} </td>
                     <td data-label="Första resan"> {userInfo.firstTrip} </td>
                     <td data-label="Senaste Resan"> {userInfo.lastTrip} </td>
@@ -84,7 +85,6 @@ export default function User(props) {
                 </table>
             </UserInfo>
             }
-            
         </Content>
 	);
 }

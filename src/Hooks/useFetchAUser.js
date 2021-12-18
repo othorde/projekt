@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import Api from "../api";
+import Api from "../Api";
 
 /* Hämtar en användare, tar mot ett id. Retunerar användaren, meddelande, om den laddar. */
 export const useFetchAUser = (id) => {
