@@ -86,6 +86,9 @@ export default function LandingPage() {
 		}
 	}, [loggedInUser, setLoggedInUser])
 
+
+	console.log(loggedInUser)
+
   return (
     <Wrapper>
 		{!loggedInUser === "Not OK" ? <p>Det gick inte att logga in just nu</p> 

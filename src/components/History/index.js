@@ -40,20 +40,66 @@ const History = ({user, customer})  => {
     const [userInvoice, setUserInvoice] = useState([]); // Alla uppg som visas
 
 
-    /* Kollar om cities är satt, Loopa städer, sätt värden till state */
-    const getAllCities = async () => {
 
-        cities && cities.forEach(city => {
-            city.charging_posts.length > 0 && (setAllCharging_posts(city.charging_posts));
-            city.parking_zones.length > 0 && (setAllParkingZones(city.parking_zones));
-        });
-    }
 
     /* Rendera och kör funktioner vid mount och om något i arrayn ändras */
     useEffect(() => {
+
+        /* Kollar om cities är satt, Loopa städer, sätt värden till state */
+        const getAllCities = async () => {
+
+            cities && cities.forEach(city => {
+                city.charging_posts.length > 0 && (setAllCharging_posts(city.charging_posts));
+                city.parking_zones.length > 0 && (setAllParkingZones(city.parking_zones));
+            });
+        }
+
+        function checkAllUsersTrips() {
+
+            let arrayOfTrips = [];
+            let time;
+            let tripEnded;
+            let tripStarted;
+            let startAtParkingZone;
+            let endedAtParkingZone;
+            let startChargePoint;
+            let endedAtChargePoint;
+            let prices;
+
+            aUser.forEach(trip => {
+                time = getTimeOfTrip(trip.start.time, trip.stop.time)
+                tripEnded = [trip.stop.position.lat, trip.stop.position.lng];
+                tripStarted = [trip.start.position.lat, trip.start.position.lng];
+                startAtParkingZone = checkIfCoordInParkingZone(tripStarted, allParkingZones);
+                endedAtParkingZone = checkIfCoordInParkingZone(tripEnded, allParkingZones);
+                startChargePoint = checkIfCoordInChargingPost(tripStarted, allCharging_posts);
+                endedAtChargePoint = checkIfCoordInChargingPost(tripEnded, allCharging_posts);
+                prices = checkUserPrices(startAtParkingZone, startChargePoint, endedAtParkingZone, endedAtChargePoint, time);
+                const atrip = { 
+                    tripId: trip.id,
+                    date: trip.date,
+                    startTime: trip.start.time,
+                    stopTime: trip.stop.time,
+                    tripStartedPos: tripStarted,
+                    tripEndedPos: tripEnded,
+                    startAtParkingZone: startAtParkingZone,
+                    endedAtParkingZone: endedAtParkingZone,
+                    startChargePoint: startChargePoint,
+                    endedAtChargePoint: endedAtChargePoint,
+                    timeOfTrip: time,
+                    startFee: prices.startFee,
+                    timeFee: prices.minFee,
+                    discount: prices.discount,
+                    totalCost: (prices.minFee + prices.startFee)
+                }
+                arrayOfTrips.push(atrip);
+            })
+            setUserInvoice(arrayOfTrips)
+        }
+
         getAllCities()
         checkAllUsersTrips()
-    }, [theUser, aUser, aUserMessage, cities, loadingCities, aUserLoading])
+    }, [theUser, aUser, aUserMessage, cities, loadingCities, aUserLoading, allCharging_posts, allParkingZones])
 
     /* rita om, om något i arrayn ändras */
     useEffect(() => {
@@ -64,49 +110,7 @@ const History = ({user, customer})  => {
         kontrollerar resedetaljer mha de andra funktionerna
         för att skapa invoice/info om resa
     */
-    function checkAllUsersTrips() {
-
-        let arrayOfTrips = [];
-        let time;
-        let tripEnded;
-        let tripStarted;
-        let startAtParkingZone;
-        let endedAtParkingZone;
-        let startChargePoint;
-        let endedAtChargePoint;
-        let prices;
-
-        aUser.forEach(trip => {
-            time = getTimeOfTrip(trip.start.time, trip.stop.time)
-            tripEnded = [trip.stop.position.lat, trip.stop.position.lng];
-            tripStarted = [trip.start.position.lat, trip.start.position.lng];
-            startAtParkingZone = checkIfCoordInParkingZone(tripStarted, allParkingZones);
-            endedAtParkingZone = checkIfCoordInParkingZone(tripEnded, allParkingZones);
-            startChargePoint = checkIfCoordInChargingPost(tripStarted, allCharging_posts);
-            endedAtChargePoint = checkIfCoordInChargingPost(tripEnded, allCharging_posts);
-            prices = checkUserPrices(startAtParkingZone, startChargePoint, endedAtParkingZone, endedAtChargePoint, time);
-            const atrip = { 
-                tripId: trip.id,
-                date: trip.date,
-                startTime: trip.start.time,
-                stopTime: trip.stop.time,
-                tripStartedPos: tripStarted,
-                tripEndedPos: tripEnded,
-                startAtParkingZone: startAtParkingZone,
-                endedAtParkingZone: endedAtParkingZone,
-                startChargePoint: startChargePoint,
-                endedAtChargePoint: endedAtChargePoint,
-                timeOfTrip: time,
-                startFee: prices.startFee,
-                timeFee: prices.minFee,
-                discount: prices.discount,
-                totalCost: (prices.minFee + prices.startFee)
-            }
-            arrayOfTrips.push(atrip);
-        })
-        setUserInvoice(arrayOfTrips)
-    }
-
+    
     /* Räknar ut kunds pris */
     const checkUserPrices = (startAtParkingZone, startChargePoint, endedAtParkingZone, endedAtChargePoint, time) => {
 
@@ -200,7 +204,7 @@ const History = ({user, customer})  => {
                             </thead>
                             <tbody>
                                 {userInvoice.length > 0 ? userInvoice.map(elem => 
-                                <tr key={elem._id}>
+                                <tr key={uuidv4()}>
                                     <td data-label="Datum"> {elem.date}</td>
                                     <td data-label="Starttid">{elem.startTime}</td>
                                     <td data-label="Sluttid">{elem.stopTime}</td>

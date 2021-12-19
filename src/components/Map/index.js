@@ -13,10 +13,9 @@ import Loader from "../Loader"
 //styles & img
 import {Container,StyleMap, Main} from './Form.styles'
 import bikeimg from '../../images/bike.png'
-
 import personimg from '../../images/person.png'
 
-// options till userLocation, hur länge ska location sparas
+// options till userLocation
 const options = {
 	enableHighAccuracy: true,
 	timeout: 1000 * 60 * 1, // 1 min
@@ -31,9 +30,9 @@ const options = {
 export default function MapContainer(props) {
 	//hooks
 	const mapRef = useRef();
-	const { loadStationContent, showInfoForLoadStation } = useDisplayPolyChargeStation(mapRef, props);
-	const { cityContent, showInfoForCity } = useDisplayPolyCities(mapRef, props);
-	const { parkingZoneContent, showInfoForParkingZone } = useDisplayPolyParkZone(mapRef, props);
+	const { loadStationContent } = useDisplayPolyChargeStation(mapRef, props);
+	const { cityContent } = useDisplayPolyCities(mapRef, props);
+	const { parkingZoneContent } = useDisplayPolyParkZone(mapRef, props);
 	const { location } = useCurrentLocation(options);
 	//State
 	const [scooter, setScooter] = useState([]);
@@ -45,57 +44,30 @@ export default function MapContainer(props) {
 	const Marker = ({ children }) => <div>{children}</div>;
 
 
-	/*  Dessa useEffect sätter de andra värdena till false så att rätt info visas i rutan för innehåll (PopUp)*/ 
+	/*  Dessa useEffect sätter de andra värdet så att rätt info visas i rutan för innehåll (PopUp)
+		Beroende på vad användaren vill se.
+	*/ 
 	useEffect(() => {
-		if (scooter.showScooter === true) {
-			showInfoForCity(false);
-			showInfoForLoadStation(false);
-			showInfoForParkingZone(false);
-			setPopupInfo({content: scooter.scooter, whatToShow: "Scooter"});
-		}
+		scooter.showScooter && setPopupInfo({content: scooter.scooter, whatToShow: "Scooter"});
 	},[scooter.showScooter, scooter, setScooter])
 
 	useEffect(() => {
-		if (loadStationContent.showLoadStations === true) {
-			setScooter(prevState => ({
-				scooter: prevState.scooter,
-				showScooter: false
-			}));
-			showInfoForCity(false);
-			showInfoForParkingZone(false);
-			setPopupInfo({content: loadStationContent.loadStations, whatToShow: "LoadStation"});
-		}
-	},[loadStationContent.showLoadStations])
+		loadStationContent.showLoadStations && setPopupInfo({content: loadStationContent.loadStations, whatToShow: "LoadStation"});
+	},[loadStationContent.showLoadStations, loadStationContent.loadStations])
 
 	useEffect(() => {
-		if (cityContent.showLoadCitys === true) {
-			setScooter(prevState => ({
-				scooter: prevState.scooter,
-				showScooter: false
-			}));
-			showInfoForLoadStation(false);
-			showInfoForParkingZone(false);
-			setPopupInfo({content: cityContent.city, whatToShow: "City"});
-		}
-	},[cityContent.showLoadCitys])
+		cityContent.showLoadCitys && setPopupInfo({content: cityContent.city, whatToShow: "City"});
+	},[cityContent.showLoadCitys, cityContent.city])
 
 	useEffect(() => {
-		if (parkingZoneContent.showParkingZone === true) {
-			setScooter(prevState => ({
-				scooter: prevState.scooter,
-				showScooter: false
-			}));
-			showInfoForCity(false);
-			showInfoForLoadStation(false);
-			setPopupInfo({content: parkingZoneContent.loadParkingZone, whatToShow: "ParkingZone"});
-		}
-	},[parkingZoneContent.showParkingZone])
+		parkingZoneContent.showParkingZone && setPopupInfo({content: parkingZoneContent.loadParkingZone, whatToShow: "ParkingZone"});
+	},[parkingZoneContent.showParkingZone, parkingZoneContent.loadParkingZone])
 
 	return (
 		<Container>
 			<Main> 
 			<StyleMap>
-				{/* Visar karta när location är satt*/}
+				{/* Visar karta */}
 				{location ? (
 				<GoogleMapReact 
 					bootstrapURLKeys={{key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY}}

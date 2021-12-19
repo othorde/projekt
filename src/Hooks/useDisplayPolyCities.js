@@ -14,61 +14,65 @@ const useDisplayPolyCities = (mapRef, {ifToShowCity}) => {
     const[cityContent, setCityContent] = useState(initalValue); // håller content för onClick
     const[cityError, setCityError] = useState(false); 
 
-    /* Tar emot res från getData. Loopar igenom. Skapar poly av
-       alla koordinater som tillhör städer. Lägger på onclickevent.
-       Sparar objekten i state, så de senare kan tas bort.
-    */
-    const handleSucces = (res) => {
-    var cityname;
-    const map = mapRef.current.map;
-    const maps = mapRef.current.maps;
 
-    res.forEach(city => {
-        cityname = city.city
-        let polyGon = 
-            ([city.position.polygonePart1,
-                city.position.polygonePart2,
-                city.position.polygonePart3,
-                city.position.polygonePart4
-            ]);
-        cityname = new maps.Polygon({
-            paths: polyGon,
-            strokeColor: "#FF0000",
-            strokeOpacity: 0.9,
-            strokeWeight: 2,
-            fillColor: "transparent",
-            fillOpacity: 0.35,
-            });
-        
-        cityname.addListener('click', () => {
-            setCityContent(prevState => ({
-                showLoadCitys: !prevState.showLoadCitys,
-                city
-            }));
-        });
-
-        cityname.setMap(map);
-        var holdArr = cityObject;
-        holdArr.push(cityname);
-        setcityObject(holdArr);
-        })
-    };
     // funktion som togglar state, från andra Map komponent
     const showInfoForCity = (trueOrFalse) => {
         setCityContent({showLoadCitys: trueOrFalse });
-	}
+    }
 
-    // tar bort poly för städer från kartan genom att sätta mapobj för alla stadspoly till null
-	function removeCitysFromMap() { 
-        cityObject !== null && cityObject.forEach(city => {
-            city.setMap(null);
-        })
-	}
-
+    
     // Om props ändras samt vid mount.
     // Är props true hämta data. Om false ta bort från karta
     useEffect(() => {
 
+        /* Tar emot res från getData. Loopar igenom. Skapar poly av
+       alla koordinater som tillhör städer. Lägger på onclickevent.
+       Sparar objekten i state, så de senare kan tas bort.
+        */
+        const handleSucces = (res) => {
+            var cityname;
+            const map = mapRef.current.map;
+            const maps = mapRef.current.maps;
+        
+            res.forEach(city => {
+                cityname = city.city
+                let polyGon = 
+                    ([city.position.polygonePart1,
+                        city.position.polygonePart2,
+                        city.position.polygonePart3,
+                        city.position.polygonePart4
+                    ]);
+                cityname = new maps.Polygon({
+                    paths: polyGon,
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 0.9,
+                    strokeWeight: 2,
+                    fillColor: "transparent",
+                    fillOpacity: 0.35,
+                    });
+                
+                cityname.addListener('click', () => {
+                    setCityContent(prevState => ({
+                        showLoadCitys: !prevState.showLoadCitys,
+                        city
+                    }));
+                });
+        
+                cityname.setMap(map);
+                var holdArr = cityObject;
+                holdArr.push(cityname);
+                setcityObject(holdArr);
+            })
+        };
+
+        
+        // tar bort poly för städer från kartan genom att sätta mapobj för alla stadspoly till null
+        function removeCitysFromMap() { 
+            cityObject !== null && cityObject.forEach(city => {
+                city.setMap(null);
+            })
+        }
+    
         const getData = async () => {
             try {
                 setCityError(false)
@@ -87,7 +91,7 @@ const useDisplayPolyCities = (mapRef, {ifToShowCity}) => {
             return()=>clearInterval(interval)
         }
         ifToShowCity.loadCity === false && removeCitysFromMap()  
-    }, [ifToShowCity.loadCity])
+    }, [ifToShowCity.loadCity, cityObject, mapRef])
 
     return {cityContent, cityError, showInfoForCity};
 };

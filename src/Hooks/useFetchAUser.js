@@ -25,7 +25,7 @@ export const useFetchAUser = (id) => {
     // hämta endast vid mount
     useEffect(() => {
         fetchData(id);
-    },[]);
+    },[id]);
 
     return {aUser, aUserLoading, aUserMessage}
 }

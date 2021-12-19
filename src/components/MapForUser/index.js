@@ -13,7 +13,7 @@ export default function MapContainer({showMapForUser}) {
 	const mapRef = useRef();
 	const [coordinates, setCoordinates] = useState({start: {}, stop: {}})
 
-	useEffect(async() => {
+	useEffect(() => {
 		function setCoord () {
 			setCoordinates({
 				startLat: parseFloat(showMapForUser.startCoord[0]),
@@ -23,7 +23,7 @@ export default function MapContainer({showMapForUser}) {
 			})
 		}
 		setCoord()
-	}, [])
+	}, [showMapForUser.stopCoord, showMapForUser.startCoord])
 
 
 	function placePolyLine() {
@@ -80,7 +80,7 @@ export default function MapContainer({showMapForUser}) {
 				yesIWantToUseGoogleMapApiInternals
 				onGoogleApiLoaded= {({map, maps}) => {
 					mapRef.current = {map, maps};
-					placePolyLine()
+					placePolyLine();
 				}}
 			>
 			<Marker

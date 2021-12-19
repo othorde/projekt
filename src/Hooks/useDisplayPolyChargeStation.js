@@ -15,12 +15,40 @@ const useDisplayPolyChargeStation = (mapRef, {ifToShowLoadStations}) => {
     const[loadStationContent, setLoadStationContent] = useState(initalValue); // håller content för onClick
     const[loadStationError, setLoadStationError] = useState(false); // håller content för onClick
 
-    /* loopar igenom res från db, tar ut alla koordinatera som
-       är laddstationer, skapar sedan ny polygon med dessa
-       och lägger på ett klickevent. Sparar obj i state
-       så att det senare kan tas bort
-    */
-    const handleSucces = (res) => {
+    
+    // funktion som kan toggla state, används från map
+    const showInfoForLoadStation = (trueOrFalse) => {
+        setLoadStationContent({ showLoadStations: trueOrFalse});
+	}
+    // Om props ändras samt vid mount.
+    // Är props true hämta data. Om false ta bort från karta
+    useEffect(()=>{
+            
+        // Hämta data
+        const getData = async () => {
+            try {
+                setLoadStationError(false)
+                let res = await Api.getAllCitys();
+                handleSucces(res)
+            } catch (error) {
+                setLoadStationError(true)
+            }
+        }
+
+        // tar bort loadinstations från kartan genom att sätta mapobj som är sparat i state till null.
+        const removeLoadingStationsFromMap = () => {
+            loadStationContent !== null && loadStationObject.forEach(loadStation => {
+                loadStation.setMap(null);
+            })
+        }
+
+        /* 
+        loopar igenom res från db, tar ut alla koordinatera som
+        är laddstationer, skapar sedan ny polygon med dessa
+        och lägger på ett klickevent. Sparar obj i state
+        så att det senare kan tas bort
+        */
+       const handleSucces = (res) => {
         var loadStationName;
         const map = mapRef.current.map;
         const maps = mapRef.current.maps;
@@ -49,42 +77,16 @@ const useDisplayPolyChargeStation = (mapRef, {ifToShowLoadStations}) => {
                         loadStations
                     }));
                 });
-            loadStationName.setMap(map);
-            // Kopierar tidigare state + lägger in nytt element sedan sätter state
-            var holdArr = loadStationObject;
-            holdArr.push(loadStationName);
-            setLoadStationObject(holdArr);
+                loadStationName.setMap(map);
+                // Kopierar tidigare state + lägger in nytt element sedan sätter state
+                var holdArr = loadStationObject;
+                holdArr.push(loadStationName);
+                setLoadStationObject(holdArr);
+                })
+
             })
+        };
 
-        })
-    };
-
-    // funktion som kan toggla state, används från map
-    const showInfoForLoadStation = (trueOrFalse) => {
-        setLoadStationContent({ showLoadStations: trueOrFalse});
-	}
-
-    // tar bort loadinstations från kartan genom att sätta mapobj som är sparat i state till null.
-	const removeLoadingStationsFromMap = () => {
-        loadStationContent !== null && loadStationObject.forEach(loadStation => {
-            loadStation.setMap(null);
-        })
-	}
-
-    // Hämta data
-    const getData = async () => {
-        try {
-            setLoadStationError(false)
-            let res = await Api.getAllCitys();
-            handleSucces(res)
-        } catch (error) {
-            setLoadStationError(true)
-        }
-    }
-
-    // Om props ändras samt vid mount.
-    // Är props true hämta data. Om false ta bort från karta
-    useEffect(()=>{
         if(ifToShowLoadStations.loadStation) {
             getData()
             const interval=setInterval(()=>{
@@ -93,7 +95,7 @@ const useDisplayPolyChargeStation = (mapRef, {ifToShowLoadStations}) => {
             return()=>clearInterval(interval)
         }
         ifToShowLoadStations.loadStation === false && removeLoadingStationsFromMap()  
-    },[ifToShowLoadStations.loadStation])
+    },[ifToShowLoadStations.loadStation, loadStationContent, loadStationObject, mapRef])
 
     return {loadStationObject, loadStationContent, loadStationError, showInfoForLoadStation};
 }
