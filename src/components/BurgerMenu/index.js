@@ -6,7 +6,7 @@ import { StyledBurger  } from './Form.styles.js';
 */
 const BurgerMenu = ({open, setOpen}) => {
 	return (
-    <StyledBurger open={open} onClick={() => setOpen(!open)} data-testid="custom-element">
+    <StyledBurger open={open} onClick={() => setOpen(!open)} data-testid="burgerButton">
 		<div/>
 		<div/>
 		<div/>

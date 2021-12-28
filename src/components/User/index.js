@@ -15,7 +15,6 @@ const initialValue = {
 export default function User({userDetails}) {
 
     const [userInfo, setUserInfo] = useState(initialValue);
-
     /* vid mount och om userDetails ändras så sätt värden. 
        Sätter generaliserade värden och senare specifika om användaren gjort resor
     */
@@ -77,9 +76,9 @@ export default function User({userDetails}) {
                     <tr key={userInfo.username}>
                     <td data-label="Användarnamn"> {userInfo.username} </td>
                     <td data-label="Första resan"> {userInfo.firstTrip} </td>
-                    <td data-label="Senaste Resan"> {userInfo.lastTrip} </td>
+                    <td data-label="Senaste resan"> {userInfo.lastTrip} </td>
                     <td data-label="Antal resor">{userInfo.totalNumberOfTrips} </td>
-                    <td data-label="På konton">{userInfo.balance}:- </td>
+                    <td data-label="På kontot">{userInfo.balance}:- </td>
                     </tr>
                 </tbody>
                 </table>

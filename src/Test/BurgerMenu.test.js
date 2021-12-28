@@ -21,7 +21,7 @@ it("changes value when clicked", () => {
 	const setOpen = jest.fn();
 	act(() => {
 	  render(<BurgerMenu open={false} setOpen={setOpen}/>, container);
-	  const button = document.querySelector("[data-testid=custom-element]");
+	  const button = document.querySelector("[data-testid=burgerButton]");
 	  button.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
 	});
