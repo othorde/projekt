@@ -1,21 +1,17 @@
 import React from 'react';
 import { StyledBurger  } from './Form.styles.js';
-import { bool, func } from 'prop-types';
 
-/* burgermeny, knapp med 3 streck/divs */
-const Burger = ({open, setOpen}) => {
+/* burgermeny, knapp med 3 streck/divs, tar
+	props from header. Om den ska vara aktiv eller inte
+*/
+const BurgerMenu = ({open, setOpen}) => {
 	return (
-    <StyledBurger open={open} onClick={() => setOpen(!open)}>
-		<div />
-		<div />
-		<div />
+    <StyledBurger open={open} onClick={() => setOpen(!open)} data-testid="custom-element">
+		<div/>
+		<div/>
+		<div/>
     </StyledBurger>
   	)
 }
 
-Burger.propTypes = {
-	open: bool.isRequired,
-	setOpen: func.isRequired,
-  };
-
-export default Burger;
+export default BurgerMenu;

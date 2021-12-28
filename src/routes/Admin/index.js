@@ -6,11 +6,14 @@ import {
 	Container, 
 	Nav, 
 	MapContainer, 
-	StyledBtn, 
+	StyledBtn,
+	StyledImg
 } from './Form.styles';
 //other
 import Api from '../../Api';
-
+import fullyChargedBike from '../../images/fullyChargedBike.png';
+import halfChargedBike from '../../images/halfchargedbike.png';
+import noChargeBike from '../../images/noChargeBike.png';
 
 let initalValue = {
 	loadScooters: false,
@@ -38,30 +41,34 @@ const Admin = () => {
 
 	// vid mount, anropa getScooters samt var 10 sekund
 	useEffect(()=>{
+		
+		const getScooters = async() => {
+			try {
+				let res = await Api.getAllScooters();  
+				setIfToShowScooter({
+					loadScooters: true,
+					content: res,
+					error: false
+				});
+			} catch (error) {
+				setIfToShowScooter({
+					loadScooters: true,
+					content: [""],
+					error: true
+				})
+			}
+		}
+
 		getScooters()
 		const interval=setInterval(()=>{
 			getScooters()
 		 }, 10000)
 		   
-		 return()=>clearInterval(interval)
-	},[])
+		return()=>{
+			clearInterval(interval)
+		}
 
-	const getScooters = async() => {
-        try {
-            let res = await Api.getAllScooters();  
-			setIfToShowScooter({
-				loadScooters: true,
-				content: res,
-				error: false
-			});
-        } catch (error) {
-			setIfToShowScooter({
-				loadScooters: true,
-				content: [""],
-				error: true
-			})
-        }
-    }
+	},[])
 
 	/* Dessa tre funktionerna togglar state, vilket tar bort eller lägger till elementen på kartan */
 	const getCitys = async() => {
@@ -89,6 +96,15 @@ const Admin = () => {
 				<StyledBtn onClick= {getCitys}> Städer </StyledBtn>
 				<StyledBtn onClick= {getLoadStations}> Laddstationer </StyledBtn>
 				<StyledBtn onClick= {getParkingZone}>  Parkeringszoner </StyledBtn>
+				<StyledImg>
+					<img src={fullyChargedBike} alt="fully charged bike" width="60%" height="10%" />
+					<p style={{fontWeight: "bold", fontSize: "0.9em"}}> MINST 75% </p>
+					<img src={halfChargedBike} alt="fully charged bike" width="60%" height="10%" />
+					<p style={{fontWeight: "bold", fontSize: "0.9em"}}> 25-75% </p>
+					<img src={noChargeBike} alt="fully charged bike" width="60%" height="10%" />
+					<p style={{fontWeight: "bold", fontSize: "0.9em"}}> MINDRE ÄN 25%</p>
+				</StyledImg>
+
 			</Nav>
 			<MapContainer>
 				<Map 

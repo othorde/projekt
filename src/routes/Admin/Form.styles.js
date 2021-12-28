@@ -37,6 +37,18 @@ export const Nav = styled.div `
 `;
 
 
+export const StyledImg = styled.div `
+	padding-top: 1em;
+	width: 80%;
+	height: 40%;
+
+	@media screen and (max-width: 720px) {
+		display:none;
+	}
+
+
+`
+
 export const MapContainer = styled.div `
 	display: flex;
 	flex-direction: column;

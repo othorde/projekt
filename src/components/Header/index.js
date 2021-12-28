@@ -3,7 +3,7 @@ import { Link, Outlet, useNavigate  } from "react-router-dom";
 //style
 import { Container, Logga, Nav, SignOut, StyledMenu } from './Form.styles.js';
 //components
-import Burger from "../BurgerMenu/index";
+import BurgerMenu from "../BurgerMenu/index";
 //import Menu from "../Menu/index"
 import AppContext from "../../AppContext";
 
@@ -41,7 +41,7 @@ const Header = () => {
     return (
         <> {/* Burgermenu */}
         {auth &&
-        <Burger open={open} setOpen={setOpen}> </Burger>
+        <BurgerMenu open={open} setOpen={setOpen}> </BurgerMenu>
         }
             <StyledMenu open={open}>
                 <Link to="/login/home" > Svenska Elsparkcyklar</Link> 

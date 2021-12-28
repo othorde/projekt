@@ -9,25 +9,25 @@ export const StyledBurger = styled.button`
 	justify-content: space-around;
 	width: 2rem;
 	height: 2rem;
-	background: #fff0f5;
+	background: white;
 	border: none;
 	cursor: pointer;
 	padding: 0;
 	z-index: 1000;
-	color: #fff0f5;
-	border: #fff0f5;
+	color: white;
+	border: white;
 	@media (min-width: 720px) {
 		display: none;
 	}
 
   &:focus {
     outline: none;
-	background: #fff0f5;
-	border: #fff0f5;
+	background: white;
+	border: white;
 }
 
 	:hover {
-		border: #fff0f5;
+		border: white;
 
 	}
 

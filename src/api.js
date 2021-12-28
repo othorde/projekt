@@ -100,7 +100,7 @@ const Api =  {
         }
     },
 
-    updateAScooter: async (id, speed, battery, newPosition, active_user, is_active) => {
+    updateAScooter: async (id, speed, battery, newPosition) => {
         try {
             const endpoint = `${API_URL}/scooter`;
 

@@ -53,8 +53,9 @@ export const Downloadable = styled.div `
     display:flex;
     flex-direction: row;
     width:100%;
-    height:30%;
+    height:35%;
     justify-content:center;
+
 `;
 
 export const AStore = styled.div `
@@ -78,16 +79,24 @@ export const BtnContainer = styled.div `
     display: flex;
     justify-content:center;
     width: 100%;
-    height: 30%;
+    height: 35%;
     min-height: 3em;
 
 `
 export const Btn = styled.div `
     width: 50%;
     flex: 1;
+    input {
+        width: 10em;
+        height: 3em;
+    }
 `;
 export const Btn2 = styled.div `
     width: 50%;
     flex: 1;
+    input {
+        width: 10em;
+        height: 3em;
+    }
 `;
 

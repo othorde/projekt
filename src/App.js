@@ -60,20 +60,20 @@ export default function App() {
 	return (
 	<>
 	<AppContext.Provider value={userInfo}>
-	<Header/>
-	<Routes>
-		<Route path="/" element={ <Welcome/>} />
-		<Route path="login/landingpage" element={ <LandingPage/>} />
-		<Route path="login" element={ <FormLogin/> } />
-		<Route path="login/home" element={ <PrivateRoute> <Home/> </PrivateRoute>} />
-		<Route path="account" element={ <PrivateRoute><Account/> </PrivateRoute>} />
-		<Route path="history" element={ <PrivateRoute> <UserHistory/> </PrivateRoute>} />
-		<Route path="customers" element={ <PrivateRoute> <Customers/> </PrivateRoute>} />
-		<Route path="admin" element={<PrivateRoute> <Admin/> </PrivateRoute>} >
-		</Route>
-		<Route path="*" element={ <Loader/>}/>
-	</Routes>
-	<Footer/>
+		<Header/>
+		<Routes>
+			<Route path="/" element={ <Welcome/>} />
+			<Route path="login/landingpage" element={ <LandingPage/>} />
+			<Route path="login" element={ <FormLogin/> } />
+			<Route path="login/home" element={ <PrivateRoute> <Home/> </PrivateRoute>} />
+			<Route path="account" element={ <PrivateRoute><Account/> </PrivateRoute>} />
+			<Route path="history" element={ <PrivateRoute> <UserHistory/> </PrivateRoute>} />
+			<Route path="customers" element={ <PrivateRoute> <Customers/> </PrivateRoute>} />
+			<Route path="admin" element={<PrivateRoute> <Admin/> </PrivateRoute>} >
+			</Route>
+			<Route path="*" element={ <Loader/>}/>
+		</Routes>
+		<Footer/>
 	</AppContext.Provider>
 
 	</>

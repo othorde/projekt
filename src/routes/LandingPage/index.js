@@ -25,7 +25,7 @@ export default function LandingPage() {
 		// Hämtar url från webbläsare
 		const url = window.location.href;
 		const hasCode = url.includes("?code=");
-		
+
 		// Om github skickar tillbaka kod, ta ut koden ur URL strängen
 		if (hasCode) {
 			const newUrl = url.split("?code=");
@@ -35,54 +35,54 @@ export default function LandingPage() {
 			};
 			getGitInfo(requestData);
 		}
-	}, []);
 
-
-	/* tar emot reqData från useEffect, skickar till backend och tar emot inlogg uppg. mha info från github */
-	async function getGitInfo(requestData) {
-		setLoggedInUser("Not OK")
-		myContext.toggleAuth(false);
-		try {
-			let res;
-			let result;
-			res = await (
-				await fetch(PROXY_URL, {
-					...defaultConfigAuthenticate,
-					body: JSON.stringify({
-						code: requestData.code,
-					})
-				})).json();
-			/* loggar in genom api och sätter user värden i localStorage samt i hook */
-			if (res && res.login) {
-				result = await Api.logginUserViaGit(res.login)
-				if (result && result.data.type === "success") {
-					localStorage.clear();
-					localStorage.setItem('user', JSON.stringify(res.login));
-					localStorage.setItem('tag', JSON.stringify(result.data.user.tag));
-					localStorage.setItem('id', JSON.stringify(result.data.user.id));
-
-					const user = {
-						user: res.login,
-						tag: result.data.user.tag,
-						id: result.data.user.id,
-					}
-					myContext.setUserValues(user)
-					myContext.toggleAuth(true);
-					setLoggedInUser(true)
-				}
-			}
-		} catch (error) {
+		
+		/* tar emot reqData från useEffect, skickar till backend och tar emot inlogg uppg. mha info från github */
+		async function getGitInfo(requestData) {
 			setLoggedInUser("Not OK")
 			myContext.toggleAuth(false);
+			try {
+				let res;
+				let result;
+				res = await (
+					await fetch(PROXY_URL, {
+						...defaultConfigAuthenticate,
+						body: JSON.stringify({
+							code: requestData.code,
+						})
+					})).json();
+				/* loggar in genom api och sätter user värden i localStorage samt i hook */
+				if (res && res.login) {
+					result = await Api.logginUserViaGit(res.login)
+					if (result && result.data.type === "success") {
+						localStorage.clear();
+						localStorage.setItem('user', JSON.stringify(res.login));
+						localStorage.setItem('tag', JSON.stringify(result.data.user.tag));
+						localStorage.setItem('id', JSON.stringify(result.data.user.id));
+
+						const user = {
+							user: res.login,
+							tag: result.data.user.tag,
+							id: result.data.user.id,
+						}
+						myContext.setUserValues(user)
+						myContext.toggleAuth(true);
+						setLoggedInUser(true)
+					}
+				}
+			} catch (error) {
+				setLoggedInUser("Not OK")
+				myContext.toggleAuth(false);
+			}
 		}
-	}
+	});
 
 	/* När loggedInUser eller set ändras navigera till home
 	   om tag är satt och loggedInUser är true */
 	useEffect(() => {
 		let tag = localStorage.getItem("tag");
 		(loggedInUser === true && tag) && navigate("/login/home")
-	}, [loggedInUser, setLoggedInUser])
+	}, [loggedInUser, setLoggedInUser, navigate])
 
 	return (
 		<Wrapper>

@@ -14,6 +14,9 @@ import Loader from "../Loader"
 import {Container,StyleMap, Main} from './Form.styles'
 import bikeimg from '../../images/bike.png'
 import personimg from '../../images/person.png'
+import fullyChargedBike from '../../images/fullyChargedBike.png';
+import halfChargedBike from '../../images/halfchargedbike.png';
+import noChargeBike from '../../images/noChargeBike.png';
 
 // options till userLocation
 const options = {
@@ -42,7 +45,6 @@ export default function MapContainer(props) {
 	const ScooterArray = props.ifToShowScooter.content;
 	// Marker på kartan 1 person
 	const Marker = ({ children }) => <div>{children}</div>;
-
 
 	/*  Dessa useEffect sätter de andra värdet så att rätt info visas i rutan för innehåll (PopUp)
 		Beroende på vad användaren vill se.
@@ -99,7 +101,11 @@ export default function MapContainer(props) {
 							lng={scooter.position.lng}
 							>
 							<div onClick={() => setScooter({scooter, showScooter: true})}className="crime-marker">
-							<img className = "scooter" src={bikeimg} alt="scooter"/>
+							
+							{ scooter.battery < 99  ? <img className = "scooter" src={halfChargedBike} alt="scooter"/>
+							: scooter.battery <= 96  ? <img className = "scooter" src={noChargeBike} alt="scooter"/>
+							: <img className = "scooter" src={fullyChargedBike} alt="scooter"/>
+							}
 							</div>
 						</Marker>)
 						})
