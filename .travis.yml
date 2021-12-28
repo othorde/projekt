@@ -2,8 +2,9 @@ language: node_js
 
 node_js:
     - "node"
-    - "8"
-    - "7"
+    - "14"
+    - "12"
+    - "10"
 
 sudo: false
 
@@ -11,10 +12,10 @@ git:
     submodules: false
 
 before_script:
-    - make install
+    - npm install
 
 script:
-    - make test
+    - npm run test
 
 after_success:
     - npm run report-coveralls
