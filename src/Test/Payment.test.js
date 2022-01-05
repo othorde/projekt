@@ -59,7 +59,6 @@ describe('input value', () => {
 
         const input = await screen.findByPlaceholderText('Nytt saldo')
         const button = await screen.findByRole('button',{name: /Ändra saldo/i})
-        const payment = screen.getByTestId("payment-element");
 
         fireEvent.change(input, {target: {value:100}})
         fireEvent.click(button)
