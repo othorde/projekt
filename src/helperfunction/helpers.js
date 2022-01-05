@@ -6,8 +6,7 @@
    om coord finns i polygon som är parkeringszon
 */
 export function checkIfCoordInParkingZone(coords, allParkingZones) {
-    console.log(coords);
-    console.log(allParkingZones);
+
     let res;
     let zone = {
         returned: false,

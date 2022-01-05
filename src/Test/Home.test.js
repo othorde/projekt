@@ -24,7 +24,7 @@ afterEach(() => {
 it("renders without problem when no user is defined ", () => {
 
 	let data = {};
-
+ 
 	act(() => {
 		render(
 			<AppContext.Provider value={data}>

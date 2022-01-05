@@ -43,8 +43,7 @@ it("renders user data", async () => {
             },
         }],
         },
-        user: "Kund100" ,
-
+        user: "Kund100",
     };
 
     await act(async () => {
