@@ -26,7 +26,7 @@ export default function Home() {
 	return (
 		<Container>
 			<WelcomeMessage> 
-				<h2>Välkommen {myContext.userHook.value.user || myContext.local.user }</h2>
+				<h2>Välkommen {myContext.userHook !== undefined ? myContext.userHook.value.user : "okända besökare" }</h2>
 				<p> </p>
 				<div className="container">
 					<img src={newBike} alt="New bike" width="100%" height="100%" /> 

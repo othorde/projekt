@@ -20,7 +20,6 @@ const initialValue = {
 
 /* Tar props, använder id för att hämta info om användare.  */
 const History = ({user, customer})  => {
-
     let theUser;
     let id;
  
@@ -31,7 +30,7 @@ const History = ({user, customer})  => {
     } else {
         id = customer.id;
     }
-
+    console.log(id)
     const {aUser, aUserMessage, aUserLoading} = useFetchAUser(id);
     const {cities, messageCities, loadingCities} = useFetchAllCities(); 
     const [showMapForUser, setShowMapForUser] = useState(initialValue);
@@ -47,13 +46,17 @@ const History = ({user, customer})  => {
 
         /* Kollar om cities är satt, Loopa städer, sätt värden till state */
         const getAllCities = async () => {
-
+            console.log(cities, "häär")
             cities && cities.forEach(city => {
                 city.charging_posts.length > 0 && (setAllCharging_posts(city.charging_posts));
                 city.parking_zones.length > 0 && (setAllParkingZones(city.parking_zones));
             });
         }
 
+        /* "huvudfunktion" Loopar igenom alla användarens resor och 
+            kontrollerar resedetaljer mha de andra funktionerna
+            för att skapa invoice/info om resa
+        */
         function checkAllUsersTrips() {
 
             let arrayOfTrips = [];
@@ -75,6 +78,7 @@ const History = ({user, customer})  => {
                 startChargePoint = checkIfCoordInChargingPost(tripStarted, allCharging_posts);
                 endedAtChargePoint = checkIfCoordInChargingPost(tripEnded, allCharging_posts);
                 prices = checkUserPrices(startAtParkingZone, startChargePoint, endedAtParkingZone, endedAtChargePoint, time);
+
                 const atrip = { 
                     tripId: trip.id,
                     date: trip.date,
@@ -105,11 +109,6 @@ const History = ({user, customer})  => {
     useEffect(() => {
     }, [setUserInvoice, userInvoice, showMapForUser, setShowMapForUser])
 
-
-    /* "huvudfunktion" Loopar igenom alla användarens resor och 
-        kontrollerar resedetaljer mha de andra funktionerna
-        för att skapa invoice/info om resa
-    */
     
     /* Räknar ut kunds pris */
     const checkUserPrices = (startAtParkingZone, startChargePoint, endedAtParkingZone, endedAtChargePoint, time) => {
@@ -119,6 +118,7 @@ const History = ({user, customer})  => {
             discount: 0,
             minFee: 2.5 * time,
         }
+
         /* Om en resa startar i fri parkering och slutar på en definerad blir startavg lägre */
         if((startAtParkingZone && startAtParkingZone.returned === false)
         || (startChargePoint && startChargePoint.returned === false)) {

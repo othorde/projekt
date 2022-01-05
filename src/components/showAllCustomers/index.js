@@ -158,7 +158,7 @@ const ShowAllCustomers = ()  => {
                 }
             </Main>
         </Container>
-        {/* Visar pilarna, endast vid vyn där alla anv är med, tar bort när man går in på enskild anv */}
+        {/* Visar pilarna, endast vid vyn där alla anv är med, tar bort den när man går in på enskild anv */}
         {!showCustomerTrips.showCustomer &&
         <>
         <p style={{"fontWeight":"bold"}}>Visar {pageIndex.start}-{pageIndex.stop} av {allCustomers.length} resultat </p>  

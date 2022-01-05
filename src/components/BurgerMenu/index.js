@@ -9,8 +9,7 @@ const BurgerMenu = ({open, setOpen}) => {
     <StyledBurger open={open} onClick={() => setOpen(!open)} data-testid="burgerButton">
 		<div/>
 		<div/>
-		<div/> 
-		
+		<div/>
     </StyledBurger>
   	)
 }

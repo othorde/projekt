@@ -12,7 +12,6 @@ import {PopUpStyle} from './Form.styles';
 export default function PopUp({PopupInfo}) {
     let content;
     let whatToShow;
-
     if (PopupInfo && PopupInfo.content ) {
         content = PopupInfo.content
         whatToShow = PopupInfo.whatToShow
@@ -21,7 +20,7 @@ export default function PopUp({PopupInfo}) {
 		<PopUpStyle >
         {/* Scooter */}
         { whatToShow === "Scooter" ? (
-            <>
+        <>
         <table>
             <caption>{whatToShow}</caption>
             <tbody>

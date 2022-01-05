@@ -23,6 +23,7 @@ const Header = () => {
             let tag = localStorage.getItem("tag");
             setCustomer(true);
             if (tag === '"admin"') {
+
                 setAdmin(true);
                 setCustomer(false);
             }

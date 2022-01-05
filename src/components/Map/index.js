@@ -31,6 +31,7 @@ const options = {
    Hooks, se mappen hooks.
 */
 export default function MapContainer(props) {
+	console.log(props)
 	//hooks
 	const mapRef = useRef();
 	const { loadStationContent } = useDisplayPolyChargeStation(mapRef, props);

@@ -69,7 +69,7 @@ const Payment = ({customer, userDetails}) => {
 	return (
         <Content>
             <StylePayment>
-            {msgForUser.showMsg ? <p>{msgForUser.msg}</p> : (<p> {adminOrNot ? (`VARNING! \n Du justerar kunds saldo`) : ("Sätt in valfritt belopp ")}</p>)}
+                <div data-testid="payment-element"> {msgForUser.showMsg ? <p data-testid="payment-element">{msgForUser.msg}</p> : (<p > {adminOrNot ? (`VARNING! \n Du justerar kunds saldo`) : ("Sätt in valfritt belopp ")}</p>)}</div>
             <form onSubmit={handleSubmit} className = "register">
                 <label>
                 <input
