@@ -32,9 +32,7 @@ it("renders without problem when no user is defined ", () => {
 			</AppContext.Provider>
 		, container);
 	});
-	
 	expect(container.textContent).toContain("Välkommen okända besökare");
-
 });
 
 it("renders the defined user", async () => {

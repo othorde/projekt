@@ -1,15 +1,10 @@
 import React from "react";
 import { fireEvent, render, screen, act, waitForElementToBeRemoved } from "@testing-library/react";
 import Payment from "../components/Payment";
-import Api from '.././Api';
+import Api from '../../Api';
 
 
 describe('input value', () => {
-
-
-    afterEach(() => {
-        jest.resetModules();
-      });
 
 
     it("updates input, for admin", () => {
