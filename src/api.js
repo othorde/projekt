@@ -1,16 +1,7 @@
 
-import { API_URL, defaultConfigPut } from "./config";
+import { API_URL } from "./config";
 
-
-const defaultConfig = {
-	method: 'POST',
-	headers: {
-		'Content-Type': 'application/json',
-        "Access-Control-Allow-Origin": "*"
-	},
-};
-
-const Api =  {
+const Api = {
 
     getAUser: async(id) => {
         try {
@@ -83,8 +74,16 @@ const Api =  {
         }
 	},
 
-    // När det är fixat med OAUTH funkar denna antagligen
     logginUserViaGit: async (username)  => {
+
+        const defaultConfig = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+            },
+        };
+
         try {
             const endpoint = `${API_URL}/customers/login`
             let res = await (
@@ -100,7 +99,17 @@ const Api =  {
         }
     },
 
-    updateAScooter: async (id, speed, battery, newPosition) => {
+    updateAScooter: async (id, speed, battery, newPosition, token) => {
+
+        const defaultConfigPut = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                'x-access-token': token
+            }
+        }
+
         try {
             const endpoint = `${API_URL}/scooter`;
 
@@ -124,7 +133,17 @@ const Api =  {
         }
 	},
 
-    updateAScootersUser: async (id) => {
+    updateAScootersUser: async (id, token) => {
+
+        const defaultConfigPut = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                'x-access-token': token
+            }
+        }
+
         try {
             const endpoint = `${API_URL}/scooter/setuser`;
 
@@ -145,7 +164,17 @@ const Api =  {
 	},
 
 
-    updateAScootersLogg: async (varForUpdate) => {
+    updateAScootersLogg: async (varForUpdate, token) => {
+
+        const defaultConfigPut = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                'x-access-token': token
+            }
+        }
+
         try {
             const endpoint = `${API_URL}/scooter/insertLogg`;
             let res = await (
@@ -174,7 +203,17 @@ const Api =  {
 	},
 
 
-    updateUserFunds: async (addToBalance, id) => {
+    updateUserFunds: async (addToBalance, id, token) => {
+        console.log(token, "HÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄR")
+        const defaultConfigPut = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                'x-access-token': token
+            }
+        }
+
         try {
             const endpoint = `${API_URL}/customers/balance`;
             let res;
@@ -198,8 +237,17 @@ const Api =  {
 	},
 
 
-    updateNrBikesChargePost: async (city, amount_of_bikes, color) => {
-        console.log(city, amount_of_bikes, color)
+    updateNrBikesChargePost: async (city, amount_of_bikes, color, token) => {
+        
+        const defaultConfigPut = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                'x-access-token': token
+            }
+        }
+
         try {
             const endpoint = `${API_URL}/cities/posts/update`;
             let res;
@@ -223,7 +271,16 @@ const Api =  {
         }
 	},
     
-    updateNrBikesParkZone: async (city, amount_of_bikes, color) => {
+    updateNrBikesParkZone: async (city, amount_of_bikes, color, token) => {
+
+        const defaultConfigPut = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                'x-access-token': token
+            }
+        }
      
         try {
             const endpoint = `${API_URL}/cities/zones/update`;

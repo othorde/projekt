@@ -4,3 +4,9 @@ build:
       tests:
         override:
           - command: npm test
+            coverage: npm test coverage
+                file: path/to/coverage-data
+
+                # These formats are supported:
+                # clover, cobertura, jacoco, python-cc, ruby-cc, go-cc, lcov
+                format: name-of-format

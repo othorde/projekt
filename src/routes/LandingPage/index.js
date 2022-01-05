@@ -39,6 +39,7 @@ export default function LandingPage() {
 		
 		/* tar emot reqData från useEffect, skickar till backend och tar emot inlogg uppg. mha info från github */
 		async function getGitInfo(requestData) {
+			
 			setLoggedInUser("Not OK")
 			myContext.toggleAuth(false);
 			try {
@@ -64,6 +65,7 @@ export default function LandingPage() {
 							user: res.login,
 							tag: result.data.user.tag,
 							id: result.data.user.id,
+							token: result.data.token
 						}
 						myContext.setUserValues(user)
 						myContext.toggleAuth(true);

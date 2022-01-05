@@ -1,6 +1,7 @@
-import {React, useState, useEffect} from "react";
+import {React, useState, useEffect, useContext} from "react";
 //components
 import Api from "../../Api.js";
+import AppContext from "../../AppContext";
 //styles
 import { Content, Delimiter, StylePayment} from "./Form.styles.js";
 
@@ -17,7 +18,7 @@ const Payment = ({customer, userDetails}) => {
     const [msgForUser, setMsgForUser] = useState(initialValue);
     const [onePayment, setOnePayment] = useState(0);
     const [adminOrNot, setAdminOrNot] = useState(false); // Om det är admin som ska ändra eller ej
-
+    const myContext = useContext(AppContext);
     /* Om det är admin som ska göra justeringen på saldot */
     useEffect(() => { 
         customer && setAdminOrNot(true)
@@ -50,11 +51,14 @@ const Payment = ({customer, userDetails}) => {
             /* Uppdaterar användarens kontobalans */
             try {
                 showMsg = true;
-                result = await Api.updateUserFunds(newBalance, id);
+                let token = myContext.userHook.value.token;
+                console.log(token)
+                result = await Api.updateUserFunds(newBalance, id, token);
                 if(result === true) {
                     msg = adminOrNot ? "Saldot är justerat" : "Din insättning har gått igenom";
                 }
             } catch (error) {
+                console.log(error)
                 msg = "Något gick fel. Beror på servern.";
             }
         } 

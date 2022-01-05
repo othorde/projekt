@@ -9,18 +9,10 @@ const defaultConfigAuthenticate = {
         "Access-Control-Allow-Origin": "*"
     },
 };
-const defaultConfigPut = {
-    method: 'PUT',
-    headers: {
-        'Content-Type': 'application/json',
-        "Access-Control-Allow-Origin": "*"
-    }
-}
 
 export {
     API_URL,
     PROXY_URL,
-    defaultConfigPut,
     defaultConfigAuthenticate,
 };
 
