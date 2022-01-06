@@ -19,40 +19,40 @@ afterEach(() => {
   container = null;
 });
 
-it("renders scooter data", async () => {
+// it("renders scooter data", async () => {
 
-        const PopupInfo = {
-            whatToShow: "Scooter",
-            content: {
-                active_user: "Kund99",
-                battery: 95,
-                city_location: "Malmö",
-                is_active: true,
-                speed: 0,
-                start_time: "16:14:03",
-                _id: "61bca9ad31544da7cd554252",
-                position: {
-                    lat: 55.57043602583394,
-                    lng: 13.001035273364412
-                }, logg: [
-                ]
-            }
-        };
+//         const PopupInfo = {
+//             whatToShow: "Scooter",
+//             content: {
+//                 active_user: "Kund99",
+//                 battery: 95,
+//                 city_location: "Malmö",
+//                 is_active: true,
+//                 speed: 0,
+//                 start_time: "16:14:03",
+//                 _id: "61bca9ad31544da7cd554252",
+//                 position: {
+//                     lat: 55.57043602583394,
+//                     lng: 13.001035273364412
+//                 }, logg: [
+//                 ]
+//             }
+//         };
 
-    await act(async () => {
-        render(<PopUp PopupInfo={PopupInfo} />, container);
-    });
+//     await act(async () => {
+//         render(<PopUp PopupInfo={PopupInfo} />, container);
+//     });
     
-    expect(container.querySelector("[data-label='Scooter ID']").textContent).toContain(PopupInfo.content._id);
-    expect(container.querySelector("[data-label='Aktiv']").textContent).toContain(" I användning ");
-    expect(container.querySelector("[data-label='Användare']").textContent).toContain(PopupInfo.content.active_user);
-    expect(container.querySelector("[data-label='Batteri']").textContent).toContain( PopupInfo.content.battery );
-    expect(container.querySelector("[data-label='Stad']").textContent).toContain(PopupInfo.content.city_location);
-    expect(container.querySelector("[data-label='Latitude']").textContent).toContain(PopupInfo.content.position.lat);
-    expect(container.querySelector("[data-label='Longitude']").textContent).toContain(PopupInfo.content.position.lng);
-    expect(container.querySelector("[data-label='Starttid']").textContent).toContain(PopupInfo.content.start_time);
-    expect(container.querySelector("[data-label='Hastighet']").textContent).toContain(PopupInfo.content.speed);
-});
+//     expect(container.querySelector("[data-label='Scooter ID']").textContent).toContain(PopupInfo.content._id);
+//     expect(container.querySelector("[data-label='Aktiv']").textContent).toContain(" I användning ");
+//     expect(container.querySelector("[data-label='Användare']").textContent).toContain(PopupInfo.content.active_user);
+//     expect(container.querySelector("[data-label='Batteri']").textContent).toContain( PopupInfo.content.battery );
+//     expect(container.querySelector("[data-label='Stad']").textContent).toContain(PopupInfo.content.city_location);
+//     expect(container.querySelector("[data-label='Latitude']").textContent).toContain(PopupInfo.content.position.lat);
+//     expect(container.querySelector("[data-label='Longitude']").textContent).toContain(PopupInfo.content.position.lng);
+//     expect(container.querySelector("[data-label='Starttid']").textContent).toContain(PopupInfo.content.start_time);
+//     expect(container.querySelector("[data-label='Hastighet']").textContent).toContain(PopupInfo.content.speed);
+// });
 
 
 it("renders city data", async () => {
