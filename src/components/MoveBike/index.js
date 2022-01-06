@@ -51,15 +51,17 @@ export default function MoveBike({city, position, id, battery}) {
     async function updateScooter(newPosition) {
         var speed = "0";
         var battery = "100";
+        let token = myContext.userHook.value.token;
 
         if (position !== null) {
-            var response = await Api.updateAScooter(id, speed, battery, newPosition); //uppdaterar scootern
+            var response = await Api.updateAScooter(id, speed, battery, newPosition, token); //uppdaterar scootern
             response === false && setMessage("Kunde ej uppdatera användaren");
         }
     }
     /* uppdaterar scooterns användare */
     async function updateScootersUser() {
-        var response = await Api.updateAScootersUser(id);
+        let token = myContext.userHook.value.token;
+        var response = await Api.updateAScootersUser(id, token);
         response === false && setMessage("Kunde ej uppdatera användaren");
     }
 
@@ -68,6 +70,7 @@ export default function MoveBike({city, position, id, battery}) {
         var active_user = "null";
         var event = getEventString(newPosition);
         var {time} = getTime();
+        let token = myContext.userHook.value.token;
 
         const varForUpdate = {
             id: id,
@@ -79,7 +82,7 @@ export default function MoveBike({city, position, id, battery}) {
             end_lat: newPosition.lat,
             end_lng: newPosition.lng,
         }
-        var response = await Api.updateAScootersLogg(varForUpdate);
+        var response = await Api.updateAScootersLogg(varForUpdate, token);
         response ? setMessage("Cykel förflyttad, logg uppdaterad") : setMessage("Något gick fel, kunde ej uppdatera logg");
     }
 
@@ -161,10 +164,9 @@ export default function MoveBike({city, position, id, battery}) {
         // Uppdaterar alltid laddstationen med +1
         console.log(res)
         if(!res === false) {
-            console.log(res, "HÄÄÄR")
+            let token = myContext.userHook.value.token;
             let amount_of_bikes_in_new_zone = res + 1;
-            res = await Api.updateNrBikesChargePost(cityState, amount_of_bikes_in_new_zone, moveBikeToColor);
-            console.log(res)
+            res = await Api.updateNrBikesChargePost(cityState, amount_of_bikes_in_new_zone, moveBikeToColor, token);
 
             res === false && setMessage("Kund ej uppdatera laddstationen");
         }
@@ -184,13 +186,15 @@ export default function MoveBike({city, position, id, battery}) {
 
     async function updateParkZone(amount_of_bikes, color) {
         let res;
-        res = await Api.updateNrBikesParkZone(cityState, amount_of_bikes, color);
+        let token = myContext.userHook.value.token;
+        res = await Api.updateNrBikesParkZone(cityState, amount_of_bikes, color, token);
         res === false && setMessage("Kund ej uppdatera parkeringszonen");
     }
 
     async function updateChargePost(amount_of_bikes, color) {
+        let token = myContext.userHook.value.token;
         let res;
-        res = await Api.updateNrBikesChargePost(cityState, amount_of_bikes, color);
+        res = await Api.updateNrBikesChargePost(cityState, amount_of_bikes, color, token);
         res === false && setMessage("Kund ej uppdatera laddstationen");
     }
 

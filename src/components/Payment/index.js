@@ -52,7 +52,6 @@ const Payment = ({customer, userDetails}) => {
             try {
                 showMsg = true;
                 let token = myContext.userHook.value.token;
-                console.log(token)
                 result = await Api.updateUserFunds(newBalance, id, token);
                 if(result === true) {
                     msg = adminOrNot ? "Saldot är justerat" : "Din insättning har gått igenom";

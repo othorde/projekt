@@ -76,42 +76,42 @@
 // }));
 
 
-import React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
-import { act } from "react-dom/test-utils";
-import History from '../components/History';
-import * as hooks from '../Hooks/useFetchAllCities';
+// import React from "react";
+// import { render, unmountComponentAtNode } from "react-dom";
+// import { act } from "react-dom/test-utils";
+// import History from '../components/History';
+// import * as hooks from '../Hooks/useFetchAllCities';
 
-let container = null;
-beforeEach(() => {
-	// setup a DOM element as a render target
-	container = document.createElement("div");
-	document.body.appendChild(container);
-});
+// let container = null;
+// beforeEach(() => {
+// 	// setup a DOM element as a render target
+// 	container = document.createElement("div");
+// 	document.body.appendChild(container);
+// });
 
-afterEach(() => {
-	// cleanup on exiting
-	unmountComponentAtNode(container);
-	container.remove();
-	container = null;
-});
+// afterEach(() => {
+// 	// cleanup on exiting
+// 	unmountComponentAtNode(container);
+// 	container.remove();
+// 	container = null;
+// });
 
-it("renders with the right content", async () => {
-    let data =  {
-        "showCustomer": true,
-        "id": "619b5e6fe8cf630e43c0aff4",
-        "username": "alex",
-        "from": "admin"
-    }
-
-
+// it("renders with the right content", async () => {
+//     let data =  {
+//         "showCustomer": true,
+//         "id": "619b5e6fe8cf630e43c0aff4",
+//         "username": "alex",
+//         "from": "admin"
+//     }
 
 
-	await act(async () => {
+
+
+// 	await act(async () => {
         
-        render(<History customer = {data}/>, container);
-	});
+//         render(<History customer = {data}/>, container);
+// 	});
 	
-    expect(container.querySelector("[data-label='Starttid']").textContent).toContain("aa");
-});
+//     expect(container.querySelector("[data-label='Starttid']").textContent).toContain("aa");
+// });
 

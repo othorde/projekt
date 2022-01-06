@@ -3,6 +3,7 @@ import { API_URL } from "./config";
 
 const Api = {
 
+    /* Hämtar en användare */
     getAUser: async(id) => {
         try {
             const endpoint = `${API_URL}/customers/${id}`;
@@ -13,6 +14,7 @@ const Api = {
         }
     },
 
+    /* Hämtar alla användare  */
     getAllUsers: async() => {
         try {
             const endpoint = `${API_URL}/customers`;
@@ -23,6 +25,7 @@ const Api = {
         }
     },
 
+    /* Hämtar en stad  */
     getACity: async (whatCity) => {
         try {
             const endpoint = `${API_URL}/cities/${whatCity}`;
@@ -33,6 +36,7 @@ const Api = {
         }
 	},
 
+    /* Hämtar alla städer */
     getAllCitys: async () => {
         try {
             const endpoint = `${API_URL}/cities`;
@@ -43,6 +47,7 @@ const Api = {
         }
 	},
 
+    /* Hämtar alla scootrar */
     getAllScooters: async () => {
         try {
             const endpoint = `${API_URL}/scooter`;
@@ -53,6 +58,7 @@ const Api = {
         }
 	},
 
+    /* Hämtar alla laddstationer */
     getAllChargePost: async (city, matching) => {
         try {
             const endpoint = `${API_URL}/cities/posts/${city}`;
@@ -74,6 +80,7 @@ const Api = {
         }
 	},
 
+    /* Loggar in användaren */
     logginUserViaGit: async (username)  => {
 
         const defaultConfig = {
@@ -99,6 +106,7 @@ const Api = {
         }
     },
 
+    /* Uppdaterar en scooter */
     updateAScooter: async (id, speed, battery, newPosition, token) => {
 
         const defaultConfigPut = {
@@ -132,7 +140,8 @@ const Api = {
             return false      
         }
 	},
-
+    
+    /* Uppdaterar en scooters användare */
     updateAScootersUser: async (id, token) => {
 
         const defaultConfigPut = {
@@ -163,7 +172,7 @@ const Api = {
         }
 	},
 
-
+    /* Uppdaterar scooterns logg */
     updateAScootersLogg: async (varForUpdate, token) => {
 
         const defaultConfigPut = {
@@ -202,9 +211,8 @@ const Api = {
         }
 	},
 
-
+    /* Uppdaterar användarens kontobalans */
     updateUserFunds: async (addToBalance, id, token) => {
-        console.log(token, "HÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄR")
         const defaultConfigPut = {
             method: 'PUT',
             headers: {
@@ -236,7 +244,7 @@ const Api = {
         }
 	},
 
-
+    /* Uppdaterar antalet cyklar i chargepost */
     updateNrBikesChargePost: async (city, amount_of_bikes, color, token) => {
         
         const defaultConfigPut = {
@@ -271,6 +279,7 @@ const Api = {
         }
 	},
     
+    /* Uppdaterar antalet cyklar i parkzone */
     updateNrBikesParkZone: async (city, amount_of_bikes, color, token) => {
 
         const defaultConfigPut = {
