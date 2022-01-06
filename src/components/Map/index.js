@@ -12,7 +12,6 @@ import Logg from "../Logg";
 import Loader from "../Loader"
 //styles & img
 import {Container,StyleMap, Main} from './Form.styles'
-import bikeimg from '../../images/bike.png'
 import personimg from '../../images/person.png'
 import fullyChargedBike from '../../images/fullyChargedBike.png';
 import halfChargedBike from '../../images/halfchargedbike.png';
@@ -31,7 +30,6 @@ const options = {
    Hooks, se mappen hooks.
 */
 export default function MapContainer(props) {
-	console.log(props)
 	//hooks
 	const mapRef = useRef();
 	const { loadStationContent } = useDisplayPolyChargeStation(mapRef, props);
@@ -81,36 +79,24 @@ export default function MapContainer(props) {
 						mapRef.current = {map, maps};
 					}}
 				>
-					{/*Visar användaren på kartan */}
-					<Marker 
-						key={1} 
-						lat={location.latitude} 
-						lng={location.longitude}
-						>
-						<div >
-							<img className = "crime-marker" src={personimg} alt="person" />
-						</div>	
-					</Marker>
+				{/*Visar användaren på kartan */}
+				<Marker key={1} lat={location.latitude} lng={location.longitude}>
+					<div> <img className = "crime-marker" src={personimg} alt="person" /></div>	
+				</Marker>
 
-					{/*Visar alla scootrar*/}
-					{loadScooters.loadScooters && (
-					ScooterArray.map(scooter => {
-						return (
-						<Marker 
-							key={scooter._id} 
-							lat={scooter.position.lat} 
-							lng={scooter.position.lng}
-							>
-							<div onClick={() => setScooter({scooter, showScooter: true})}className="crime-marker">
-							
-							{ scooter.battery < 99  ? <img className = "scooter" src={halfChargedBike} alt="scooter"/>
-							: scooter.battery <= 96  ? <img className = "scooter" src={noChargeBike} alt="scooter"/>
-							: <img className = "scooter" src={fullyChargedBike} alt="scooter"/>
-							}
-							</div>
-						</Marker>)
-						})
-					)}
+				{/*Visar alla scootrar*/}
+				{loadScooters.loadScooters && (
+				ScooterArray.map(scooter => {
+					return (
+					<Marker key={scooter._id} lat={scooter.position.lat} lng={scooter.position.lng}>
+						<div onClick={() => setScooter({scooter, showScooter: true})}className="crime-marker">
+						{ scooter.battery < 25 ? <img className = "scooter" src={noChargeBike} alt="scooter"/> 
+							: scooter.battery < 75 ? <img className = "scooter" src={halfChargedBike} alt="scooter"/> 
+							: <img className = "scooter" src={fullyChargedBike} alt="scooter"/> }
+						</div>
+					</Marker>)
+					})
+				)}
 				</GoogleMapReact>
 				):(<Loader/> )}
 			</StyleMap>

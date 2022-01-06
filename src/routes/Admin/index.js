@@ -67,7 +67,6 @@ const Admin = () => {
 		return()=>{
 			clearInterval(interval)
 		}
-
 	},[])
 
 	/* Dessa tre funktionerna togglar state, vilket tar bort eller lägger till elementen på kartan */
@@ -97,14 +96,13 @@ const Admin = () => {
 				<StyledBtn onClick= {getLoadStations}> Laddstationer </StyledBtn>
 				<StyledBtn onClick= {getParkingZone}>  Parkeringszoner </StyledBtn>
 				<StyledImg>
-					<img src={fullyChargedBike} alt="fully charged bike" width="60%" height="10%" />
-					<p style={{fontWeight: "bold", fontSize: "0.9em"}}> MINST 75% </p>
-					<img src={halfChargedBike} alt="fully charged bike" width="60%" height="10%" />
-					<p style={{fontWeight: "bold", fontSize: "0.9em"}}> 25-75% </p>
-					<img src={noChargeBike} alt="fully charged bike" width="60%" height="10%" />
-					<p style={{fontWeight: "bold", fontSize: "0.9em"}}> MINDRE ÄN 25%</p>
+					<img src={fullyChargedBike} alt="fully charged bike" width="60px" height="60px" />
+					<p style={{fontWeight: "bold", fontSize: "0.9em"}}> BATTERI {'>'} 75% </p>
+					<img src={halfChargedBike} alt="fully charged bike" width="60px" height="60px" />
+					<p style={{fontWeight: "bold", fontSize: "0.9em"}}>BATTERI 25-75% </p>
+					<img src={noChargeBike} alt="fully charged bike" width="60px" height="60px" />
+					<p style={{fontWeight: "bold", fontSize: "0.9em"}}> BATTERI {'<'} 25%</p>
 				</StyledImg>
-
 			</Nav>
 			<MapContainer>
 				<Map 

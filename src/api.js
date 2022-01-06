@@ -58,19 +58,16 @@ const Api = {
         }
 	},
 
-    /* Hämtar alla laddstationer */
+    /* Hämtar alla laddstationer, retunerar antal cyklar som finns */
     getAllChargePost: async (city, matching) => {
         try {
             const endpoint = `${API_URL}/cities/posts/${city}`;
             let res = await (await fetch(endpoint)).json();
             let result = false;
-            console.log(city, matching, res)
             if(matching) {
                 res.data.forEach(element => {
                     if (element.color === matching) {
-                        console.log(element.color, matching)
                         result = element.amount_of_bikes_post
-                        
                     }
                 });
                 return result

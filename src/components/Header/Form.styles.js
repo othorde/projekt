@@ -6,8 +6,8 @@ export const Container = styled.div `
     	flex-direction: row;
 		font-size: 1em;
 		width: 100vw;
-		height: 13%;
-		min-height: 13vh;
+		height: 12%;
+		min-height: 12vh;
 		background: #1f2a32;
 		color: #f1f1f1;
 		border-bottom: 2px solid black;
@@ -38,7 +38,8 @@ export const Logga = styled.div `
 		font-size: 1.3em;
 		width: 25%;
         text-align: left;
-
+		font-size: 1.3em;
+		font-weight: 700;
 		@media screen and (max-width: 720px) {
 			display: none;
 		  }

@@ -46,7 +46,6 @@ const History = ({user, customer})  => {
 
         /* Kollar om cities är satt, Loopa städer, sätt värden till state */
         const getAllCities = async () => {
-            console.log(cities, "häär")
             cities && cities.forEach(city => {
                 city.charging_posts.length > 0 && (setAllCharging_posts(city.charging_posts));
                 city.parking_zones.length > 0 && (setAllParkingZones(city.parking_zones));

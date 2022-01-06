@@ -17,7 +17,6 @@ export default function MoveBike({city, position, id, battery}) {
     const [cityState, setCityState] = useState([]) //parkering och laddstationer
     
     /* hämtar alla ladd/parkeringszoner sparar i state 
-        KONTROLLERA SÅ att denna fungerar med flera städer
     */
     async function getLoadStationsForMovingBike() {
         try {
@@ -30,8 +29,6 @@ export default function MoveBike({city, position, id, battery}) {
         }
     }
     /* När admin förflyttar cykel 
-        Behöver uppdatera en del, alla är beroende av varandra
-        så måste kolla först att det går igenom innan nästa
     */
     const handleSubmit = async () => {
         if (moveBikeToColor === '' || moveBikeToColor === null) { // Om inget val görs
@@ -82,6 +79,7 @@ export default function MoveBike({city, position, id, battery}) {
             end_lat: newPosition.lat,
             end_lng: newPosition.lng,
         }
+
         var response = await Api.updateAScootersLogg(varForUpdate, token);
         response ? setMessage("Cykel förflyttad, logg uppdaterad") : setMessage("Något gick fel, kunde ej uppdatera logg");
     }
@@ -159,17 +157,7 @@ export default function MoveBike({city, position, id, battery}) {
         let coordInParkingZone = checkIfCoordInParkingZone(startCoords, allParkingZones);
         let coordInChargingPost = checkIfCoordInChargingPost(startCoords, charging_posts);
         
-        //Kollar alltid hur många cyklar som finns i station
-        res = await Api.getAllChargePost(cityState, moveBikeToColor);
-        // Uppdaterar alltid laddstationen med +1
-        console.log(res)
-        if(!res === false) {
-            let token = myContext.userHook.value.token;
-            let amount_of_bikes_in_new_zone = res + 1;
-            res = await Api.updateNrBikesChargePost(cityState, amount_of_bikes_in_new_zone, moveBikeToColor, token);
 
-            res === false && setMessage("Kund ej uppdatera laddstationen");
-        }
         //Uppdaterar zon med -1 OM cykel tidigare fanns i en parkeringszon
         if(coordInParkingZone && coordInParkingZone.returned === true) {
             amount_of_bikes = coordInParkingZone.amount_of_bikes_zone - 1;
@@ -180,13 +168,32 @@ export default function MoveBike({city, position, id, battery}) {
         if (coordInChargingPost && coordInChargingPost.returned === true) {
             amount_of_bikes = coordInChargingPost.amount_of_bikes_post - 1;
             color = coordInChargingPost.color;
+
+            // om cykel ska "flyttas" till samma station som den redan är i
+            if(color === moveBikeToColor){
+                amount_of_bikes = coordInChargingPost.amount_of_bikes_post;
+                updateChargePost(amount_of_bikes, color)
+                return
+            }
             updateChargePost(amount_of_bikes, color)
+        }
+
+        //Kollar alltid hur många cyklar som finns i station
+        res = await Api.getAllChargePost(cityState, moveBikeToColor);
+        // Uppdaterar alltid laddstationen dit cyklen förflyttas med +1
+        if(!res === false) {
+            let token = myContext.userHook.value.token;
+            let amount_of_bikes_in_new_zone = res + 1;
+            
+            res = await Api.updateNrBikesChargePost(cityState, amount_of_bikes_in_new_zone, moveBikeToColor, token);
+            res === false && setMessage("Kund ej uppdatera laddstationen");
         }
     }
 
     async function updateParkZone(amount_of_bikes, color) {
         let res;
         let token = myContext.userHook.value.token;
+        
         res = await Api.updateNrBikesParkZone(cityState, amount_of_bikes, color, token);
         res === false && setMessage("Kund ej uppdatera parkeringszonen");
     }
@@ -194,6 +201,7 @@ export default function MoveBike({city, position, id, battery}) {
     async function updateChargePost(amount_of_bikes, color) {
         let token = myContext.userHook.value.token;
         let res;
+
         res = await Api.updateNrBikesChargePost(cityState, amount_of_bikes, color, token);
         res === false && setMessage("Kund ej uppdatera laddstationen");
     }

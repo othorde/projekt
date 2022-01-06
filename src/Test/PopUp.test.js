@@ -3,15 +3,11 @@ import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import PopUp from "../components/PopUp";
-import * as MoveBike from "../components/MoveBike";
-
-jest.mock('../components/MoveBike');
 
 
 let container = null;
 beforeEach(() => {
   // setup a DOM element as a render target
-  
   container = document.createElement("div");
   document.body.appendChild(container);
 });
@@ -44,8 +40,6 @@ it("renders scooter data", async () => {
         };
 
     await act(async () => {
-        MoveBike.get.mockResolvedValue(true);
-
         render(<PopUp PopupInfo={PopupInfo} />, container);
     });
     
@@ -70,7 +64,6 @@ it("renders city data", async () => {
             amount_of_bikes: 100,
         }
     };
-
     await act(async () => {
         render(<PopUp PopupInfo={PopupInfo} />, container);
     });
