@@ -4,7 +4,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import ShowAllCustomers from "../components/showAllCustomers";
 import { unmountComponentAtNode } from "react-dom";
 import {useFetchAllCustomers} from '../Hooks/useFetchAllCustomers';
-import {Loader} from '../components/Loader/index';
+import {loader} from '../components/Loader/index';
 
 
 
