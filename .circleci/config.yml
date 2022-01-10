@@ -11,6 +11,15 @@ orbs:
 workflows:
   sample: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
+
+    - restore_cache:
+        keys:
+          # Find a cache corresponding to this specific package-lock.json checksum
+          # when this file is changed, this key will fail
+          - v1-npm-deps-{{ checksum "package-lock.json" }}
+          # Find the most recently generated cache used from any branch
+          - v1-npm-deps-
+
     jobs:
       - node/test:
           # This is the node version to use for the `cimg/node` tag
