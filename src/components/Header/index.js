@@ -22,9 +22,11 @@ const Header = () => {
         function checkWhoLoggedIn(){
             let tag = localStorage.getItem("tag");
             setCustomer(true);
+            setAdmin(true);
+
             if (tag === '"admin"') {
                 setAdmin(true);
-                setCustomer(false);
+                setCustomer(true);
             }
         }
         checkWhoLoggedIn()
