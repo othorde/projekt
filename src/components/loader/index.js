@@ -17,7 +17,7 @@ const Loader = () => {
             </FourOFour>
         </Wrapper>
         </>
-        )        
+    )
 }
 
 export default Loader
