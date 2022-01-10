@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 
 /* useCurrentPosition används av Map komponenten. Hämtar användarens position 
-   Options är hur länge location ska sparas, tas alltså mot av Map.
+   Options är hur länge location ska sparas, tas mot av Map.
    Retunerar position och error.
 */
 const useCurrentPosition = (options={}) => {

@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import Api from "../Api";
+import {getAllUsers} from "../Api";
 
 // hämtar alla användare som finns registrerade vid mount
 // retunerar alla och error
@@ -12,7 +12,7 @@ export const useFetchAllCustomers = () => {
     const fetchData = async () => {
         try {
             setErrorAllCustomers(false)
-            let res = await Api.getAllUsers();
+            let res = await getAllUsers();
             res.data && setAllCustomers(res.data);
         } catch (error) {
             setErrorAllCustomers(true)

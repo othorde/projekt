@@ -1,5 +1,5 @@
 import {useState, useEffect } from 'react'
-import Api from '../Api';
+import {getAllCitys} from '../Api';
 
 /* Hämtar alla städer */
 export const  useFetchAllCities = () => {
@@ -11,7 +11,8 @@ export const  useFetchAllCities = () => {
 	const fetchData = async () => {
         try {
             setLoadingCities(true)
-            const allCities = await Api.getAllCitys()
+            const allCities = await getAllCitys()
+            console.log(allCities)
             allCities.length > 0 ? setCities(allCities) : setMessageCities("Städerna kunde ej läsas in");
             
         } catch (error) {

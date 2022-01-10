@@ -10,7 +10,7 @@ import {
 	StyledImg
 } from './Form.styles';
 //other
-import Api from '../../Api';
+import {getAllScooters} from '../../Api';
 import fullyChargedBike from '../../images/fullyChargedBike.png';
 import halfChargedBike from '../../images/halfchargedbike.png';
 import noChargeBike from '../../images/noChargeBike.png';
@@ -44,7 +44,7 @@ const Admin = () => {
 		
 		const getScooters = async() => {
 			try {
-				let res = await Api.getAllScooters();  
+				let res = await getAllScooters();  
 				setIfToShowScooter({
 					loadScooters: true,
 					content: res,

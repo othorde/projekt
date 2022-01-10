@@ -9,7 +9,7 @@ import {useFetchAllCities} from '../../Hooks/useFetchAllCities'
 //styles
 import {Container, Main, UserHistory, MapContainer} from './Form.styles'
 //other
-import {checkIfCoordInParkingZone, checkIfCoordInChargingPost } from '../../helperfunction/helpers'
+import {checkIfCoordInParkingZone, checkIfCoordInChargingPost} from '../../helperfunction/helpers'
 const { v4: uuidv4 } = require('uuid');
 
 const initialValue = {
@@ -30,7 +30,6 @@ const History = ({user, customer})  => {
     } else {
         id = customer.id;
     }
-    console.log(id)
     const {aUser, aUserMessage, aUserLoading} = useFetchAUser(id);
     const {cities, messageCities, loadingCities} = useFetchAllCities(); 
     const [showMapForUser, setShowMapForUser] = useState(initialValue);
@@ -40,12 +39,11 @@ const History = ({user, customer})  => {
 
 
 
-
     /* Rendera och kör funktioner vid mount och om något i arrayn ändras */
     useEffect(() => {
-
         /* Kollar om cities är satt, Loopa städer, sätt värden till state */
         const getAllCities = async () => {
+
             cities && cities.forEach(city => {
                 city.charging_posts.length > 0 && (setAllCharging_posts(city.charging_posts));
                 city.parking_zones.length > 0 && (setAllParkingZones(city.parking_zones));

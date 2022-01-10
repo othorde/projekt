@@ -1,8 +1,6 @@
 import {checkIfCoordInParkingZone, checkIfCoordInChargingPost } from '.././helperfunction/helpers'
 
 
-
-
 describe('tests if helperfunctions can find coords in poly', () => {
     let chargePost= [
         {

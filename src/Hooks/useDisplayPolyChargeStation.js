@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import Api from '../Api';
+import {getAllCitys} from '../Api';
 
 let initalValue = {
 	showLoadStations: false,
@@ -28,7 +28,7 @@ const useDisplayPolyChargeStation = (mapRef, {ifToShowLoadStations}) => {
         const getData = async () => {
             try {
                 setLoadStationError(false)
-                let res = await Api.getAllCitys();
+                let res = await getAllCitys();
                 handleSucces(res)
             } catch (error) {
                 setLoadStationError(true)

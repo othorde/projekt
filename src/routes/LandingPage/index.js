@@ -6,7 +6,7 @@ import Loader from '../../components/Loader'
 import {Wrapper} from "./Form.styles";
 //other
 import AppContext from "../../AppContext";
-import Api from "../../Api";
+import {logginUserViaGit} from "../../Api";
 import {PROXY_URL, defaultConfigAuthenticate} from '../../config'
 
 require('dotenv').config()
@@ -54,7 +54,7 @@ export default function LandingPage() {
 					})).json();
 				/* loggar in genom api och sätter user värden i localStorage samt i hook */
 				if (res && res.login) {
-					result = await Api.logginUserViaGit(res.login)
+					result = await logginUserViaGit(res.login)
 					if (result && result.data.type === "success") {
 						localStorage.clear();
 						localStorage.setItem('user', JSON.stringify(res.login));

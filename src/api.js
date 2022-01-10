@@ -1,10 +1,8 @@
 
 import { API_URL } from "./config";
 
-const Api = {
-
     /* Hämtar en användare */
-    getAUser: async(id) => {
+    export async function getAUser(id) {
         try {
             const endpoint = `${API_URL}/customers/${id}`;
             let res = await (await fetch(endpoint)).json();
@@ -12,10 +10,10 @@ const Api = {
         } catch (error) {
             return false
         }
-    },
+    };
 
     /* Hämtar alla användare  */
-    getAllUsers: async() => {
+    export async function getAllUsers() {
         try {
             const endpoint = `${API_URL}/customers`;
             let res = await (await fetch(endpoint)).json();
@@ -23,10 +21,10 @@ const Api = {
         } catch (error) {
             return false
         }
-    },
+    };
 
     /* Hämtar en stad  */
-    getACity: async (whatCity) => {
+    export async function getACity(whatCity) {
         try {
             const endpoint = `${API_URL}/cities/${whatCity}`;
             let res = await (await fetch(endpoint)).json();
@@ -34,10 +32,10 @@ const Api = {
         } catch (error) {
             return false
         }
-	},
+	};
 
     /* Hämtar alla städer */
-    getAllCitys: async () => {
+    export async function getAllCitys() {
         try {
             const endpoint = `${API_URL}/cities`;
             let res = await (await fetch(endpoint)).json();
@@ -45,10 +43,10 @@ const Api = {
         } catch (error) {
             return false
         }
-	},
+	};
 
     /* Hämtar alla scootrar */
-    getAllScooters: async () => {
+    export async function getAllScooters() {
         try {
             const endpoint = `${API_URL}/scooter`;
             let res = await (await fetch(endpoint)).json();
@@ -56,10 +54,10 @@ const Api = {
         } catch (error) {
             return false
         }
-	},
+	};
 
     /* Hämtar alla laddstationer, retunerar antal cyklar som finns */
-    getAllChargePost: async (city, matching) => {
+    export async function getAllChargePost(city, matching) {
         try {
             const endpoint = `${API_URL}/cities/posts/${city}`;
             let res = await (await fetch(endpoint)).json();
@@ -75,10 +73,10 @@ const Api = {
         } catch (error) {
             return false
         }
-	},
+	};
 
     /* Loggar in användaren */
-    logginUserViaGit: async (username)  => {
+    export async function logginUserViaGit(username) {
 
         const defaultConfig = {
             method: 'POST',
@@ -101,10 +99,10 @@ const Api = {
         } catch (error) {
             return false
         }
-    },
+    };
 
     /* Uppdaterar en scooter */
-    updateAScooter: async (id, speed, battery, newPosition, token) => {
+    export async function updateAScooter(id, speed, battery, newPosition, token) {
 
         const defaultConfigPut = {
             method: 'PUT',
@@ -136,10 +134,10 @@ const Api = {
         } catch (error) {
             return false      
         }
-	},
+	};
     
     /* Uppdaterar en scooters användare */
-    updateAScootersUser: async (id, token) => {
+    export async function updateAScootersUser(id, token) {
 
         const defaultConfigPut = {
             method: 'PUT',
@@ -167,10 +165,10 @@ const Api = {
         } catch (error) {
             return false      
         }
-	},
+	};
 
     /* Uppdaterar scooterns logg */
-    updateAScootersLogg: async (varForUpdate, token) => {
+    export async function updateAScootersLogg(varForUpdate, token) {
 
         const defaultConfigPut = {
             method: 'PUT',
@@ -206,10 +204,10 @@ const Api = {
         } catch (error) {
             return false      
         }
-	},
+	};
 
     /* Uppdaterar användarens kontobalans */
-    updateUserFunds: async (addToBalance, id, token) => {
+    export async function updateUserFunds(addToBalance, id, token) {
         const defaultConfigPut = {
             method: 'PUT',
             headers: {
@@ -239,10 +237,10 @@ const Api = {
         } catch (error) {
             return false
         }
-	},
+	};
 
     /* Uppdaterar antalet cyklar i chargepost */
-    updateNrBikesChargePost: async (city, amount_of_bikes, color, token) => {
+    export async function updateNrBikesChargePost(city, amount_of_bikes, color, token){
         
         const defaultConfigPut = {
             method: 'PUT',
@@ -274,10 +272,10 @@ const Api = {
         } catch (error) {
             return false
         }
-	},
+	};
     
     /* Uppdaterar antalet cyklar i parkzone */
-    updateNrBikesParkZone: async (city, amount_of_bikes, color, token) => {
+    export async function  updateNrBikesParkZone(city, amount_of_bikes, color, token) {
 
         const defaultConfigPut = {
             method: 'PUT',
@@ -309,7 +307,6 @@ const Api = {
         } catch (error) {
             return false
         }
-	},
-}
+	};
 
-export default Api
+

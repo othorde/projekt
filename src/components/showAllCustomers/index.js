@@ -130,8 +130,8 @@ const ShowAllCustomers = ()  => {
                         <td data-label="På kontot">{elem.balance}:- </td>
                         <td data-label="Antal Resor">{elem.trips.length} </td>
                         <td data-label="Se alla resor">{ <button className="button vertical-align:middle" onClick={(e) => 
-                            showSpecificCustomer(elem._id, elem.username, e)}><span>Visa</span></button>} </td>
-                        <td data-label="Justera saldo">{ <button className="button vertical-align:middle" onClick={(e) => 
+                            showSpecificCustomer(elem._id, elem.username, e)}  ><span>Visa</span></button>} </td>
+                        <td data-label="Justera saldo">{ <button className="button vertical-align:middle" data-testid="changePayment" onClick={(e) => 
                             changeUserBalance(elem._id, elem.username, e)}><span>Ändra </span></button>} </td>
                         </tr>
                     )
@@ -139,21 +139,17 @@ const ShowAllCustomers = ()  => {
                     </tbody>
                     </table>
                 </UserInfo>
-                ) : (
-                    <Loader/>
-                )}
+                ) : (<Loader/>)}
                 {/* Om man vill se användarens alla resor */}
                 {showCustomerTrips.showCustomer && 
-                <>
-                <StyleHistory>
+                <><StyleHistory>
                         <History customer={showCustomerTrips}></History>
-                </StyleHistory>
-                </>
+                </StyleHistory></>
                 }
                 {/* Om man vill ändra användarens kontobalans */}
                 {changeCustomerBalance.show && 
                 <StylePayment pageY = {changeCustomerBalance.pageY}>
-                        <Payment customer={changeCustomerBalance}></Payment>
+                    <Payment customer={changeCustomerBalance}></Payment>
                 </StylePayment>
                 }
             </Main>
@@ -161,10 +157,10 @@ const ShowAllCustomers = ()  => {
         {/* Visar pilarna, endast vid vyn där alla anv är med, tar bort den när man går in på enskild anv */}
         {!showCustomerTrips.showCustomer &&
         <>
-        <p style={{"fontWeight":"bold"}}>Visar {pageIndex.start}-{pageIndex.stop} av {allCustomers.length} resultat </p>  
+        <p data-testid="textForForward" style={{"fontWeight":"bold"}}>Visar {pageIndex.start}-{pageIndex.stop} av {allCustomers.length} resultat </p>  
         <ForwardBackwards>
             <div className="back"><FontAwesomeIcon icon={faArrowLeft} size="3x" onClick={() => changeIndex("back")}/></div>
-            <div className="forward"><FontAwesomeIcon icon={faArrowRight} size="3x" onClick={() => changeIndex("forward")}/></div>
+            <div className="forward" data-testid="forward" ><FontAwesomeIcon icon={faArrowRight} size="3x" onClick={() => changeIndex("forward")}/></div>
         </ForwardBackwards>
         </>
         }

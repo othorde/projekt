@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import Api from '../Api';
+import {getAllCitys} from '../Api';
 
 let initalValue = {
 	showLoadCitys: false,
@@ -76,7 +76,7 @@ const useDisplayPolyCities = (mapRef, {ifToShowCity}) => {
         const getData = async () => {
             try {
                 setCityError(false)
-                let res = await Api.getAllCitys();
+                let res = await getAllCitys();
                 handleSucces(res)
             } catch (error) {
                 setCityError(true)

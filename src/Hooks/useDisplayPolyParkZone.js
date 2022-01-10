@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import Api from '../Api';
+import {getAllCitys} from '../Api';
 
 let initalValue = {
 	showParkingZone: false,
@@ -76,7 +76,7 @@ const useDisplayPolyParkZone = (mapRef, {ifToShowParkingZone}) => {
         const getData = async () => {
             try {
                 setParkingZoneError(false)
-                let res = await Api.getAllCitys();
+                let res = await getAllCitys();
                 handleSucces(res);
             } catch (error) {
                 setParkingZoneError(true)

@@ -1,6 +1,6 @@
 import {React, useState, useEffect, useContext} from "react";
 //components
-import Api from "../../Api.js";
+import {updateUserFunds} from "../../Api.js";
 import AppContext from "../../AppContext";
 //styles
 import { Content, Delimiter, StylePayment} from "./Form.styles.js";
@@ -52,7 +52,8 @@ const Payment = ({customer, userDetails}) => {
             try {
                 showMsg = true;
                 let token = myContext.userHook.value.token;
-                result = await Api.updateUserFunds(newBalance, id, token);
+                result = await updateUserFunds(newBalance, id, token);
+                
                 if(result === true) {
                     msg = adminOrNot ? "Saldot är justerat" : "Din insättning har gått igenom";
                 }

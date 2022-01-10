@@ -6,7 +6,7 @@ import Payment from "../../components/Payment/index.js";
 import { Container, UserInfoContainer, PaymentContainer, Christmas } from "./Form.styles.js";
 import christmas from "../../images/christmas.jpg"
 //Other
-import Api from "../../Api.js";
+import {getAUser} from "../../Api.js";
 import AppContext from "../../AppContext.js";
 
 /* Sidan account. Hämtar användaren från useContext, skickar vidare infon till komponenterna */
@@ -23,7 +23,7 @@ const Account = () => {
 			setUserDetailsError(false);
 			if(user && user.value.id) {
 				try {
-					let res = await Api.getAUser(user.value.id);
+					let res = await getAUser(user.value.id);
 					setUserDetails(res);
 				} catch (error) {
 					setUserDetailsError(true);
