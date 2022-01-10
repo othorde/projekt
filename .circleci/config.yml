@@ -1,6 +1,6 @@
 version: '2.1'
 orbs:
-  codecov: codecov/codecov@3.1.1
+  node: circleci/node@4.7
 jobs:
   build:
     working_directory: ~/webbclient
@@ -8,8 +8,6 @@ jobs:
     #   - image: circleci/node:latest
     steps:
       - checkout
-      - codecov/upload:
-          file: ./coverage/lcov.info
       - restore_cache:
           key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
       - run: npm install
