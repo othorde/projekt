@@ -14,6 +14,7 @@ export async function getAUser(id) {
 
 /* Hämtar alla användare  */
 export async function getAllUsers() {
+    console.log("")
     try {
         const endpoint = `${API_URL}/customers`;
         let res = await (await fetch(endpoint)).json();
