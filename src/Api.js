@@ -14,7 +14,6 @@ export async function getAUser(id) {
 
 /* Hämtar alla användare  */
 export async function getAllUsers() {
-    console.log("")
     try {
         const endpoint = `${API_URL}/customers`;
         let res = await (await fetch(endpoint)).json();
@@ -128,6 +127,8 @@ export async function updateAScooter(id, speed, battery, newPosition, token) {
                     lng: newPosition.lng,
                 })
                 })).json();
+
+
         if(res.data.result === `Object: ${id} updated`) {
             return true
         }

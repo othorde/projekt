@@ -58,7 +58,6 @@ const Payment = ({customer, userDetails}) => {
                     msg = adminOrNot ? "Saldot är justerat" : "Din insättning har gått igenom";
                 }
             } catch (error) {
-                console.log(error)
                 msg = "Något gick fel. Beror på servern.";
             }
         } 

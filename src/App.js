@@ -14,7 +14,7 @@ import Home from './routes/Home';
 import UserHistory from './routes/History';
 import Customers from './routes/Customers';
 
-
+/* Main */
 export default function App() {
 
 	const [userHook, setUserHook] = useState("");

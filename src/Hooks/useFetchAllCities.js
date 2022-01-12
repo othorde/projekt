@@ -12,7 +12,6 @@ export const  useFetchAllCities = () => {
         try {
             setLoadingCities(true)
             const allCities = await getAllCitys()
-            console.log(allCities)
             allCities.length > 0 ? setCities(allCities) : setMessageCities("Städerna kunde ej läsas in");
             
         } catch (error) {
