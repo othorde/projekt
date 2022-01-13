@@ -60,7 +60,6 @@ export default function LandingPage() {
 						localStorage.setItem('user', JSON.stringify(res.login));
 						localStorage.setItem('tag', JSON.stringify(result.data.user.tag));
 						localStorage.setItem('id', JSON.stringify(result.data.user.id));
-
 						const user = {
 							user: res.login,
 							tag: result.data.user.tag,

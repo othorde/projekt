@@ -243,7 +243,7 @@ export async function updateUserFunds(addToBalance, id, token) {
 
 /* Uppdaterar antalet cyklar i chargepost */
 export async function updateNrBikesChargePost(city, amount_of_bikes, color, token){
-    
+
     const defaultConfigPut = {
         method: 'PUT',
         headers: {

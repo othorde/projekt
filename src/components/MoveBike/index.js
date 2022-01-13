@@ -118,7 +118,7 @@ export default function MoveBike({city, position, id, battery}) {
         Moved(update)(bikeId:${id})\n
         from position: lat: ${position.lat} lng: ${position.lng} to the ${moveBikeToColor} zon.\n
         New exact position in zon: lat: ${newPosition.lat}, lng: ${newPosition.lng}.\n
-        Speed is now 0 and battery is charged from ${battery} to 100%. Carried out by ${movedBy}.
+        Speed is now 0 and battery is charged from ${battery}% to 100%. Carried out by ${movedBy}.
     `;
         return event
     }
