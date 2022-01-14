@@ -8,14 +8,44 @@
 Detta är en del av ett grupparbete i kursen pattern på Blekinge Tekniska Högskola.
 Denna del består av admin och användarens webbgränssnitt.
 
+# Hela systemet
 
-# Ladda ner
+Kan hämtas genom docker
+
+## Hämta
+Webbklient: 
+docker-compose pull othordeman/projekt:latest
+
+Server:
+docker-compose pull alexander97olsson/api_server
+
+App:
+docker-compose pull jontepson/app:latest
+
+Simulation/cykel:
+docker-compose pull johannapersson123/simulation:latest
+
+## docker-compose.yml
+
+[https://drive.google.com/file/d/1SMhEPOr0hLStIhgTGTvMLBNN19QvtGiz/view?usp=sharing](Hämta filen docker-compose.yml).
+
+## Kör
+
+docker-compose up
+
+## Stäng ner
+
+docker-compose down
+
+# Webbklient
+
+## Ladda ner
 
 Ladda ner repot från github.
 För att allt ska fungera behövs API nyckel för google maps som ej är inkluderat i nedladdningen.
 Den ska läggas till som REACT_APP_GOOGLE_MAPS_API_KEY="DIN API NYCKEL" i .env filen.
 
-# Installera
+## Installera
 
 Installera allt med "npm install"
 

@@ -251,9 +251,12 @@ export async function updateNrBikesChargePost(city, amount_of_bikes, color, toke
             "Access-Control-Allow-Origin": "*",
             'x-access-token': token
         }
-    }
+    }    
 
     try {
+        if(amount_of_bikes === 0) {
+            amount_of_bikes = "0"
+        }
         const endpoint = `${API_URL}/cities/posts/update`;
         let res;
         res = await(
@@ -265,7 +268,6 @@ export async function updateNrBikesChargePost(city, amount_of_bikes, color, toke
                     color: color
                 })
             })).json();
-
         if(res.data.result === `City post: ${city} updated`) {
             return true
         } else {
@@ -289,6 +291,9 @@ export async function  updateNrBikesParkZone(city, amount_of_bikes, color, token
     }
     
     try {
+        if(amount_of_bikes === 0) {
+            amount_of_bikes = "0"
+        }
         const endpoint = `${API_URL}/cities/zones/update`;
         let res;
         res = await(

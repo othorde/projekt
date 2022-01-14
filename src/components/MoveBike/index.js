@@ -189,10 +189,10 @@ export default function MoveBike({city, position, id, battery}) {
         //Kollar alltid hur många cyklar som finns i station
         res = await getAllChargePost(cityState, moveBikeToColor);
         // Uppdaterar alltid laddstationen dit cyklen förflyttas med +1
-        if(!res === false) {
+        if(!isNaN(res)) {
             let token = myContext.userHook.value.token;
             let amount_of_bikes_in_new_zone = res + 1;
-            
+
             res = await updateNrBikesChargePost(cityState, amount_of_bikes_in_new_zone, moveBikeToColor, token);
             res === false && setMessage("Kund ej uppdatera laddstationen");
         }
@@ -209,7 +209,6 @@ export default function MoveBike({city, position, id, battery}) {
     async function updateChargePost(amount_of_bikes, color) {
         let token = myContext.userHook.value.token;
         let res;
-
         res = await updateNrBikesChargePost(cityState, amount_of_bikes, color, token);
         res === false && setMessage("Kund ej uppdatera laddstationen");
     }
