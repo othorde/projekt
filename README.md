@@ -27,7 +27,7 @@ docker-compose pull johannapersson123/simulation:latest
 
 ## docker-compose.yml
 
-[https://drive.google.com/file/d/1SMhEPOr0hLStIhgTGTvMLBNN19QvtGiz/view?usp=sharing](Hämta filen docker-compose.yml).
+[https://drive.google.com/file/d/1SMhEPOr0hLStIhgTGTvMLBNN19QvtGiz/view?usp=sharing]
 
 ## Kör
 
@@ -37,7 +37,7 @@ docker-compose up
 
 docker-compose down
 
-# Webbklient
+# Endast webbklient
 
 ## Ladda ner
 
